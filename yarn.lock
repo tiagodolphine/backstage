@@ -9302,6 +9302,9 @@ __metadata:
     "@backstage/backend-common": "workspace:^"
     "@backstage/cli": "workspace:^"
     "@backstage/config": "workspace:^"
+    "@backstage/core-plugin-api": "workspace:^"
+    "@backstage/plugin-events-backend": "workspace:^"
+    "@backstage/plugin-events-node": "workspace:^"
     "@backstage/plugin-swf-common": "workspace:^"
     "@types/express": "*"
     "@types/node-fetch": ^2.6.4
@@ -9317,7 +9320,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@backstage/plugin-swf-common@workspace:^, @backstage/plugin-swf-common@workspace:plugins/swf-common":
+"@backstage/plugin-swf-common@^0.0.0, @backstage/plugin-swf-common@workspace:^, @backstage/plugin-swf-common@workspace:plugins/swf-common":
   version: 0.0.0-use.local
   resolution: "@backstage/plugin-swf-common@workspace:plugins/swf-common"
   dependencies:
@@ -25684,12 +25687,14 @@ __metadata:
     "@backstage/plugin-scaffolder-backend": "workspace:^"
     "@backstage/plugin-scaffolder-backend-module-confluence-to-markdown": "workspace:^"
     "@backstage/plugin-scaffolder-backend-module-rails": "workspace:^"
+    "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-search-backend": "workspace:^"
     "@backstage/plugin-search-backend-module-elasticsearch": "workspace:^"
     "@backstage/plugin-search-backend-module-pg": "workspace:^"
     "@backstage/plugin-search-backend-node": "workspace:^"
     "@backstage/plugin-search-common": "workspace:^"
     "@backstage/plugin-swf-backend": ^0.0.0
+    "@backstage/plugin-swf-common": ^0.0.0
     "@backstage/plugin-tech-insights-backend": "workspace:^"
     "@backstage/plugin-tech-insights-backend-module-jsonfc": "workspace:^"
     "@backstage/plugin-tech-insights-node": "workspace:^"
