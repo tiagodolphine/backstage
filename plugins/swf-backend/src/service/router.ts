@@ -23,7 +23,7 @@ import fetch from 'node-fetch';
 import { EventBroker } from '@backstage/plugin-events-node';
 import { topic } from '@backstage/plugin-swf-common';
 import { Config } from '@backstage/config';
-import {DiscoveryApi} from "@backstage/core-plugin-api";
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
@@ -47,7 +47,7 @@ export async function createRouter(
 
   const kogitoBaseUrl =
     config.getOptionalString('swf.baseUrl') ?? 'http://localhost';
-  const kogitoPort = config.getOptionalString('swf.port') ?? '8899';
+  const kogitoPort = config.getOptionalNumber('swf.port') ?? 8899;
   logger.info(
     `Using kogito Serverless Workflow Url of: ${kogitoBaseUrl}:${kogitoPort}`,
   );
