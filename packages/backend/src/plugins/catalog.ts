@@ -19,8 +19,8 @@ import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backen
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { DemoEventBasedEntityProvider } from './DemoEventBasedEntityProvider';
-import { UnprocessedEntitiesModule } from '@backstage/plugin-catalog-backend-module-unprocessed';
-import { ServerlessWorkflowEntityProvider } from './ServerlessWorkflowEntityProvider';
+import { UnprocessedEntitesModule } from '@backstage/plugin-catalog-backend-module-unprocessed';
+import { ServerlessWorkflowEntityProvider } from '@backstage/plugin-swf-backend';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -36,18 +36,34 @@ export default async function createPlugin(
   builder.addEntityProvider(demoProvider);
 
   // SWF Entity Provider
+  const config = env.config;
+  const logger = env.logger;
+  const kogitoBaseUrl =
+    config.getOptionalString('swf.baseUrl') ?? 'http://localhost';
+  const kogitoPort = config.getOptionalNumber('swf.port') ?? 8899;
+  logger.info(
+    `Using kogito Serverless Workflow Url of: ${kogitoBaseUrl}:${kogitoPort}`,
+  );
+  const owner =
+    config.getOptionalString('swf.workflow-service.owner') ?? 'infrastructure';
+  const environment =
+    config.getOptionalString('swf.workflow-service.environment') ??
+    'development';
+
   const swfProvider = new ServerlessWorkflowEntityProvider({
     reader: env.reader,
-    kogitoServiceUrl: 'http://localhost:8899',
+    kogitoServiceUrl: `${kogitoBaseUrl}:${kogitoPort}`,
     eventBroker: env.eventBroker,
+    scheduler: env.scheduler,
     logger: env.logger,
-    env: 'development',
+    owner: owner,
+    env: environment,
   });
   builder.addEntityProvider(swfProvider);
 
   const { processingEngine, router } = await builder.build();
 
-  const unprocessed = new UnprocessedEntitiesModule(
+  const unprocessed = new UnprocessedEntitesModule(
     await env.database.getClient(),
     router,
   );
