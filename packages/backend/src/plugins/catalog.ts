@@ -69,15 +69,5 @@ export default async function createPlugin(
   );
   unprocessed.registerRoutes();
   await processingEngine.start();
-
-  await env.scheduler.scheduleTask({
-    id: 'run_swf_provider_refresh',
-    fn: async () => {
-      await swfProvider.run();
-    },
-    frequency: { seconds: 5 },
-    timeout: { minutes: 10 },
-  });
-
   return router;
 }
