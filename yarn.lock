@@ -8724,6 +8724,7 @@ __metadata:
     "@backstage/plugin-permission-node": "workspace:^"
     "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-scaffolder-node": "workspace:^"
+    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/types": "workspace:^"
     "@gitbeaker/core": ^35.6.0
     "@gitbeaker/node": ^35.1.0
@@ -8820,6 +8821,7 @@ __metadata:
     "@backstage/plugin-catalog-react": "workspace:^"
     "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-swf": "workspace:^"
+    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
     "@backstage/types": "workspace:^"
@@ -8885,6 +8887,7 @@ __metadata:
     "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-scaffolder-react": "workspace:^"
     "@backstage/plugin-swf": "workspace:^"
+    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
     "@backstage/types": "workspace:^"
