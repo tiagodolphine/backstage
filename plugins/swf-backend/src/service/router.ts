@@ -162,15 +162,17 @@ function setupInternalRoutes(
       params: { swfId },
     } = req;
     const swfData = req.body;
-    const svcResponse = await executeWithRetry(() =>
-      fetch(`${kogitoBaseUrl}:${kogitoPort}/${swfId}`, {
-        method: 'POST',
-        body: JSON.stringify(swfData),
-        headers: { 'content-type': 'application/json' },
-      }),
+    const svcResponse = await executeWithRetry(
+      () =>
+        fetch(`${kogitoBaseUrl}:${kogitoPort}/${swfId}`, {
+          method: 'POST',
+          body: JSON.stringify(swfData),
+          headers: { 'content-type': 'application/json' },
+        }),
+      [500],
     );
     const json = await svcResponse.json();
-    res.status(svcResponse.status).json(json);
+    res.status(201).json(json);
   });
 
   router.get('/instances', async (_, res) => {
@@ -311,6 +313,7 @@ async function setupKogitoService(
 
 async function executeWithRetry(
   action: () => Promise<Response>,
+  nonErrorCodes?: Array<Number>,
 ): Promise<Response> {
   let response: Response;
   let errorCount = 0;
@@ -319,7 +322,7 @@ async function executeWithRetry(
   const maxErrors = 15;
   while (errorCount < maxErrors) {
     response = await action();
-    if (response.status >= 400) {
+    if (!nonErrorCodes?.includes(response.status) && response.status >= 400) {
       errorCount++;
       // backoff
       await delay(backoff);
