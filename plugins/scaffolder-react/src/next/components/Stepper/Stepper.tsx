@@ -70,10 +70,7 @@ export type StepperProps = {
   templateName?: string;
   FormProps?: FormProps;
   initialState?: Record<string, JsonValue>;
-  onCreate: (
-    values: Record<string, JsonValue>,
-    manifest: TemplateParameterSchema,
-  ) => Promise<void>;
+  onCreate: (values: Record<string, JsonValue>) => Promise<void>;
   components?: {
     ReviewStateComponent?: (props: ReviewStateProps) => JSX.Element;
     createButtonText?: ReactNode;
@@ -221,7 +218,7 @@ export const Stepper = (stepperProps: StepperProps) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  props.onCreate(formState, props.manifest);
+                  props.onCreate(formState);
                   const name =
                     typeof formState.name === 'string'
                       ? formState.name
