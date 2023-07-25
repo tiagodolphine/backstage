@@ -32,6 +32,7 @@ import {
   TaskSteps,
 } from '@backstage/plugin-scaffolder-react/alpha';
 import { useAsync } from '@react-hookz/web';
+import { swfInstanceRouteRef } from '@backstage/plugin-swf';
 
 const useStyles = makeStyles(theme => ({
   contentWrapper: {
@@ -65,9 +66,16 @@ export const OngoingTask = (props: {
       taskStream.task?.spec.steps.map(step => ({
         ...step,
         ...taskStream?.steps?.[step.id],
+        output: taskStream?.output,
       })) ?? [],
     [taskStream],
   );
+
+  const processInstanceId = useMemo(
+    () => steps.find(step => step.output)?.output?.processInstanceId as string,
+    [steps],
+  );
+  const swfInstanceRoute = useRouteRef(swfInstanceRouteRef);
 
   const [logsVisible, setLogVisibleState] = useState(false);
   const [buttonBarVisible, setButtonBarVisibleState] = useState(true);
@@ -174,6 +182,18 @@ export const OngoingTask = (props: {
         </Box>
 
         <Outputs output={taskStream.output} />
+
+        {processInstanceId && (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              navigate(swfInstanceRoute({ instanceId: processInstanceId }))
+            }
+          >
+            View details
+          </Button>
+        )}
 
         {buttonBarVisible ? (
           <Box paddingBottom={2}>

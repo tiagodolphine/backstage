@@ -195,7 +195,20 @@ export class ServerlessWorkflowEntityProvider
         spec: {
           owner: this.owner,
           type: workflow_type,
-          steps: [],
+          steps: [
+            {
+              id: 'execute',
+              name: 'swf:execute',
+              action: 'swf:execute',
+              input: {
+                swfId: 'TBE',
+                parameters: '${{ parameters }}',
+              },
+            },
+          ],
+          output: {
+            processInstanceId: '${{ steps.execute.output.results.id }}',
+          },
           parameters: this.makeBackstageTemplateParameters(
             i,
             openApiDefinitions,

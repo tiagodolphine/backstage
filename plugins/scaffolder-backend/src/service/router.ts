@@ -68,7 +68,6 @@ import {
   TemplateAction,
 } from '@backstage/plugin-scaffolder-node';
 import {
-  DiscoveryApi,
   PermissionEvaluator,
   PermissionRuleParams,
 } from '@backstage/plugin-permission-common';
@@ -79,7 +78,6 @@ import {
 } from '@backstage/plugin-permission-node';
 import { scaffolderActionRules, scaffolderTemplateRules } from './rules';
 import fs from 'fs-extra';
-import fetch from 'node-fetch';
 import { workflow_type } from '@backstage/plugin-swf-common';
 import { PassThrough } from 'stream';
 import path from 'path';
@@ -151,8 +149,18 @@ export interface RouterOptions {
     TemplatePermissionRuleInput | ActionPermissionRuleInput
   >;
   identity?: IdentityApi;
-  discovery: DiscoveryApi;
 }
+
+type ExecutorOptions = {
+  kind: string;
+  namespace: string;
+  name: string;
+  template: TemplateEntityV1beta3;
+  userEntity: Entity | undefined;
+  userEntityRef: string | undefined;
+  baseUrl: string | undefined;
+  values: any;
+};
 
 function isSupportedTemplate(entity: TemplateEntityV1beta3) {
   return entity.apiVersion === 'scaffolder.backstage.io/v1beta3';
@@ -247,7 +255,6 @@ export async function createRouter(
     additionalTemplateGlobals,
     permissions,
     permissionRules,
-    discovery,
   } = options;
 
   const logger = parentLogger.child({ plugin: 'scaffolder' });
@@ -355,6 +362,66 @@ export async function createRouter(
       },
     ],
   });
+
+  const defaultExecutor = (opts: ExecutorOptions): TaskSpec => {
+    return {
+      apiVersion: opts.template.apiVersion,
+      steps: opts.template.spec.steps.map((step, index) => ({
+        ...step,
+        id: step.id ?? `step-${index + 1}`,
+        name: step.name ?? step.action,
+      })),
+      output: opts.template.spec.output ?? {},
+      parameters: opts.values,
+      user: {
+        entity: opts.userEntity as UserEntity,
+        ref: opts.userEntityRef,
+      },
+      templateInfo: {
+        entityRef: stringifyEntityRef({
+          kind: opts.kind,
+          name: opts.name,
+          namespace: opts.namespace,
+        }),
+        baseUrl: opts.baseUrl,
+        entity: {
+          metadata: opts.template.metadata,
+        },
+      },
+    };
+  };
+
+  const swfExecutor = (opts: ExecutorOptions): TaskSpec => {
+    return {
+      apiVersion: opts.template.apiVersion,
+      steps: opts.template.spec.steps.map(step => ({
+        ...step,
+        id: step.id as string,
+        name: step.name as string,
+        input: {
+          ...step.input,
+          swfId: opts.name,
+        },
+      })),
+      output: opts.template.spec.output ?? {},
+      parameters: opts.values,
+      user: {
+        entity: opts.userEntity as UserEntity,
+        ref: opts.userEntityRef,
+      },
+      templateInfo: {
+        entityRef: stringifyEntityRef({
+          kind: opts.kind,
+          name: opts.name,
+          namespace: opts.namespace,
+        }),
+        baseUrl: opts.baseUrl,
+        entity: {
+          metadata: opts.template.metadata,
+        },
+      },
+    };
+  };
 
   router.use(permissionIntegrationRouter);
 
@@ -470,43 +537,32 @@ export async function createRouter(
 
       const baseUrl = getEntityBaseUrl(template);
 
-      // Delegate execution of SWF's to the SWF backend
+      let taskSpec: TaskSpec;
       if (template.spec.type === workflow_type) {
-        logger.info('Delegating execution of Serverless Workflow...');
-        const swfId: string = template.metadata.name;
-        const swfApiUrl: string = await discovery.getBaseUrl('swf');
-        const swfApiRequest = await fetch(`${swfApiUrl}/execute/${swfId}`, {
-          method: 'POST',
-          body: JSON.stringify(values),
-          headers: { 'content-type': 'application/json' },
-        });
-        const swfApiResponse = await swfApiRequest.json();
-        res.status(swfApiRequest.status).json(swfApiResponse);
-        return;
-      }
-
-      // Otherwise delegate to Backstage's default workflow
-      const taskSpec: TaskSpec = {
-        apiVersion: template.apiVersion,
-        steps: template.spec.steps.map((step, index) => ({
-          ...step,
-          id: step.id ?? `step-${index + 1}`,
-          name: step.name ?? step.action,
-        })),
-        output: template.spec.output ?? {},
-        parameters: values,
-        user: {
-          entity: userEntity as UserEntity,
-          ref: userEntityRef,
-        },
-        templateInfo: {
-          entityRef: stringifyEntityRef({ kind, name, namespace }),
+        // Delegate execution of SWF's to the SWF backend
+        taskSpec = swfExecutor({
+          kind,
+          namespace,
+          name,
+          template,
+          userEntity,
+          userEntityRef,
           baseUrl,
-          entity: {
-            metadata: template.metadata,
-          },
-        },
-      };
+          values,
+        });
+      } else {
+        // Otherwise delegate to Backstage's default workflow
+        taskSpec = defaultExecutor({
+          kind,
+          namespace,
+          name,
+          template,
+          userEntity,
+          userEntityRef,
+          baseUrl,
+          values,
+        });
+      }
 
       const result = await taskBroker.dispatch({
         spec: taskSpec,
