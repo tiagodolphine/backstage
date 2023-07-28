@@ -21,15 +21,14 @@ import {
   ProcessInstance,
   SwfItem,
   SwfListResult,
+  topic,
 } from '@backstage/plugin-swf-common';
-import { ExecException } from 'child_process';
+import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
-import { topic } from '@backstage/plugin-swf-common';
 import { Config } from '@backstage/config';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import YAML from 'yaml';
 import { resolve } from 'path';
-import { exec } from 'child_process';
 import { WorkflowService } from './WorkflowService';
 import { OpenApiService } from './OpenApiService';
 
@@ -324,13 +323,18 @@ async function executeWithRetry(
   const backoff = 5000;
   const maxErrors = 15;
   while (errorCount < maxErrors) {
-    response = await action();
-    if (response.status >= 400) {
+    try {
+      response = await action();
+      if (response.status >= 400) {
+        errorCount++;
+        // backoff
+        await delay(backoff);
+      } else {
+        return response;
+      }
+    } catch (e) {
       errorCount++;
-      // backoff
       await delay(backoff);
-    } else {
-      return response;
     }
   }
   throw new Error('Unable to execute query.');
