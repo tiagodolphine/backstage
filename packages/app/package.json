@@ -143,17 +143,15 @@
     "start-server-and-test": "^1.10.11",
     "style-loader": "^1.0.0",
     "ts-loader": "^8.4.0",
-    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "url-loader": "^3.0.0",
     "vscode-languageserver-textdocument": "^1.0.4",
     "webpack": "^5.36.2",
-    "webpack-cli": "^4.10.0",
-    "webpack-merge": "^5.8.0"
+    "webpack-cli": "^4.10.0"
   },
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
-    "build:swf": "rm -rf dist/ && webpack --config webpack.config.js",
+    "build:swf": "rm -rf dist/ && webpack --config swf-webpack.config.js",
     "clean": "backstage-cli package clean",
     "test": "backstage-cli package test",
     "lint": "backstage-cli package lint",
