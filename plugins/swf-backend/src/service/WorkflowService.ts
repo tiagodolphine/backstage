@@ -69,8 +69,7 @@ export class WorkflowService {
     url: string,
   ): Promise<Specification.Workflow> {
     const response = await fetch(url);
-    const json = await response.json();
-    return Specification.Workflow.fromSource(json);
+    return await response.json();
   }
 
   async saveOpenApi(): Promise<void> {

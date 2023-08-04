@@ -72,17 +72,13 @@ export const CreateSWFPage = () => {
         }
 
         // Check validate as provided by the Stunner editor
-        swfEditor?.validate().then(n => {
-          if (!n) {
-            errorApi.post(new Error('Error creating workflow'));
-            return;
-          }
-          if (n.length !== 0) {
-            errorApi.post(
-              new Error(
-                `Error creating workflow: ${JSON.stringify(n, undefined, 2)}`,
-              ),
-            );
+        swfEditor?.validate().then(notifications => {
+          if (notifications.length !== 0) {
+            const messages = notifications.map(n => n.message).join('; ');
+            errorApi.post({
+              name: 'Validation error',
+              message: `The workflow cannot be saved due to: ${messages}`,
+            });
             return;
           }
 

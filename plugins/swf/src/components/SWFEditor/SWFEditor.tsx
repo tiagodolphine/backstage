@@ -78,6 +78,7 @@ export interface SWFEditorRef {
   swfItem: SwfItem | undefined;
 }
 
+const EDITOR_CONTEXT_PATH = '/swf';
 const LOCALE = 'en';
 const DEFAULT_FILENAME = 'fileName.sw.json';
 const NODE_COLORS = {
@@ -126,10 +127,10 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
         new EnvelopeMapping({
           type: 'swf',
           filePathGlob: '**/*.sw.json',
-          resourcesPathPrefix: '',
+          resourcesPathPrefix: EDITOR_CONTEXT_PATH,
           envelopeContent: {
             type: EnvelopeContentType.PATH,
-            path: '/serverless-workflow-combined-editor-envelope.html',
+            path: `${EDITOR_CONTEXT_PATH}/serverless-workflow-combined-editor-envelope.html`,
           },
         }),
       ]),
