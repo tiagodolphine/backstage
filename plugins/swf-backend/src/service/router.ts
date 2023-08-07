@@ -68,7 +68,7 @@ export async function createRouter(
     '../../plugins/swf-backend/workflows:/home/kogito/serverless-workflow-project/src/main/resources';
   const kogitoServiceContainer =
     config.getOptionalString('swf.workflow-service.container') ??
-    'quay.io/kiegroup/kogito-swf-devmode-nightly:latest';
+    'quay.io/kiegroup/kogito-swf-devmode:1.42';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
   const openApiService = new OpenApiService(logger, discovery);
