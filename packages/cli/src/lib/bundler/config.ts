@@ -177,7 +177,7 @@ export async function createConfig(
         child_process: false,
 
         /* new ignores */
-        path: require.resolve('path-browserify'),
+        path: false,
         https: false,
         http: false,
         util: require.resolve('util/'),

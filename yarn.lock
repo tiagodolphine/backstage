@@ -9195,16 +9195,16 @@ __metadata:
     "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
-    "@kie-tools-core/editor": ^0.30.0
-    "@kie-tools-core/envelope-bus": ^0.30.0
-    "@kie-tools-core/notifications": ^0.30.0
-    "@kie-tools-core/react-hooks": ^0.30.0
-    "@kie-tools-core/workspace": ^0.30.0
-    "@kie-tools/serverless-workflow-combined-editor": ^0.30.0
-    "@kie-tools/serverless-workflow-diagram-editor-envelope": ^0.30.0
-    "@kie-tools/serverless-workflow-language-service": ^0.30.0
-    "@kie-tools/serverless-workflow-service-catalog": ^0.30.0
-    "@kie-tools/serverless-workflow-text-editor": ^0.30.0
+    "@kie-tools-core/editor": ^0.31.0
+    "@kie-tools-core/envelope-bus": ^0.31.0
+    "@kie-tools-core/notifications": ^0.31.0
+    "@kie-tools-core/react-hooks": ^0.31.0
+    "@kie-tools-core/workspace": ^0.31.0
+    "@kie-tools/serverless-workflow-combined-editor": ^0.31.0
+    "@kie-tools/serverless-workflow-diagram-editor-envelope": ^0.31.0
+    "@kie-tools/serverless-workflow-language-service": ^0.31.0
+    "@kie-tools/serverless-workflow-service-catalog": ^0.31.0
+    "@kie-tools/serverless-workflow-text-editor": ^0.31.0
     "@material-table/core": ^3.1.0
     "@material-ui/core": ^4.9.13
     "@material-ui/icons": ^4.9.1
@@ -9983,13 +9983,6 @@ __metadata:
   version: 6.0.2
   resolution: "@braintree/sanitize-url@npm:6.0.2"
   checksum: 6a9dfd4081cc96516eeb281d1a83d3b5f1ad3d2837adf968fcc2ba18889ee833554f9c641b4083c36d3360a932e4504ddf25b0b51e9933c3742622df82cf7c9a
-  languageName: node
-  linkType: hard
-
-"@braintree/sanitize-url@npm:^6.0.0":
-  version: 6.0.4
-  resolution: "@braintree/sanitize-url@npm:6.0.4"
-  checksum: f5ec6048973722ea1c46ae555d2e9eb848d7fa258994f8ea7d6db9514ee754ea3ef344ef71b3696d486776bcb839f3124e79f67c6b5b2814ed2da220b340627c
   languageName: node
   linkType: hard
 
@@ -12660,156 +12653,149 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kie-tools-core/backend@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/backend@npm:0.30.0"
+"@kie-tools-core/backend@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/backend@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/i18n": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
+    "@kie-tools-core/i18n": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
     axios: ^0.27.2
     fast-xml-parser: ^4.2.4
     portfinder: ^1.0.32
     semver: ^7.3.5
     sinon: ^11.1.1
-  checksum: 790c8bd163ff7f5b0d8e80250e1fa0b917a46e0709cafef20908fd87299f7cf223289bb163cec3d2309dea31fc6fc72624fb33193cdf0404c7b4964ec383c621
+  checksum: d7a027c265198c426e70621c2f52b07bed3a19a8277b9eaa706507300a2d260ff33c87bdb7dcc059ace02cc8a0fde49cdedc119ef21c2c8cbfcc1e5c4f80b1b0
   languageName: node
   linkType: hard
 
-"@kie-tools-core/editor@npm:0.30.0, @kie-tools-core/editor@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/editor@npm:0.30.0"
+"@kie-tools-core/editor@npm:0.31.0, @kie-tools-core/editor@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/editor@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/backend": 0.30.0
-    "@kie-tools-core/envelope": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/i18n": 0.30.0
-    "@kie-tools-core/keyboard-shortcuts": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/patternfly-base": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
+    "@kie-tools-core/backend": 0.31.0
+    "@kie-tools-core/envelope": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/i18n": 0.31.0
+    "@kie-tools-core/keyboard-shortcuts": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/patternfly-base": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6
     csstype: ^3.0.11
     minimatch: ^3.0.5
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: e42cc6dfcbf3d3eb47569fb5e6d264cfc8cfc27b66dcb89f806678301480c81c77b26fc81b3ce272e9969c2ae87e419bcf628768dcb6080b740dfca9d765549e
+  checksum: e2dfd1fedd372ad1cc775d08abffeb3d6951dd4bfbda680f2bbded38d852ea88a752eac92390a7323b7e9fa3e016b4924ffcb85848baea6e32b4955bc5558cc1
   languageName: node
   linkType: hard
 
-"@kie-tools-core/envelope-bus@npm:0.30.0, @kie-tools-core/envelope-bus@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/envelope-bus@npm:0.30.0"
+"@kie-tools-core/envelope-bus@npm:0.31.0, @kie-tools-core/envelope-bus@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/envelope-bus@npm:0.31.0"
   dependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: c1d06a845bad2cb31044f92721305054c6d47fb5d39b77a8aa5dc6d6c32987c1d04d6594d61ac0c9576a8e2d42c103d5ffde6d03c2d948b1117bbfc63119bb4a
+  checksum: b4a3e886dda5b79ceaef528f0994e7eef0d970c5099634b94fa1f8c0b83e35bc929d4459cbfe16f83107ed9ca5ee4647ff440a15dcb54d08813cadc3d6ac330a
   languageName: node
   linkType: hard
 
-"@kie-tools-core/envelope@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/envelope@npm:0.30.0"
+"@kie-tools-core/envelope@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/envelope@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/envelope-bus": 0.30.0
+    "@kie-tools-core/envelope-bus": 0.31.0
     csstype: ^3.0.11
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 5548dc872cc674d3bd02abb0c5ec1ae7e0d730f457f9cdabf1ccef9e5dc196c28de36e4cd04f44c9bba1f0932e32bbd194c80ca6c2770e68b00747d619126fff
+  checksum: edabe01d6f5591afc9b20d2999560fbd5295975518f2e550505606e72fa69cf7907b2c5c133166526019ce06c3a0105cfeb64e8e07f2748d8fba53915269def8
   languageName: node
   linkType: hard
 
-"@kie-tools-core/i18n@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/i18n@npm:0.30.0"
+"@kie-tools-core/i18n@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/i18n@npm:0.31.0"
   dependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 3f79573812ec9416453af9cd53549d45cbb8587c6683fc45913d6a855032dcef1e53c43a26313497d607861abd6f7f251846a53723228771853c19c8bd06bf69
+  checksum: 720de5874550816bd2f3a262cb2c3e036c283536e11bff5827cbdfad2313269e7119e519694728f018ae761d10955a22878a643d4bf51ad268687179b7b6f19a
   languageName: node
   linkType: hard
 
-"@kie-tools-core/keyboard-shortcuts@npm:0.30.0, @kie-tools-core/keyboard-shortcuts@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/keyboard-shortcuts@npm:0.30.0"
+"@kie-tools-core/keyboard-shortcuts@npm:0.31.0, @kie-tools-core/keyboard-shortcuts@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/keyboard-shortcuts@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
     react: ^17.0.2
-  checksum: befebff692088c7f57029fbd6644caec28068e8a23da931859d452ea7761206531579f169ec0251dc06220e9e377cd8902a09ad2f8a1ec337f2de5161c49e92c
+  checksum: 8d93fb8205b7a05b44c6a10c9d9b8609ce76c8403691be5f40c5a5f6ef7b061d72188862da47a7a246ee9eabc3a155c493bc7ce5e9c2a002b7b2ba01595d4d6e
   languageName: node
   linkType: hard
 
-"@kie-tools-core/notifications@npm:0.30.0, @kie-tools-core/notifications@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/notifications@npm:0.30.0"
+"@kie-tools-core/notifications@npm:0.31.0, @kie-tools-core/notifications@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/notifications@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/i18n": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-  checksum: fb904d3119916464133373f81550fe00438b37786ad969267318f1dfe0ff59a20543d1784cb0dae6c37264dd8eeece70b05e5d81c7730911c19cd6f460464b0f
+    "@kie-tools-core/i18n": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
+  checksum: b2795218959d0c6215713a4ce44b856663b782b8e08f090e43f3877f47cdbd1b143471421cd2affbb005133cc6ee877d8a8a08d502488b823d7a5f7eafa9e6ae
   languageName: node
   linkType: hard
 
-"@kie-tools-core/operating-system@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/operating-system@npm:0.30.0"
-  checksum: 55c66b5c269deb040fc1af31c897f186613e7fcfc2f221dfe327b093b994a2809fe11ee99c77cfe9bc3c1c36f628aa794aab4fcce06f51f9404a907ca9fb8778
+"@kie-tools-core/operating-system@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/operating-system@npm:0.31.0"
+  checksum: 9a7ac41b028db2e1d4097e40a566c92b95b4d1264331fe2c9b71e2dced0e598ef7c2a4bbfb89f5ede434777c5596725f39d75f333a37721fa562a3641b7ea08e
   languageName: node
   linkType: hard
 
-"@kie-tools-core/patternfly-base@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/patternfly-base@npm:0.30.0"
-  checksum: 7b293bba6b4185a65fd4d5f2bfd164d25bc92988550050da80898804e6841900a08e0fbdd217ef4aa7a731f93d74babdee80c560ace8b64d911e882bf3e73576
+"@kie-tools-core/patternfly-base@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/patternfly-base@npm:0.31.0"
+  checksum: b186ae8f19b402f4d8724a72557d41725dcb27b1449bdfc51624d3460043c79b66f478466d80d2507048029ad24812194afdb85d04b432389c3f0e3fdd577d01
   languageName: node
   linkType: hard
 
-"@kie-tools-core/react-hooks@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/react-hooks@npm:0.30.0"
+"@kie-tools-core/react-hooks@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/react-hooks@npm:0.31.0"
   dependencies:
     react: ^17.0.2
-  checksum: a3b9ada0533e5e852b061c2dd343fa44e770f20622d439a2d9fd1d16523fc8b36d31b75c0361524e75a238c3f0c98f819ef047d3bec8231ca03f19cc0232e3ca
+  checksum: 5e62d913a0a22ffb9d69615d4bc670814008af754cfc572d232e35e8ac1e20d690ba5bfd13d1102a9d85935bc9cfa1e5039ea7269e38400c17da2c9c278768dd
   languageName: node
   linkType: hard
 
-"@kie-tools-core/vscode-java-code-completion@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/vscode-java-code-completion@npm:0.30.0"
-  checksum: 9986d192fb6d51d5042485f44b687f87c2e9a1b755f607b5e779b18778dcff56e0735f42afc6367768e189cd957d88556791e2b01b2957b4bc827d7e9613cc6e
+"@kie-tools-core/vscode-java-code-completion@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/vscode-java-code-completion@npm:0.31.0"
+  checksum: f901b07bbcd63f8865b5660b638e5d7ac4b9fad2c0e8253be7109b8f3dfe56aa37f0b101c97469a679723894c690941f95411006537a81f1f68d3a22ec420c68
   languageName: node
   linkType: hard
 
-"@kie-tools-core/workspace@npm:0.30.0, @kie-tools-core/workspace@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools-core/workspace@npm:0.30.0"
+"@kie-tools-core/workspace@npm:0.31.0, @kie-tools-core/workspace@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools-core/workspace@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/operating-system": 0.30.0
-  checksum: 2052e2ee2d1c5316adf27ca47dccf0950ddd45a40972316314d016b011516691288b1b7bc0453051f8d907a239ee8309a63c7274ec59debf05d6d234e15466f8
+    "@kie-tools-core/operating-system": 0.31.0
+  checksum: 6a5d2b013c40bbbe5d268dd0b1c166d1c1c4f917018309d9ca45b6c642663c72fc149e0196694ffe4ba03465e1045cf2579f17f36ee980a016c7f7fa574f1ed5
   languageName: node
   linkType: hard
 
-"@kie-tools/dmn-language-service@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/dmn-language-service@npm:0.30.0"
-  checksum: 0e6b6ab48833cc4a14f1e2c88a5605270bf891e1f9226237021450ec5fa54a6d716513e73e0d450d9b4f9be4e1991d145d7112501d1b4446ba7aec86c127e0ad
+"@kie-tools/dmn-language-service@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/dmn-language-service@npm:0.31.0"
+  checksum: 5fc494fb3d6808c8aee976499b8ead0b9e1cd625aa46f00ec1c7993137eb210d85e3f206c10d4e62898c8a5b86c36b4c4908bf9fdd68cf7b978917c09f21bc22
   languageName: node
   linkType: hard
 
-"@kie-tools/emscripten-fs@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@kie-tools/emscripten-fs@npm:0.0.2"
-  checksum: 0f93aada0cae4e5d8f2b684f7fb5546ed4fee5e6c72e38bc25eb0c955c4527a9661ef53aa97122ef7afae17f2b918ce71bd3a52e57a5abfe736de8eb7c3b4dcb
-  languageName: node
-  linkType: hard
-
-"@kie-tools/json-yaml-language-service@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/json-yaml-language-service@npm:0.30.0"
+"@kie-tools/json-yaml-language-service@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/json-yaml-language-service@npm:0.31.0"
   dependencies:
-    "@kie-tools/yaml-language-server": 0.30.0
+    "@kie-tools/yaml-language-server": 0.31.0
     jsonata: ^1.8.3
     jsonc-parser: ^3.0.0
     vscode-json-languageservice: ^4.2.1
@@ -12817,174 +12803,154 @@ __metadata:
     vscode-languageserver-textdocument: ^1.0.4
     vscode-languageserver-types: ^3.16.0
     yaml-language-server-parser: ^0.1.3
-  checksum: 5720f7056012eaa15e194ef2a0dac26d89af66718d321af921ef90c3417ee786d7b892595d1a91e7e161bfda613790f3d6a23f7702fa68783bcfa0433e68cecc
+  checksum: 835553dbd171a568827004dcec8b26b8a009bfe883ffdf2694b1a930aeeaabb22179613226e8bb82a453b32ae009820c30f208b9b5a8048ef1f2b2a579ff48a7
   languageName: node
   linkType: hard
 
-"@kie-tools/kie-bc-editors@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/kie-bc-editors@npm:0.30.0"
+"@kie-tools/kie-bc-editors@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/kie-bc-editors@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/i18n": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/vscode-java-code-completion": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-    "@kie-tools/dmn-language-service": 0.30.0
-    "@kie-tools/pmml-editor-marshaller": 0.30.0
+    "@kie-tools-core/editor": 0.31.0
+    "@kie-tools-core/envelope": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/i18n": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/vscode-java-code-completion": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
+    "@kie-tools/dmn-language-service": 0.31.0
+    "@kie-tools/pmml-editor-marshaller": 0.31.0
     "@patternfly/react-core": ^4.276.6
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: fba76f85abc7f9eb96958fbee3fec653ff3208e9cffc8d10c9495f2132dec5eef579fe5e0a266d3f70e67ea7bcc7602286b2d11fd3edb2d61f395f5af4cb4ca5
+  checksum: 5ceb0f14f1c1e7c3a15e4e11c7ab1c4152e7bdc21588196eab91a6995c565325116e6a6cdfc1a4dda1631c581118d260edfd99ad150c11fbac87b7adaabb4376
   languageName: node
   linkType: hard
 
-"@kie-tools/pmml-editor-marshaller@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/pmml-editor-marshaller@npm:0.30.0"
+"@kie-tools/pmml-editor-marshaller@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/pmml-editor-marshaller@npm:0.31.0"
   dependencies:
     jsonata: ^1.8.3
     xml-js: ^1.6.11
-  checksum: ced6a5c6995a085e89e9714634dee04f94ded59e6b96ab48271b9ec039a328a27db80c2579c21ded52e21f09e323aafc7bc43331c2f3e405bef1ec6943cd4d30
+  checksum: f7157ef335e5d8850360eb4f6c881d472155fe856fa914873ef619390e4a340abe86106328826e7cac71cbab1823126af2d09bda27d7221b9e4e76e131a460bb
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-combined-editor@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-combined-editor@npm:0.30.0"
+"@kie-tools/serverless-workflow-combined-editor@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-combined-editor@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/keyboard-shortcuts": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/patternfly-base": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-    "@kie-tools/serverless-workflow-diagram-editor-assets": 0.30.0
-    "@kie-tools/serverless-workflow-diagram-editor-envelope": 0.30.0
-    "@kie-tools/serverless-workflow-language-service": 0.30.0
-    "@kie-tools/serverless-workflow-mermaid-viewer": 0.30.0
-    "@kie-tools/serverless-workflow-service-catalog": 0.30.0
-    "@kie-tools/serverless-workflow-text-editor": 0.30.0
+    "@kie-tools-core/editor": 0.31.0
+    "@kie-tools-core/envelope": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/keyboard-shortcuts": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/patternfly-base": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
+    "@kie-tools/serverless-workflow-diagram-editor-assets": 0.31.0
+    "@kie-tools/serverless-workflow-diagram-editor-envelope": 0.31.0
+    "@kie-tools/serverless-workflow-language-service": 0.31.0
+    "@kie-tools/serverless-workflow-service-catalog": 0.31.0
+    "@kie-tools/serverless-workflow-text-editor": 0.31.0
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6
     json-schema: ^0.4.0
     monaco-editor: ^0.33.0
     monaco-yaml: ^4.0.0
+    path-browserify: ^1.0.1
     react: ^17.0.2
     react-dom: ^17.0.2
     vscode-languageserver-types: ^3.16.0
-  checksum: 37d5ef3202f7bfde3dbcf5973c0fee8f3b896e4765ab0ab0f9bd317804c710207430e12a2dcc54bc175ab4a47187ac92f96df870e78de47c1ab9c45543eedadc
+  checksum: bbaa010da816d2235fd889fac93cf14934e273035dd0f2717ca35a29005e6d7e8b99e6d33fcc98d569780c5095c177fcac95a65852b98278e11e9466c608f244
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-diagram-editor-assets@npm:0.30.0, @kie-tools/serverless-workflow-diagram-editor-assets@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-diagram-editor-assets@npm:0.30.0"
-  checksum: e7d1a8226de8ea0eb3e045d4d8953eab43628ac5ad79bdccd031c9c88374c2f8bfc264b2238397a2851a87b080b6ff03557e3e7ab7af44e6b04cd16f7ae30cbe
+"@kie-tools/serverless-workflow-diagram-editor-assets@npm:0.31.0, @kie-tools/serverless-workflow-diagram-editor-assets@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-diagram-editor-assets@npm:0.31.0"
+  checksum: 920f3f106faed6064a122f3dc1ad361e70cd11e8487069c0d51243a18e05ebb23b6e3c71691a1292fd450cadb380588f118d69bd405a36932c31de92702c7349
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-diagram-editor-envelope@npm:0.30.0, @kie-tools/serverless-workflow-diagram-editor-envelope@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-diagram-editor-envelope@npm:0.30.0"
+"@kie-tools/serverless-workflow-diagram-editor-envelope@npm:0.31.0, @kie-tools/serverless-workflow-diagram-editor-envelope@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-diagram-editor-envelope@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/i18n": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/vscode-java-code-completion": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-    "@kie-tools/kie-bc-editors": 0.30.0
-  checksum: f37e88973b2da6586debbdafcddf3a26b52257562f7b3c9955da3c8fdb4cd2bb864d1036f46b8c7995415df607da228360dc7b76fe8d53a063409f04a239b5cb
+    "@kie-tools-core/editor": 0.31.0
+    "@kie-tools-core/envelope": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/i18n": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/vscode-java-code-completion": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
+    "@kie-tools/kie-bc-editors": 0.31.0
+  checksum: abb713bed7ba1ccae33e61b5b7d5ae17add14a3b8e71c09fd6fd6c681bd11510fba51072b49bbcea8a4751c4306a3bccd3cbd9b22f33b258ac66fa844944bc4d
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-jq-expressions@npm:0.30.0, @kie-tools/serverless-workflow-jq-expressions@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-jq-expressions@npm:0.30.0"
+"@kie-tools/serverless-workflow-jq-expressions@npm:0.31.0, @kie-tools/serverless-workflow-jq-expressions@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-jq-expressions@npm:0.31.0"
   dependencies:
-    "@kie-tools/serverless-workflow-service-catalog": 0.30.0
+    "@kie-tools/serverless-workflow-service-catalog": 0.31.0
     cross-fetch: ^3.1.5
-  checksum: 1c0f023155d3581c74e137620eaff41f6b8fac47cb68b8270df647b92947c093fcf2be4b3409af618bac5e6ec08f5ddc1ef1ebec3dc91dd01167f705045bc70e
+  checksum: 579d114a829d8de8b6fdb360f6de476f507403d350c1d4e53e89d141678bae57ea16167b30ba45f6e80544f7715c4bc33d6978bfd1e1dd9e2550e7655c814afb
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-language-service@npm:0.30.0, @kie-tools/serverless-workflow-language-service@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-language-service@npm:0.30.0"
+"@kie-tools/serverless-workflow-language-service@npm:0.31.0, @kie-tools/serverless-workflow-language-service@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-language-service@npm:0.31.0"
   dependencies:
-    "@kie-tools/json-yaml-language-service": 0.30.0
-    "@kie-tools/serverless-workflow-jq-expressions": 0.30.0
-    "@kie-tools/serverless-workflow-service-catalog": 0.30.0
-    "@kie-tools/yaml-language-server": 0.30.0
+    "@kie-tools/json-yaml-language-service": 0.31.0
+    "@kie-tools/serverless-workflow-jq-expressions": 0.31.0
+    "@kie-tools/serverless-workflow-service-catalog": 0.31.0
+    "@kie-tools/yaml-language-server": 0.31.0
     "@severlessworkflow/sdk-typescript": ^3.0.3
     json-to-ast: ^2.1.0
     jsonata: ^1.8.3
     jsonc-parser: ^3.0.0
+    path-browserify: ^1.0.1
     vscode-json-languageservice: ^4.2.1
     vscode-languageserver: ^7.0.0
     vscode-languageserver-textdocument: ^1.0.4
     vscode-languageserver-types: ^3.16.0
     yaml-language-server-parser: ^0.1.3
-  checksum: 1a20e9894cf429a995ff36c5406f2a31a23555926428dfd95585571cab2bc021c7208e33b76d4e67c895e1076269013f30b829ea2a6ee7740a6d4704c9283147
+  checksum: c89ae23c1cecf6a6a84754a3316e939cf5efef95abaf5b86e28cd644761c2daedfe83e3fef1fc8d1f1693795af9543c7430d15c1f56445c5d9e71991809d9b60
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-mermaid-viewer@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-mermaid-viewer@npm:0.30.0"
+"@kie-tools/serverless-workflow-service-catalog@npm:0.31.0, @kie-tools/serverless-workflow-service-catalog@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-service-catalog@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/keyboard-shortcuts": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/patternfly-base": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-    "@patternfly/react-core": ^4.276.6
-    "@patternfly/react-icons": ^4.93.6
-    "@severlessworkflow/sdk-typescript": ^3.0.3
-    mermaid: ^9.1.7
-    react: ^17.0.2
-    react-dom: ^17.0.2
-    svg-pan-zoom: ^3.6.1
-  checksum: 1ab855d89731fb9e4292047f58e3c7b621b6c6b2f4f39fb9e4d99a8c499748bb0df8d24f5992405a24ac8555ca93f21f091cb62059b28c349b280ad0c77bf2df
-  languageName: node
-  linkType: hard
-
-"@kie-tools/serverless-workflow-service-catalog@npm:0.30.0, @kie-tools/serverless-workflow-service-catalog@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-service-catalog@npm:0.30.0"
-  dependencies:
-    "@kie-tools-core/envelope-bus": 0.30.0
+    "@kie-tools-core/envelope-bus": 0.31.0
     "@types/js-yaml": ^4.0.5
     js-yaml: ^4.1.0
     lodash: ^4.17.21
     openapi-types: ^7.0.1
-  checksum: 6b8355c41214765071160803cf14702806a0caa5eb888fcfd310e092affdda5615dbae7b1ce9868537aa0610a5ad1d58b92cac682b7cc37c966e3da894b86042
+    path-browserify: ^1.0.1
+  checksum: a11cb1a40295d290cea0624755d3f4cc2f7a30cb110daf333db53becd9bed92924eaa31406f52fb2aacd1a64ea18296bab0db19d40cf797273786e5ae677e4c1
   languageName: node
   linkType: hard
 
-"@kie-tools/serverless-workflow-text-editor@npm:0.30.0, @kie-tools/serverless-workflow-text-editor@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/serverless-workflow-text-editor@npm:0.30.0"
+"@kie-tools/serverless-workflow-text-editor@npm:0.31.0, @kie-tools/serverless-workflow-text-editor@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/serverless-workflow-text-editor@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/patternfly-base": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
-    "@kie-tools/serverless-workflow-language-service": 0.30.0
-    "@kie-tools/serverless-workflow-service-catalog": 0.30.0
+    "@kie-tools-core/editor": 0.31.0
+    "@kie-tools-core/envelope": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/patternfly-base": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
+    "@kie-tools/serverless-workflow-language-service": 0.31.0
+    "@kie-tools/serverless-workflow-service-catalog": 0.31.0
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6
     json-schema: ^0.4.0
@@ -12993,39 +12959,39 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     vscode-languageserver-types: ^3.16.0
-  checksum: d9ef314c46156f87990b568f25b35f791320c837786e519b4d409f3924ff4a9fa8f9ced9ecfcdb5b76150c04bcce525d2623660c46bcf6bcc82a0a6515007206
+  checksum: 16569430f2cec46511147558ac2276885181312af45318626f594c180a12b00ba8d6f951109c7990a0ca49615bd05f21dbebd5a0eb437fd14c0d3a6f5311434a
   languageName: node
   linkType: hard
 
-"@kie-tools/text-editor@npm:^0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/text-editor@npm:0.30.0"
+"@kie-tools/text-editor@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/text-editor@npm:0.31.0"
   dependencies:
-    "@kie-tools-core/editor": 0.30.0
-    "@kie-tools-core/envelope-bus": 0.30.0
-    "@kie-tools-core/notifications": 0.30.0
-    "@kie-tools-core/operating-system": 0.30.0
-    "@kie-tools-core/patternfly-base": 0.30.0
-    "@kie-tools-core/workspace": 0.30.0
+    "@kie-tools-core/editor": 0.31.0
+    "@kie-tools-core/envelope-bus": 0.31.0
+    "@kie-tools-core/notifications": 0.31.0
+    "@kie-tools-core/operating-system": 0.31.0
+    "@kie-tools-core/patternfly-base": 0.31.0
+    "@kie-tools-core/workspace": 0.31.0
     "@patternfly/react-core": ^4.276.6
     monaco-editor: ^0.33.0
     monaco-yaml: ^4.0.0
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 850d07d1756b05c5cc3f7c94164d51584bc9af178a53a9b4aa1240face35d9ff379b5f34c5e7076c008459aa41d8acf9527c8337483022a4c338bb34f3a54f7d
+  checksum: 3ad2fa4e661012b711fe6483ac5a8bb564067d92ed86c65f87595cf8f0dc7506b7221f00b451b24f7a92b6a72f7021e64d81f8599ca1ac2a3b2abba9ae898085
   languageName: node
   linkType: hard
 
-"@kie-tools/yaml-language-server@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@kie-tools/yaml-language-server@npm:0.30.0"
+"@kie-tools/yaml-language-server@npm:0.31.0":
+  version: 0.31.0
+  resolution: "@kie-tools/yaml-language-server@npm:0.31.0"
   dependencies:
     path-browserify: ^1.0.1
     vscode-json-languageservice: ^4.2.1
     vscode-languageserver: ^7.0.0
     vscode-languageserver-textdocument: ^1.0.4
     vscode-languageserver-types: ^3.16.0
-  checksum: 2a9343e53f27ce4caf8bcbf9e5c1eacdbe95d204453bf840794ff2846896ad2d187afba57ec53e5e19bbdbe775b7985268cd3673c63c9ad82b9d4aee7685ee60
+  checksum: cc07c37398c693336455e7cd7bf63d12a6dd6f6e43b45451d0dc020b2964385065bace11f94355ea7463fbbb3018b34f5372969d7a19afbda4f03cc9e63accfe
   languageName: node
   linkType: hard
 
@@ -22524,13 +22490,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:7, commander@npm:^7.0.0, commander@npm:^7.2.0":
-  version: 7.2.0
-  resolution: "commander@npm:7.2.0"
-  checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
-  languageName: node
-  linkType: hard
-
 "commander@npm:7.1.0":
   version: 7.1.0
   resolution: "commander@npm:7.1.0"
@@ -22563,6 +22522,13 @@ __metadata:
   version: 5.1.0
   resolution: "commander@npm:5.1.0"
   checksum: 0b7fec1712fbcc6230fcb161d8d73b4730fa91a21dc089515489402ad78810547683f058e2a9835929c212fead1d6a6ade70db28bbb03edbc2829a9ab7d69447
+  languageName: node
+  linkType: hard
+
+"commander@npm:^7.0.0, commander@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "commander@npm:7.2.0"
+  checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
   languageName: node
   linkType: hard
 
@@ -23022,24 +22988,6 @@ __metadata:
     object-assign: ^4
     vary: ^1
   checksum: ced838404ccd184f61ab4fdc5847035b681c90db7ac17e428f3d81d69e2989d2b680cc254da0e2554f5ed4f8a341820a1ce3d1c16b499f6e2f47a1b9b07b5006
-  languageName: node
-  linkType: hard
-
-"cose-base@npm:^1.0.0":
-  version: 1.0.3
-  resolution: "cose-base@npm:1.0.3"
-  dependencies:
-    layout-base: ^1.0.0
-  checksum: 3f3d592316df74adb215ca91e430f1c22b6e890bc0025b32ae1f6464c73fdb9614816cb40a8d38b40c6a3e9e7b8c64eda90d53fb9a4a6948abec17dad496f30b
-  languageName: node
-  linkType: hard
-
-"cose-base@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "cose-base@npm:2.2.0"
-  dependencies:
-    layout-base: ^2.0.0
-  checksum: 2e694f340bf216c71fc126d237578a4168e138720011d0b48c88bf9bfc7fd45f912eff2c603ef3d1307d6e3ce6f465ed382285a764a3a6620db590c5457d2557
   languageName: node
   linkType: hard
 
@@ -23687,39 +23635,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cytoscape-cose-bilkent@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "cytoscape-cose-bilkent@npm:4.1.0"
-  dependencies:
-    cose-base: ^1.0.0
-  peerDependencies:
-    cytoscape: ^3.2.0
-  checksum: bea6aa139e21bf4135b01b99f8778eed061e074d1a1689771597e8164a999d66f4075d46be584b0a88a5447f9321f38c90c8821df6a9322faaf5afebf4848d97
-  languageName: node
-  linkType: hard
-
-"cytoscape-fcose@npm:^2.1.0":
-  version: 2.2.0
-  resolution: "cytoscape-fcose@npm:2.2.0"
-  dependencies:
-    cose-base: ^2.2.0
-  peerDependencies:
-    cytoscape: ^3.2.0
-  checksum: 94ffe6f131f9c08c2a0a7a6ce1c6c5e523a395bf8d84eba6d4a5f85e23f33788ea3ff807540861a5f78a6914a27729e06a7e6f66784f4f28ea1c030acf500121
-  languageName: node
-  linkType: hard
-
-"cytoscape@npm:^3.23.0":
-  version: 3.25.0
-  resolution: "cytoscape@npm:3.25.0"
-  dependencies:
-    heap: ^0.2.6
-    lodash: ^4.17.21
-  checksum: 514ea396d90b16ffb6decff0ef1e790b9c35fbdfe3e842a56705d87e5d0a0ed78c94a5e7b66a93596245473868c46d4396886d940688e73a4d418701ac5caa34
-  languageName: node
-  linkType: hard
-
-"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:2.5.0 - 3, d3-array@npm:3, d3-array@npm:^3.1.6, d3-array@npm:^3.2.0":
+"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:^3.1.6":
   version: 3.2.4
   resolution: "d3-array@npm:3.2.4"
   dependencies:
@@ -23728,68 +23644,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-axis@npm:3":
-  version: 3.0.0
-  resolution: "d3-axis@npm:3.0.0"
-  checksum: 227ddaa6d4bad083539c1ec245e2228b4620cca941997a8a650cb0af239375dc20271993127eedac66f0543f331027aca09385e1e16eed023f93eac937cddf0b
-  languageName: node
-  linkType: hard
-
-"d3-brush@npm:3":
-  version: 3.0.0
-  resolution: "d3-brush@npm:3.0.0"
-  dependencies:
-    d3-dispatch: 1 - 3
-    d3-drag: 2 - 3
-    d3-interpolate: 1 - 3
-    d3-selection: 3
-    d3-transition: 3
-  checksum: 1d042167769a02ac76271c71e90376d7184206e489552b7022a8ec2860209fe269db55e0a3430f3dcbe13b6fec2ff65b1adeaccba3218991b38e022390df72e3
-  languageName: node
-  linkType: hard
-
-"d3-chord@npm:3":
-  version: 3.0.1
-  resolution: "d3-chord@npm:3.0.1"
-  dependencies:
-    d3-path: 1 - 3
-  checksum: ddf35d41675e0f8738600a8a2f05bf0858def413438c12cba357c5802ecc1014c80a658acbbee63cbad2a8c747912efb2358455d93e59906fe37469f1dc6b78b
-  languageName: node
-  linkType: hard
-
-"d3-color@npm:1 - 3, d3-color@npm:3":
+"d3-color@npm:1 - 3":
   version: 3.1.0
   resolution: "d3-color@npm:3.1.0"
   checksum: 4931fbfda5d7c4b5cfa283a13c91a954f86e3b69d75ce588d06cde6c3628cebfc3af2069ccf225e982e8987c612aa7948b3932163ce15eb3c11cd7c003f3ee3b
   languageName: node
   linkType: hard
 
-"d3-contour@npm:4":
-  version: 4.0.2
-  resolution: "d3-contour@npm:4.0.2"
-  dependencies:
-    d3-array: ^3.2.0
-  checksum: 56aa082c1acf62a45b61c8d29fdd307041785aa17d9a07de7d1d848633769887a33fb6823888afa383f31c460d0f21d24756593e84e334ddb92d774214d32f1b
-  languageName: node
-  linkType: hard
-
-"d3-delaunay@npm:6":
-  version: 6.0.4
-  resolution: "d3-delaunay@npm:6.0.4"
-  dependencies:
-    delaunator: 5
-  checksum: ce6d267d5ef21a8aeadfe4606329fc80a22ab6e7748d47bc220bcc396ee8be84b77a5473033954c5ac4aa522d265ddc45d4165d30fe4787dd60a15ea66b9bbb4
-  languageName: node
-  linkType: hard
-
-"d3-dispatch@npm:1 - 3, d3-dispatch@npm:3":
+"d3-dispatch@npm:1 - 3":
   version: 3.0.1
   resolution: "d3-dispatch@npm:3.0.1"
   checksum: fdfd4a230f46463e28e5b22a45dd76d03be9345b605e1b5dc7d18bd7ebf504e6c00ae123fd6d03e23d9e2711e01f0e14ea89cd0632545b9f0c00b924ba4be223
   languageName: node
   linkType: hard
 
-"d3-drag@npm:2 - 3, d3-drag@npm:3":
+"d3-drag@npm:2 - 3":
   version: 3.0.0
   resolution: "d3-drag@npm:3.0.0"
   dependencies:
@@ -23799,44 +23668,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-dsv@npm:1 - 3, d3-dsv@npm:3":
-  version: 3.0.1
-  resolution: "d3-dsv@npm:3.0.1"
-  dependencies:
-    commander: 7
-    iconv-lite: 0.6
-    rw: 1
-  bin:
-    csv2json: bin/dsv2json.js
-    csv2tsv: bin/dsv2dsv.js
-    dsv2dsv: bin/dsv2dsv.js
-    dsv2json: bin/dsv2json.js
-    json2csv: bin/json2dsv.js
-    json2dsv: bin/json2dsv.js
-    json2tsv: bin/json2dsv.js
-    tsv2csv: bin/dsv2dsv.js
-    tsv2json: bin/dsv2json.js
-  checksum: 5fc0723647269d5dccd181d74f2265920ab368a2868b0b4f55ffa2fecdfb7814390ea28622cd61ee5d9594ab262879509059544e9f815c54fe76fbfb4ffa4c8a
-  languageName: node
-  linkType: hard
-
-"d3-ease@npm:1 - 3, d3-ease@npm:3, d3-ease@npm:^3.0.1":
+"d3-ease@npm:1 - 3, d3-ease@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-ease@npm:3.0.1"
   checksum: 06e2ee5326d1e3545eab4e2c0f84046a123dcd3b612e68858219aa034da1160333d9ce3da20a1d3486d98cb5c2a06f7d233eee1bc19ce42d1533458bd85dedcd
   languageName: node
   linkType: hard
 
-"d3-fetch@npm:3":
-  version: 3.0.1
-  resolution: "d3-fetch@npm:3.0.1"
-  dependencies:
-    d3-dsv: 1 - 3
-  checksum: 382dcea06549ef82c8d0b719e5dc1d96286352579e3b51b20f71437f5800323315b09cf7dcfd4e1f60a41e1204deb01758470cea257d2285a7abd9dcec806984
-  languageName: node
-  linkType: hard
-
-"d3-force@npm:3, d3-force@npm:^3.0.0":
+"d3-force@npm:^3.0.0":
   version: 3.0.0
   resolution: "d3-force@npm:3.0.0"
   dependencies:
@@ -23847,30 +23686,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-format@npm:1 - 3, d3-format@npm:3":
+"d3-format@npm:1 - 3":
   version: 3.1.0
   resolution: "d3-format@npm:3.1.0"
   checksum: f345ec3b8ad3cab19bff5dead395bd9f5590628eb97a389b1dd89f0b204c7c4fc1d9520f13231c2c7cf14b7c9a8cf10f8ef15bde2befbab41454a569bd706ca2
   languageName: node
   linkType: hard
 
-"d3-geo@npm:3":
-  version: 3.1.0
-  resolution: "d3-geo@npm:3.1.0"
-  dependencies:
-    d3-array: 2.5.0 - 3
-  checksum: adf82b0c105c0c5951ae0a833d4dfc479a563791ad7938579fa14e1cffd623b469d8aa7a37dc413a327fb6ac56880f3da3f6c43d4abe3c923972dd98f34f37d1
-  languageName: node
-  linkType: hard
-
-"d3-hierarchy@npm:3":
-  version: 3.1.2
-  resolution: "d3-hierarchy@npm:3.1.2"
-  checksum: 0fd946a8c5fd4686d43d3e11bbfc2037a145fda29d2261ccd0e36f70b66af6d7638e2c0c7112124d63fc3d3127197a00a6aecf676bd5bd392a94d7235a214263
-  languageName: node
-  linkType: hard
-
-"d3-interpolate@npm:1 - 3, d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:3, d3-interpolate@npm:^3.0.1":
+"d3-interpolate@npm:1 - 3, d3-interpolate@npm:1.2.0 - 3, d3-interpolate@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-interpolate@npm:3.0.1"
   dependencies:
@@ -23879,45 +23702,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-path@npm:1 - 3, d3-path@npm:3, d3-path@npm:^3.1.0":
+"d3-path@npm:^3.1.0":
   version: 3.1.0
   resolution: "d3-path@npm:3.1.0"
   checksum: 2306f1bd9191e1eac895ec13e3064f732a85f243d6e627d242a313f9777756838a2215ea11562f0c7630c7c3b16a19ec1fe0948b1c82f3317fac55882f6ee5d8
   languageName: node
   linkType: hard
 
-"d3-polygon@npm:3":
-  version: 3.0.1
-  resolution: "d3-polygon@npm:3.0.1"
-  checksum: 0b85c532517895544683849768a2c377cee3801ef8ccf3fa9693c8871dd21a0c1a2a0fc75ff54192f0ba2c562b0da2bc27f5bf959dfafc7fa23573b574865d2c
-  languageName: node
-  linkType: hard
-
-"d3-quadtree@npm:1 - 3, d3-quadtree@npm:3":
+"d3-quadtree@npm:1 - 3":
   version: 3.0.1
   resolution: "d3-quadtree@npm:3.0.1"
   checksum: 5469d462763811475f34a7294d984f3eb100515b0585ca5b249656f6b1a6e99b20056a2d2e463cc9944b888896d2b1d07859c50f9c0cf23438df9cd2e3146066
   languageName: node
   linkType: hard
 
-"d3-random@npm:3":
-  version: 3.0.1
-  resolution: "d3-random@npm:3.0.1"
-  checksum: a70ad8d1cabe399ebeb2e482703121ac8946a3b336830b518da6848b9fdd48a111990fc041dc716f16885a72176ffa2898f2a250ca3d363ecdba5ef92b18e131
-  languageName: node
-  linkType: hard
-
-"d3-scale-chromatic@npm:3":
-  version: 3.0.0
-  resolution: "d3-scale-chromatic@npm:3.0.0"
-  dependencies:
-    d3-color: 1 - 3
-    d3-interpolate: 1 - 3
-  checksum: a8ce4cb0267a17b28ebbb929f5e3071d985908a9c13b6fcaa2a198e1e018f275804d691c5794b970df0049725b7944f32297b31603d235af6414004f0c7f82c0
-  languageName: node
-  linkType: hard
-
-"d3-scale@npm:4, d3-scale@npm:^4.0.2":
+"d3-scale@npm:^4.0.2":
   version: 4.0.2
   resolution: "d3-scale@npm:4.0.2"
   dependencies:
@@ -23937,7 +23736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-shape@npm:3, d3-shape@npm:^3.0.0, d3-shape@npm:^3.1.0":
+"d3-shape@npm:^3.0.0, d3-shape@npm:^3.1.0":
   version: 3.2.0
   resolution: "d3-shape@npm:3.2.0"
   dependencies:
@@ -23946,7 +23745,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-time-format@npm:2 - 4, d3-time-format@npm:4":
+"d3-time-format@npm:2 - 4":
   version: 4.1.0
   resolution: "d3-time-format@npm:4.1.0"
   dependencies:
@@ -23955,7 +23754,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-time@npm:1 - 3, d3-time@npm:2.1.1 - 3, d3-time@npm:3, d3-time@npm:^3.0.0":
+"d3-time@npm:1 - 3, d3-time@npm:2.1.1 - 3, d3-time@npm:^3.0.0":
   version: 3.1.0
   resolution: "d3-time@npm:3.1.0"
   dependencies:
@@ -23964,14 +23763,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-timer@npm:1 - 3, d3-timer@npm:3, d3-timer@npm:^3.0.1":
+"d3-timer@npm:1 - 3, d3-timer@npm:^3.0.1":
   version: 3.0.1
   resolution: "d3-timer@npm:3.0.1"
   checksum: 1cfddf86d7bca22f73f2c427f52dfa35c49f50d64e187eb788dcad6e927625c636aa18ae4edd44d084eb9d1f81d8ca4ec305dae7f733c15846a824575b789d73
   languageName: node
   linkType: hard
 
-"d3-transition@npm:2 - 3, d3-transition@npm:3":
+"d3-transition@npm:2 - 3":
   version: 3.0.1
   resolution: "d3-transition@npm:3.0.1"
   dependencies:
@@ -23986,7 +23785,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-zoom@npm:3, d3-zoom@npm:^3.0.0":
+"d3-zoom@npm:^3.0.0":
   version: 3.0.0
   resolution: "d3-zoom@npm:3.0.0"
   dependencies:
@@ -23996,54 +23795,6 @@ __metadata:
     d3-selection: 2 - 3
     d3-transition: 2 - 3
   checksum: 8056e3527281cfd1ccbcbc458408f86973b0583e9dac00e51204026d1d36803ca437f970b5736f02fafed9f2b78f145f72a5dbc66397e02d4d95d4c594b8ff54
-  languageName: node
-  linkType: hard
-
-"d3@npm:^7.4.0, d3@npm:^7.8.2":
-  version: 7.8.5
-  resolution: "d3@npm:7.8.5"
-  dependencies:
-    d3-array: 3
-    d3-axis: 3
-    d3-brush: 3
-    d3-chord: 3
-    d3-color: 3
-    d3-contour: 4
-    d3-delaunay: 6
-    d3-dispatch: 3
-    d3-drag: 3
-    d3-dsv: 3
-    d3-ease: 3
-    d3-fetch: 3
-    d3-force: 3
-    d3-format: 3
-    d3-geo: 3
-    d3-hierarchy: 3
-    d3-interpolate: 3
-    d3-path: 3
-    d3-polygon: 3
-    d3-quadtree: 3
-    d3-random: 3
-    d3-scale: 4
-    d3-scale-chromatic: 3
-    d3-selection: 3
-    d3-shape: 3
-    d3-time: 3
-    d3-time-format: 4
-    d3-timer: 3
-    d3-transition: 3
-    d3-zoom: 3
-  checksum: e407e79731f74d946a5eb8dec2f037b5a4ad33c294409b1d3531fdf7094de48adfe364974cb37e2396bdb81e23149d56d0ede716c004d6aebb52b3cc114cd15c
-  languageName: node
-  linkType: hard
-
-"dagre-d3-es@npm:7.0.9":
-  version: 7.0.9
-  resolution: "dagre-d3-es@npm:7.0.9"
-  dependencies:
-    d3: ^7.8.2
-    lodash-es: ^4.17.21
-  checksum: 5f24ad9558e84066e70cfa6979320d93079979ac8b0a3b033e5330742aeeba74e205f66794ab6e0a82354b061a4e29c10a291590d7b2cf82b5780fab5443f5ba
   languageName: node
   linkType: hard
 
@@ -24130,7 +23881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.10.4, dayjs@npm:^1.11.7":
+"dayjs@npm:^1.10.4":
   version: 1.11.9
   resolution: "dayjs@npm:1.11.9"
   checksum: a4844d83dc87f921348bb9b1b93af851c51e6f71fa259604809cfe1b49d1230e6b0212dab44d1cb01994c096ad3a77ea1cf18fa55154da6efcc9d3610526ac38
@@ -24405,15 +24156,6 @@ __metadata:
     rimraf: ^3.0.2
     slash: ^4.0.0
   checksum: 33e5077f18b5dfbe81971d1f8a2cd8bf676dd5ede491bab85ec17a4a1d59001bd3ec47fd38e9a4ae01a3c98c07b98c7b3dc56190b86d88926798802d7858d827
-  languageName: node
-  linkType: hard
-
-"delaunator@npm:5":
-  version: 5.0.0
-  resolution: "delaunator@npm:5.0.0"
-  dependencies:
-    robust-predicates: ^3.0.0
-  checksum: d6764188442b7f7c6bcacebd96edc00e35f542a96f1af3ef600e586bfb9849a3682c489c0ab423440c90bc4c7cac77f28761babff76fa29e193e1cf50a95b860
   languageName: node
   linkType: hard
 
@@ -24815,13 +24557,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:2.4.3":
-  version: 2.4.3
-  resolution: "dompurify@npm:2.4.3"
-  checksum: b440981f2a38cada2085759cc3d1e2f94571afc34343d011a8a6aa1ad91ae6abf651adbfa4994b0e2283f0ce81f7891cdb04b67d0b234c8d190cb70e9691f026
-  languageName: node
-  linkType: hard
-
 "dompurify@npm:=3.0.2":
   version: 3.0.2
   resolution: "dompurify@npm:3.0.2"
@@ -25028,13 +24763,6 @@ __metadata:
   version: 1.4.483
   resolution: "electron-to-chromium@npm:1.4.483"
   checksum: 2314b356b1a0cf2a4d74f20771112db0d014fab3fe8a8e55191448e21f2fca9d6410d7f029a8aaedb4a7ccce50c31c5d4f12973ac7b1fc38937b522de903f05c
-  languageName: node
-  linkType: hard
-
-"elkjs@npm:^0.8.2":
-  version: 0.8.2
-  resolution: "elkjs@npm:0.8.2"
-  checksum: ed615c485fa4ac1e858af509df24fdc9f61f2c6576df5f79f6a31c733fda69f235f53cd36af037aa9d2b8a935cb4f823fbd89d784b67f6e51be5100306ea1b39
   languageName: node
   linkType: hard
 
@@ -26399,17 +26127,16 @@ __metadata:
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
     "@internal/plugin-catalog-customized": "workspace:^"
-    "@kie-tools-core/editor": ^0.30.0
-    "@kie-tools-core/keyboard-shortcuts": ^0.30.0
-    "@kie-tools/emscripten-fs": ^0.0.2
-    "@kie-tools/serverless-workflow-combined-editor": ^0.30.0
-    "@kie-tools/serverless-workflow-diagram-editor-assets": ^0.30.0
-    "@kie-tools/serverless-workflow-diagram-editor-envelope": ^0.30.0
-    "@kie-tools/serverless-workflow-jq-expressions": ^0.30.0
-    "@kie-tools/serverless-workflow-language-service": ^0.30.0
-    "@kie-tools/serverless-workflow-service-catalog": ^0.30.0
-    "@kie-tools/serverless-workflow-text-editor": ^0.30.0
-    "@kie-tools/text-editor": ^0.30.0
+    "@kie-tools-core/editor": ^0.31.0
+    "@kie-tools-core/keyboard-shortcuts": ^0.31.0
+    "@kie-tools/serverless-workflow-combined-editor": ^0.31.0
+    "@kie-tools/serverless-workflow-diagram-editor-assets": ^0.31.0
+    "@kie-tools/serverless-workflow-diagram-editor-envelope": ^0.31.0
+    "@kie-tools/serverless-workflow-jq-expressions": ^0.31.0
+    "@kie-tools/serverless-workflow-language-service": ^0.31.0
+    "@kie-tools/serverless-workflow-service-catalog": ^0.31.0
+    "@kie-tools/serverless-workflow-text-editor": ^0.31.0
+    "@kie-tools/text-editor": ^0.31.0
     "@material-ui/core": ^4.12.2
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": 4.0.0-alpha.61
@@ -28941,13 +28668,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"heap@npm:^0.2.6":
-  version: 0.2.7
-  resolution: "heap@npm:0.2.7"
-  checksum: b0f3963a799e02173f994c452921a777f2b895b710119df999736bfed7477235c2860c423d9aea18a9f3b3d065cb1114d605c208cfcb8d0ac550f97ec5d28cb0
-  languageName: node
-  linkType: hard
-
 "helmet@npm:^6.0.0":
   version: 6.0.1
   resolution: "helmet@npm:6.0.1"
@@ -29357,7 +29077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6, iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
+"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -32300,13 +32020,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"khroma@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "khroma@npm:2.0.0"
-  checksum: 3be7ef681f41f6071464e21060731fa63e2915bcd0774b9f35e431aa664c0c0e0826825403360654935111d4309f6704e5dc27cd953614133dfbdee4c056c3a8
-  languageName: node
-  linkType: hard
-
 "kind-of@npm:^3.0.2, kind-of@npm:^3.0.3, kind-of@npm:^3.2.0":
   version: 3.2.2
   resolution: "kind-of@npm:3.2.2"
@@ -32466,20 +32179,6 @@ __metadata:
     picocolors: ^1.0.0
     shell-quote: ^1.7.3
   checksum: 48e4230643e8fdb5c14c11314706d58d9f3fbafe2606be3d6e37da1918ad8bfe39dd87875c726a1b59b9f4da99d87ec3e36d4c528464f0b820f9e91e5cb1c02d
-  languageName: node
-  linkType: hard
-
-"layout-base@npm:^1.0.0":
-  version: 1.0.2
-  resolution: "layout-base@npm:1.0.2"
-  checksum: e4c312765ac4fa13b49c940e701461309c7a0aa07f784f81d31f626b945dced90a8abf83222388a5af16b7074271f745501a90ef5a3af676abb2e7eb16d55b2e
-  languageName: node
-  linkType: hard
-
-"layout-base@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "layout-base@npm:2.0.1"
-  checksum: ef93baf044f67c3680f4f3a6d628bf4c7faba0f70f3e0abb16e4811bed087045208560347ca749e123d169cbf872505ad84e11fb21b0be925997227e042c7f43
   languageName: node
   linkType: hard
 
@@ -33816,30 +33515,6 @@ __metadata:
   version: 1.4.1
   resolution: "merge2@npm:1.4.1"
   checksum: 7268db63ed5169466540b6fb947aec313200bcf6d40c5ab722c22e242f651994619bcd85601602972d3c85bd2cc45a358a4c61937e9f11a061919a1da569b0c2
-  languageName: node
-  linkType: hard
-
-"mermaid@npm:^9.1.7":
-  version: 9.4.3
-  resolution: "mermaid@npm:9.4.3"
-  dependencies:
-    "@braintree/sanitize-url": ^6.0.0
-    cytoscape: ^3.23.0
-    cytoscape-cose-bilkent: ^4.1.0
-    cytoscape-fcose: ^2.1.0
-    d3: ^7.4.0
-    dagre-d3-es: 7.0.9
-    dayjs: ^1.11.7
-    dompurify: 2.4.3
-    elkjs: ^0.8.2
-    khroma: ^2.0.0
-    lodash-es: ^4.17.21
-    non-layered-tidy-tree-layout: ^2.0.2
-    stylis: ^4.1.2
-    ts-dedent: ^2.2.0
-    uuid: ^9.0.0
-    web-worker: ^1.2.0
-  checksum: 9e29177f289cc268ea4a2ca7a45ec0ca06f678007eae15a7cd54c682148a71367e861d2c9c0afa9f7474da154d9920524e59722186820e9bc0d79989305a7064
   languageName: node
   linkType: hard
 
@@ -35326,13 +35001,6 @@ __metadata:
   bin:
     nodemon: bin/nodemon.js
   checksum: 9c987e139748f5b5c480c6c9080bdc97304ee7d29172b7b3da1a7db590b1323ad57b96346304e9b522b0e445c336dc393ccd3f9f45c73b20d476d2347890dcd0
-  languageName: node
-  linkType: hard
-
-"non-layered-tidy-tree-layout@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "non-layered-tidy-tree-layout@npm:2.0.2"
-  checksum: 5defc1c459001b22816a4fb8b86259b9b76e7f3090df576122a41c760133ab2061934cacd6f176c98c2ae4fee3879b97941e8897e8882985cbfe830f155cd158
   languageName: node
   linkType: hard
 
@@ -40210,13 +39878,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"robust-predicates@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "robust-predicates@npm:3.0.2"
-  checksum: 36854c1321548ceca96d36ad9d6e0a5a512986029ec6929ad6ed3ec1612c22cc8b46cc72d2c5674af42e8074a119d793f6f0ea3a5b51373e3ab926c64b172d7a
-  languageName: node
-  linkType: hard
-
 "rollup-plugin-dts@npm:^4.0.1":
   version: 4.2.3
   resolution: "rollup-plugin-dts@npm:4.2.3"
@@ -40433,13 +40094,6 @@ __metadata:
   version: 0.1.1
   resolution: "run-script-webpack-plugin@npm:0.1.1"
   checksum: 7c2ca7310438e7e84d1b5b43d040bc1dc8d0c731bac0312605b68fac321e41aa268cd5545c1afce9d65165f5ef6dc8a822e58fbd154c95015fb9c960946e605e
-  languageName: node
-  linkType: hard
-
-"rw@npm:1":
-  version: 1.3.3
-  resolution: "rw@npm:1.3.3"
-  checksum: c20d82421f5a71c86a13f76121b751553a99cd4a70ea27db86f9b23f33db941f3f06019c30f60d50c356d0bd674c8e74764ac146ea55e217c091bde6fba82aa3
   languageName: node
   linkType: hard
 
@@ -42343,7 +41997,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylis@npm:^4.0.6, stylis@npm:^4.1.2":
+"stylis@npm:^4.0.6":
   version: 4.3.0
   resolution: "stylis@npm:4.3.0"
   checksum: 6120de3f03eacf3b5adc8e7919c4cca991089156a6badc5248752a3088106afaaf74996211a6817a7760ebeadca09004048eea31875bd8d4df51386365c50025
@@ -42444,7 +42098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"svg-pan-zoom@npm:^3.6.0, svg-pan-zoom@npm:^3.6.1":
+"svg-pan-zoom@npm:^3.6.0":
   version: 3.6.1
   resolution: "svg-pan-zoom@npm:3.6.1"
   checksum: 500b99378d321315e1668067ef6a73af3f61f9adfab75a575b21d2d216cb446def61d60ad12265203463cca9bef56b090f00e48118fa9b7f0ffa1c691e4c1621
@@ -43256,13 +42910,6 @@ __metadata:
   version: 1.2.0
   resolution: "ts-algebra@npm:1.2.0"
   checksum: 471d3a049dbceadf2355f980e4d0a4cba413b50e66f0c8fb5eece876c238f7d2a270e1c85aa9ebd04349ae70335715f8e6d87338fd8cf755d12e285e884b3d91
-  languageName: node
-  linkType: hard
-
-"ts-dedent@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "ts-dedent@npm:2.2.0"
-  checksum: 93ed8f7878b6d5ed3c08d99b740010eede6bccfe64bce61c5a4da06a2c17d6ddbb80a8c49c2d15251de7594a4f93ffa21dd10e7be75ef66a4dc9951b4a94e2af
   languageName: node
   linkType: hard
 
@@ -44731,13 +44378,6 @@ __metadata:
   version: 3.3.2
   resolution: "web-vitals@npm:3.3.2"
   checksum: 76e832341d213d5de6f6767fef7f8c02163ab94326912a6355bbf6e194d930196ca5094b0d0d493b4c194acaaabcc96f0adc87870b913a7b9a51b225807abccf
-  languageName: node
-  linkType: hard
-
-"web-worker@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "web-worker@npm:1.2.0"
-  checksum: 1bb28348ddcf9b2e7c62c5fd02e49a84098795856cd905456de957271bba288e9618941cf69d8960f0a7ae81f5dfb74b427c0634be47ec69e3e955c4ec5213be
   languageName: node
   linkType: hard
 
