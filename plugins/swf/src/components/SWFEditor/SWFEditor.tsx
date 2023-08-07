@@ -225,7 +225,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
       uriPath: embeddedFile.path!,
     });
 
-    const notifications: Notification[] = lsDiagnostics.map(
+    return lsDiagnostics.map(
       (lsDiagnostic: Diagnostic) =>
         ({
           path: '', // empty to not group them by path, as we're only validating one file.
@@ -245,8 +245,6 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
           },
         } as Notification),
     );
-
-    return notifications;
   }, [editor, embeddedFile, languageService]);
 
   const getContent = useCallback(async () => editor?.getContent(), [editor]);
@@ -284,7 +282,6 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
 
     return new SwfCombinedEditorChannelApiImpl(
       defaultApiImpl,
-      undefined,
       undefined,
       swfLanguageServiceChannelApiImpl,
       swfPreviewOptionsChannelApiImpl,

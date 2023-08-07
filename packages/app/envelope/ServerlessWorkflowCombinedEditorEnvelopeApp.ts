@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { NoOpKeyboardShortcutsService } from '@kie-tools-core/keyboard-shortcuts/dist/envelope';
-import {
-  ServerlessWorkflowCombinedEditorApi,
-  ServerlessWorkflowCombinedEditorFactory,
-} from '@kie-tools/serverless-workflow-combined-editor/dist/editor';
+import { ServerlessWorkflowCombinedEditorFactory } from '@kie-tools/serverless-workflow-combined-editor/dist/editor';
 import { initCustom } from '@kie-tools-core/editor/dist/envelope';
 import { ServerlessWorkflowCombinedEditorEnvelopeApi } from '@kie-tools/serverless-workflow-combined-editor/dist/api/ServerlessWorkflowCombinedEditorEnvelopeApi';
-import { ServerlessWorkflowCombinedEditorChannelApi } from '@kie-tools/serverless-workflow-combined-editor/dist/api';
+import {
+  ServerlessWorkflowCombinedEditorApi,
+  ServerlessWorkflowCombinedEditorChannelApi,
+} from '@kie-tools/serverless-workflow-combined-editor/dist/api';
 import { ServerlessWorkflowCombinedEditorEnvelopeApiImpl } from '@kie-tools/serverless-workflow-combined-editor/dist';
 
 initCustom<
