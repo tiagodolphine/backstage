@@ -39,7 +39,8 @@
   },
   "dependencies": {
     "@backstage/plugin-permission-common": "workspace:^",
-    "@backstage/types": "workspace:^"
+    "@backstage/types": "workspace:^",
+    "json-schema": "^0.4.0"
   },
   "devDependencies": {
     "@backstage/cli": "workspace:^"

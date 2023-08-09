@@ -92,7 +92,7 @@ const DEFAULT_SWF_ITEM_FOR_AUTHORING: SwfItem = {
   id: to_be_entered,
   name: to_be_entered,
   description: to_be_entered,
-  definition: empty_definition,
+  definition: JSON.stringify(empty_definition, null, 2),
 };
 
 type SWFEditorProps = {

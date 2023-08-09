@@ -2,8 +2,8 @@
   "id": "quarkus-backend-workflow-extended",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "[SWF] GPT - Create a Quarkus Backend application with a CI pipeline",
-  "description": "[SWF] Create a starter Quarkus Backend application with a CI pipeline",
+  "name": "[WF] Create a Quarkus Backend application with a CI pipeline - Extended",
+  "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline - Extended",
   "dataInputSchema": "schemas/quarkus-backend-workflow-extended__schema__quarkus-backend-workflow-extended.json",
   "functions": [
     {
@@ -40,7 +40,7 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/quarkus-backend-template/skeleton",
-              "targetPath": "source_code/",
+              "targetPath": "source/",
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -82,7 +82,7 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-skeletons/github-actions-skeleton/",
-              "targetPath": "source_ci/",
+              "targetPath": "source/",
               "copyWithoutTemplating": ["\".github/workflows/\""],
               "values": {
                 "githubOrg": ".githubOrg",
@@ -122,7 +122,7 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
-              "targetPath": "source_catalog/",
+              "targetPath": "source/",
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -163,6 +163,7 @@
           "functionRef": {
             "refName": "runActionPublishGithub",
             "arguments": {
+              "sourcePath": "source/",
               "allowedHosts": ["\"github.com\""],
               "description": "Workflow Action",
               "repoUrl": "\"github.com?owner=\" + .githubOrg + \"&repo=\" + .repoName",
@@ -229,7 +230,7 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source_code/"] }
+            "arguments": { "files": ["source/"] }
           }
         }
       ]
@@ -243,7 +244,7 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source_ci/"] }
+            "arguments": { "files": ["source/"] }
           }
         }
       ]
@@ -257,7 +258,7 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source_catalog/"] }
+            "arguments": { "files": ["source/"] }
           }
         }
       ]
