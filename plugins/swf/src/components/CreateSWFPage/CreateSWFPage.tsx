@@ -125,16 +125,14 @@ export const CreateSWFPage = () => {
           <Grid item>
             {loading && <Progress />}
             <InfoCard
-              title={
-                <>
-                  <Typography variant="h5">
-                    Author - Example of how we could support authoring
-                  </Typography>
+              action={
+                swfEditor?.isReady && (
                   <Button
                     color="primary"
                     type="submit"
                     variant="contained"
                     disabled={loading}
+                    style={{ marginTop: 8, marginRight: 8 }}
                     onClick={() => {
                       swfEditor?.getContent().then(content => {
                         if (content) {
@@ -143,12 +141,17 @@ export const CreateSWFPage = () => {
                       });
                     }}
                   >
-                    Save...
+                    Save
                   </Button>
-                </>
+                )
+              }
+              title={
+                <Typography variant="h5">
+                  Author - Example of how we could support authoring
+                </Typography>
               }
             >
-              <div style={{ height: '500px', padding: '10px' }}>
+              <div style={{ height: '600px', padding: '10px' }}>
                 <SWFEditor
                   ref={swfEditorRef}
                   kind={EditorViewKind.AUTHORING}

@@ -17,6 +17,7 @@ import React, {
   ForwardRefRenderFunction,
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useState,
@@ -69,6 +70,7 @@ import {
 export enum EditorViewKind {
   AUTHORING = 'AUTHORING',
   DIAGRAM_VIEWER = 'DIAGRAM_VIEWER',
+  EXTENDED_DIAGRAM_VIEWER = 'EXTENDED_DIAGRAM_VIEWER',
   RUNTIME = 'RUNTIME',
 }
 
@@ -76,6 +78,7 @@ export interface SWFEditorRef {
   validate: () => Promise<Notification[]>;
   getContent: () => Promise<string | undefined>;
   swfItem: SwfItem | undefined;
+  isReady: boolean;
 }
 
 const EDITOR_CONTEXT_PATH = '/swf';
@@ -97,6 +100,7 @@ type SWFEditorProps = {
 } & (
   | { kind: EditorViewKind.AUTHORING }
   | { kind: EditorViewKind.DIAGRAM_VIEWER }
+  | { kind: EditorViewKind.EXTENDED_DIAGRAM_VIEWER }
   | { kind: EditorViewKind.RUNTIME; processInstance: ProcessInstance }
 );
 
@@ -112,7 +116,8 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
   const [catalogServices, setCatalogServices] = useState<
     SwfServiceCatalogService[]
   >([]);
-  const [isReadyToRender, setReadyToRender] = useState(false);
+  const [canRender, setCanRender] = useState(false);
+  const [isReady, setReady] = useState(false);
 
   const currentProcessInstance = useMemo(() => {
     if (kind !== EditorViewKind.RUNTIME) {
@@ -260,9 +265,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
       LOCALE,
       {
         kogitoEditor_ready: () => {
-          if (currentProcessInstance) {
-            colorNodes(currentProcessInstance);
-          }
+          setReady(true);
         },
       },
     );
@@ -277,6 +280,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
           kind === EditorViewKind.DIAGRAM_VIEWER
             ? 'diagram'
             : 'full',
+        defaultWidth: kind === EditorViewKind.AUTHORING ? '50%' : '100%',
       },
     );
 
@@ -286,14 +290,14 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
       swfLanguageServiceChannelApiImpl,
       swfPreviewOptionsChannelApiImpl,
     );
-  }, [
-    embeddedFile,
-    languageService,
-    stateControl,
-    kind,
-    currentProcessInstance,
-    colorNodes,
-  ]);
+  }, [embeddedFile, languageService, stateControl, kind]);
+
+  useEffect(() => {
+    if (!isReady || !currentProcessInstance) {
+      return;
+    }
+    colorNodes(currentProcessInstance);
+  }, [colorNodes, currentProcessInstance, isReady]);
 
   useImperativeHandle(
     forwardedRef,
@@ -302,15 +306,16 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
         validate,
         getContent,
         swfItem: swfItemPromise.data,
+        isReady,
       };
     },
-    [validate, getContent, swfItemPromise],
+    [validate, getContent, swfItemPromise.data, isReady],
   );
 
   useCancelableEffect(
     useCallback(
       ({ canceled }) => {
-        setReadyToRender(false);
+        setCanRender(false);
 
         const promise = swfId
           ? swfApi.getSwf(swfId)
@@ -331,7 +336,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
               fileName: DEFAULT_FILENAME,
             });
 
-            setReadyToRender(true);
+            setCanRender(true);
           })
           .catch(e => {
             setSwfItemPromise({ error: e });
@@ -370,7 +375,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
     <PromiseStateWrapper
       promise={swfItemPromise}
       resolved={swfItem =>
-        isReadyToRender &&
+        canRender &&
         embeddedFile && (
           <EmbeddedEditor
             key={currentProcessInstance?.id ?? swfItem.id}
@@ -381,6 +386,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
             customChannelApiImpl={customEditorApi}
             stateControl={stateControl}
             locale={LOCALE}
+            isReady={isReady}
           />
         )
       }

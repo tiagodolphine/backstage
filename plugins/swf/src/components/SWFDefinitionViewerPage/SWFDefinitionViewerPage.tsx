@@ -63,10 +63,10 @@ export const SWFDefinitionViewerPage = () => {
           <Grid item>
             {loading && <Progress />}
             <InfoCard title={name || ''}>
-              <div style={{ height: '500px' }}>
+              <div style={{ height: '600px' }}>
                 <SWFEditor
                   ref={swfEditorRef}
-                  kind={EditorViewKind.DIAGRAM_VIEWER}
+                  kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
                   swfId={swfId}
                 />
               </div>
