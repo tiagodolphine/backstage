@@ -97,6 +97,27 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
       {manifest && (
         <InfoCard
           title={title ?? manifest.title}
+          action={
+            manifest.type === workflow_type &&
+            manifest.name && (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginTop: 8, marginRight: 8 }}
+                  onClick={_ => setOpen(true)}
+                >
+                  View {workflow_title}
+                </Button>
+                <SWFDialog
+                  swfId={manifest.name}
+                  title={manifest.title}
+                  open={open}
+                  close={() => setOpen(false)}
+                />
+              </>
+            )
+          }
           subheader={
             <MarkdownContent
               className={styles.markdown}
@@ -106,23 +127,6 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
           noPadding
           titleTypographyProps={{ component: 'h2' }}
         >
-          {manifest.type === workflow_type && manifest.name && (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={_ => setOpen(true)}
-              >
-                View {workflow_title}
-              </Button>
-              <SWFDialog
-                swfId={manifest.name}
-                title={manifest.title}
-                open={open}
-                close={() => setOpen(false)}
-              />
-            </>
-          )}
           <Stepper manifest={manifest} templateName={templateName} {...props} />
         </InfoCard>
       )}
