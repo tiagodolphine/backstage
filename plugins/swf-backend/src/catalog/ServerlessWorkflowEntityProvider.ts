@@ -119,18 +119,16 @@ export class ServerlessWorkflowEntityProvider
 
     this.logger.info('Retrieving Serverless Workflow definitions');
 
+    const items: SwfItem[] = await fetch(`${this.swfPluginUrl}/items`)
+      .then(res => res.json())
+      .then(res => res.items);
+
     // Load OpenAPI definitions
     const oaResponse = await this.reader.readUrl(
       `${this.kogitoServiceUrl}/q/openapi`,
     );
     const oaBuffer = await oaResponse.buffer();
-
     const oaData = YAML.parse(oaBuffer.toString());
-
-    const items: SwfItem[] = await fetch(`${this.swfPluginUrl}/items`)
-      .then(res => res.json())
-      .then(res => res.items);
-
     const entities: Entity[] = items ? this.swfToEntities(items, oaData) : [];
 
     await this.connection.applyMutation({
