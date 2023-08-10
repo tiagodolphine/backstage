@@ -53,6 +53,7 @@ export default async function createPlugin(
   const swfProvider = new ServerlessWorkflowEntityProvider({
     reader: env.reader,
     kogitoServiceUrl: `${kogitoBaseUrl}:${kogitoPort}`,
+    swfPluginUrl: await env.discovery.getBaseUrl('swf'),
     eventBroker: env.eventBroker,
     scheduler: env.scheduler,
     logger: env.logger,

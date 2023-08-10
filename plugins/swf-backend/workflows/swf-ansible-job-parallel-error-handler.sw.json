@@ -2,8 +2,8 @@
   "id": "swf-ansible-job-parallel-error-handler",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "[SWF] Ansible Job - Parallel - Error Handler",
-  "description": "[SWF] Launch an Ansible Job within Ansible Automation Platform",
+  "name": "[WF] Ansible Job - Parallel - Error Handler",
+  "description": "[WF] Launch an Ansible Job within Ansible Automation Platform",
   "dataInputSchema": "schemas/swf-ansible-job-parallel-error-handler__schema__swf-ansible-job-parallel-error-handler.json",
   "errors": [
     {

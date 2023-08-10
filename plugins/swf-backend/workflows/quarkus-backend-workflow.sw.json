@@ -2,8 +2,8 @@
   "id": "quarkus-backend-workflow",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "[SWF] GPT - Create a Quarkus Backend application with a CI pipeline",
-  "description": "[SWF] Create a starter Quarkus Backend application with a CI pipeline",
+  "name": "[WF] Create a Quarkus Backend application with a CI pipeline",
+  "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline",
   "dataInputSchema": "schemas/quarkus-backend-workflow__schema__quarkus-backend-workflow.json",
   "functions": [
     {

@@ -27,7 +27,6 @@ import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
 import { Config } from '@backstage/config';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import YAML from 'yaml';
 import { resolve } from 'path';
 import { WorkflowService } from './WorkflowService';
 import { OpenApiService } from './OpenApiService';
@@ -120,18 +119,27 @@ function setupInternalRoutes(
 ) {
   router.get('/items', async (_, res) => {
     const svcResponse = await executeWithRetry(() =>
-      fetch(`${kogitoBaseUrl}:${kogitoPort}/q/openapi`),
+      fetch(`${kogitoBaseUrl}:${kogitoPort}/management/processes`),
     );
-    const yaml = YAML.parse(await svcResponse.text());
-    const items: SwfItem[] = yaml.tags?.map((swf: SwfItem) => {
-      const swfItem: SwfItem = {
-        id: swf.name,
-        name: swf.name,
-        description: swf.description,
-        definition: '',
-      };
-      return swfItem;
-    });
+    const ids = await svcResponse.json();
+    const items: SwfItem[] = await Promise.all(
+      ids?.map(
+        async (swfId: String) =>
+          await fetch(
+            `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}`,
+          )
+            .then((swfResponse: Response) => swfResponse.json())
+            .then((swf: SwfItem) => {
+              const swfItem: SwfItem = {
+                id: swf.id,
+                name: swf.name,
+                description: swf.name,
+                definition: '',
+              };
+              return swfItem;
+            }),
+      ),
+    );
     const result: SwfListResult = {
       items: items ? items : [],
       limit: 0,

@@ -40,6 +40,8 @@ export class ServerlessWorkflowEntityProvider
   private readonly reader: UrlReader;
   private readonly kogitoServiceUrl: string;
 
+  private readonly swfPluginUrl: string;
+
   private connection: EntityProviderConnection | undefined;
   private readonly scheduler: PluginTaskScheduler;
   private readonly logger: Logger;
@@ -49,6 +51,7 @@ export class ServerlessWorkflowEntityProvider
   constructor(opts: {
     reader: UrlReader;
     kogitoServiceUrl: string;
+    swfPluginUrl: string;
     eventBroker: EventBroker;
     scheduler: PluginTaskScheduler;
     logger: Logger;
@@ -58,6 +61,7 @@ export class ServerlessWorkflowEntityProvider
     const {
       reader,
       kogitoServiceUrl,
+      swfPluginUrl,
       eventBroker,
       scheduler,
       owner,
@@ -66,6 +70,7 @@ export class ServerlessWorkflowEntityProvider
     } = opts;
     this.reader = reader;
     this.kogitoServiceUrl = kogitoServiceUrl;
+    this.swfPluginUrl = swfPluginUrl;
     this.scheduler = scheduler;
     this.owner = owner;
     this.logger = logger;
@@ -114,22 +119,16 @@ export class ServerlessWorkflowEntityProvider
 
     this.logger.info('Retrieving Serverless Workflow definitions');
 
+    const items: SwfItem[] = await fetch(`${this.swfPluginUrl}/items`)
+      .then(res => res.json())
+      .then(res => res.items);
+
     // Load OpenAPI definitions
     const oaResponse = await this.reader.readUrl(
       `${this.kogitoServiceUrl}/q/openapi`,
     );
     const oaBuffer = await oaResponse.buffer();
     const oaData = YAML.parse(oaBuffer.toString());
-
-    const items: SwfItem[] = oaData.tags?.map((swf: SwfItem) => {
-      const swfItem: SwfItem = {
-        id: swf.name,
-        name: swf.name,
-        description: swf.description,
-        definition: '',
-      };
-      return swfItem;
-    });
     const entities: Entity[] = items ? this.swfToEntities(items, oaData) : [];
 
     await this.connection.applyMutation({

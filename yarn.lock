@@ -9192,6 +9192,7 @@ __metadata:
     "@backstage/cli": "workspace:^"
     "@backstage/plugin-permission-common": "workspace:^"
     "@backstage/types": "workspace:^"
+    json-schema: ^0.4.0
   languageName: unknown
   linkType: soft
 
