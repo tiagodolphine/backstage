@@ -19,6 +19,16 @@ import { Specification } from '@severlessworkflow/sdk-typescript';
 import { OpenAPIV3 } from 'openapi-types';
 import { JSONSchema4 } from 'json-schema';
 import { Octokit } from '@octokit/rest';
+import { Sleepstate } from '@severlessworkflow/sdk-typescript/lib/definitions/sleepstate';
+import { Eventstate } from '@severlessworkflow/sdk-typescript/lib/definitions/eventstate';
+import { Operationstate } from '@severlessworkflow/sdk-typescript/lib/definitions/operationstate';
+import { Parallelstate } from '@severlessworkflow/sdk-typescript/lib/definitions/parallelstate';
+import { Switchstate } from '@severlessworkflow/sdk-typescript/lib/definitions/types';
+import { Injectstate } from '@severlessworkflow/sdk-typescript/lib/definitions/injectstate';
+import { Foreachstate } from '@severlessworkflow/sdk-typescript/lib/definitions/foreachstate';
+import { Callbackstate } from '@severlessworkflow/sdk-typescript/lib/definitions/callbackstate';
+import { Databasedswitchstate } from '@severlessworkflow/sdk-typescript/lib/definitions/databasedswitchstate';
+import { Transitiondatacondition } from '@severlessworkflow/sdk-typescript/lib/definitions/transitiondatacondition';
 
 type OpenApiSchemaProperties = {
   [k: string]: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
@@ -29,9 +39,20 @@ interface WorkflowFunctionArgs {
 }
 
 interface WorkflowActionDescriptor {
+  owner: string;
   descriptor: string;
   action: Specification.Action;
 }
+
+type WorkflowState =
+  | Sleepstate
+  | Eventstate
+  | Operationstate
+  | Parallelstate
+  | Switchstate
+  | Injectstate
+  | Foreachstate
+  | Callbackstate;
 
 interface GitHubPath {
   owner: string;
@@ -51,6 +72,7 @@ interface FileData {
 }
 
 interface JsonSchemaFile {
+  owner: string;
   fileName: string;
   jsonSchema: JSONSchema4;
 }
@@ -91,155 +113,128 @@ export class DataInputSchemaService {
     workflow: Specification.Workflow;
     openApi: OpenAPIV3.Document;
   }): Promise<ComposedJsonSchema | null> {
-    const functionActionMap = this.extractFunctionActionMap(args.workflow);
+    if (!args.workflow.states.length) {
+      this.logger.info(`No state found on workflow. Skipping...`);
+      return null;
+    }
 
     const actionSchemas: JsonSchemaFile[] = [];
+    const workflowArgsMap = new Map<string, string>();
 
-    for (const [fnName, workflowActionsUsingFn] of functionActionMap) {
-      const operationId = this.extractOperationIdByWorkflowFunctionName({
-        workflow: args.workflow,
-        functionName: fnName,
-      });
-      if (!operationId) {
-        this.logger.info(
-          `No operation id found for function ${fnName}. Skipping...`,
-        );
+    const stateHandled = new Set<string>();
+
+    for (const state of args.workflow.states) {
+      if (stateHandled.has(state.name!)) {
         continue;
       }
 
-      const refSchema = this.extractSchemaByOperationId({
-        openApi: args.openApi,
-        operationId,
-      });
-      if (!refSchema) {
-        this.logger.info(
-          `The schema associated with ${operationId} could not be found. Skipping...`,
+      stateHandled.add(state.name!);
+
+      if (state.type === 'switch') {
+        const dataConditions = (state as Databasedswitchstate).dataConditions;
+        if (!dataConditions?.length) {
+          continue;
+        }
+
+        const conditionalStateNames = dataConditions
+          .filter(d => (d as Transitiondatacondition).transition)
+          .map(d => {
+            const transition = (d as Transitiondatacondition).transition;
+            if (typeof transition === 'string') {
+              return transition;
+            }
+            return transition.nextState;
+          });
+
+        const conditionalStates = args.workflow.states.filter(s =>
+          conditionalStateNames.includes(s.name!),
         );
-        continue;
-      }
 
-      const workflowArgsMap = new Map<string, string>();
+        const conditionalActionSchemas: JsonSchemaFile[] = [];
+        for (const conditionalState of conditionalStates) {
+          stateHandled.add(conditionalState.name!);
 
-      for (const actionDescriptor of workflowActionsUsingFn) {
-        const functionRefArgs = (
-          actionDescriptor.action.functionRef as Specification.Functionref
-        ).arguments;
-        if (!functionRefArgs) {
-          continue;
-        }
+          for (const actionDescriptor of this.extractActionsFromState(
+            conditionalState,
+          )) {
+            const result = await this.extractSchemaFromState({
+              workflow: args.workflow,
+              openApi: args.openApi,
+              actionDescriptor,
+              workflowArgsMap,
+              isConditional: true,
+            });
 
-        const schemaPropsToFilter = { ...(refSchema.properties ?? {}) };
-        const workflowArgsToFilter = {
-          ...functionRefArgs,
-        } as WorkflowFunctionArgs;
-
-        if (operationId === FETCH_TEMPLATE_ACTION_OPERATION_ID) {
-          const skeletonValues = await this.extractTemplateValuesFromSkeleton(
-            workflowArgsToFilter,
-          );
-
-          if (!skeletonValues) {
-            continue;
-          }
-
-          skeletonValues.forEach(v => {
-            schemaPropsToFilter[v] = {
-              title: v,
-              description: `Extracted from ${workflowArgsToFilter.url}`,
-              type: 'string',
-            };
-            schemaPropsToFilter[this.snakeCaseToCamelCase(v)] = {
-              title: this.snakeCaseToCamelCase(v),
-              description: `Extracted from ${workflowArgsToFilter.url}`,
-              type: 'string',
-            };
-            schemaPropsToFilter[this.camelCaseToSnakeCase(v)] = {
-              title: this.camelCaseToSnakeCase(v),
-              description: `Extracted from ${workflowArgsToFilter.url}`,
-              type: 'string',
-            };
-          });
-
-          Object.keys(workflowArgsToFilter.values).forEach(k => {
-            workflowArgsToFilter[k] = workflowArgsToFilter.values[k];
-          });
-        }
-
-        if (refSchema.oneOf?.length) {
-          const oneOfSchema = (
-            refSchema.oneOf as OpenAPIV3.SchemaObject[]
-          ).find(item =>
-            Object.keys(workflowArgsToFilter).some(arg =>
-              Object.keys(item.properties!).includes(arg),
-            ),
-          );
-          if (!oneOfSchema?.properties) {
-            continue;
-          }
-          Object.entries(oneOfSchema.properties).forEach(([k, v]) => {
-            schemaPropsToFilter[k] = {
-              ...(v as OpenAPIV3.BaseSchemaObject),
-            };
-          });
-        }
-
-        const requiredArgsToShow =
-          this.extractRequiredArgsToShow(workflowArgsToFilter);
-        if (!Object.keys(requiredArgsToShow).length) {
-          continue;
-        }
-
-        const filteredProperties: OpenApiSchemaProperties = {};
-        const filteredRequired: string[] = [];
-        for (const [argKey, argValue] of Object.entries(requiredArgsToShow)) {
-          if (!schemaPropsToFilter.hasOwnProperty(argKey)) {
-            continue;
-          }
-          let argId;
-          if (workflowArgsMap.has(argKey)) {
-            if (workflowArgsMap.get(argKey) === argValue) {
+            if (!result) {
               continue;
             }
-            argId = this.sanitizeText({
-              text: `${actionDescriptor.descriptor} ${argKey}`,
-              placeholder: '_',
-            });
-          } else {
-            argId = argKey;
-          }
-          workflowArgsMap.set(argId, argValue);
 
-          filteredProperties[argId] = {
-            ...schemaPropsToFilter[argKey],
-          };
-          filteredRequired.push(argKey);
+            conditionalActionSchemas.push(result.actionSchema);
+          }
         }
 
-        const updatedSchema = {
-          properties: Object.keys(filteredProperties).length
-            ? { ...filteredProperties }
-            : undefined,
-          required: filteredRequired.length ? [...filteredRequired] : undefined,
-        };
-
-        if (!updatedSchema.properties) {
+        if (conditionalActionSchemas.length <= 1) {
+          if (
+            conditionalActionSchemas.length &&
+            Object.keys(conditionalActionSchemas[0].jsonSchema.properties ?? {})
+              .length
+          ) {
+            actionSchemas.push(conditionalActionSchemas[0]);
+          }
           continue;
         }
 
-        const actionSchema = this.buildJsonSchemaSkeleton({
+        const conditionalDescriptor = this.buildActionDescriptor({
+          stateName: state.name,
+        });
+        const oneOfSchema = this.buildJsonSchemaSkeleton({
+          owner: state.name,
           workflowId: args.workflow.id,
-          title: actionDescriptor.descriptor,
+          title: conditionalDescriptor,
           filename: this.sanitizeText({
-            text: actionDescriptor.descriptor,
+            text: conditionalDescriptor,
             placeholder: '_',
           }),
         });
 
-        actionSchema.jsonSchema = {
-          ...actionSchema.jsonSchema,
-          ...updatedSchema,
-        };
-        actionSchemas.push(actionSchema);
+        oneOfSchema.jsonSchema.oneOf = conditionalActionSchemas.map(s => ({
+          title: s.owner,
+          type: 'object',
+          properties: {
+            [s.owner]: { type: 'boolean', default: true },
+            ...s.jsonSchema.properties,
+          },
+          required: [
+            s.owner,
+            ...(s.jsonSchema.required
+              ? (s.jsonSchema.required as string[])
+              : []),
+          ],
+        }));
+
+        actionSchemas.push(oneOfSchema);
+      } else {
+        for (const actionDescriptor of this.extractActionsFromState(state)) {
+          const result = await this.extractSchemaFromState({
+            workflow: args.workflow,
+            openApi: args.openApi,
+            actionDescriptor,
+            workflowArgsMap,
+            isConditional: false,
+          });
+
+          if (!result) {
+            continue;
+          }
+
+          const { actionSchema, argsMap } = result;
+
+          argsMap.forEach((v, k) => {
+            workflowArgsMap.set(k, v);
+          });
+
+          actionSchemas.push(actionSchema);
+        }
       }
     }
 
@@ -249,14 +244,13 @@ export class DataInputSchemaService {
 
     const compositionSchema = this.buildJsonSchemaSkeleton({
       workflowId: args.workflow.id,
-      filename: `${args.workflow.id}`,
       title: `Data Input Schema - ${args.workflow.name ?? args.workflow.id}`,
     });
 
     actionSchemas.forEach(actionSchema => {
       compositionSchema.jsonSchema.properties = {
-        ...compositionSchema.jsonSchema.properties,
-        [`${actionSchema.jsonSchema.title}`]: {
+        ...(compositionSchema.jsonSchema.properties ?? {}),
+        [`${actionSchema.fileName}`]: {
           $ref: actionSchema.fileName,
           type: actionSchema.jsonSchema.type,
           description: actionSchema.jsonSchema.description,
@@ -265,6 +259,162 @@ export class DataInputSchemaService {
     });
 
     return { compositionSchema, actionSchemas };
+  }
+
+  private async extractSchemaFromState(args: {
+    workflow: Specification.Workflow;
+    openApi: OpenAPIV3.Document;
+    actionDescriptor: WorkflowActionDescriptor;
+    workflowArgsMap: Map<string, string>;
+    isConditional: boolean;
+  }): Promise<
+    { actionSchema: JsonSchemaFile; argsMap: Map<string, string> } | undefined
+  > {
+    const functionRef = args.actionDescriptor.action
+      .functionRef as Specification.Functionref;
+
+    const operationId = this.extractOperationIdByWorkflowFunctionName({
+      workflow: args.workflow,
+      functionName: functionRef.refName,
+    });
+    if (!operationId) {
+      this.logger.info(
+        `No operation id found for function ${functionRef.refName}. Skipping...`,
+      );
+      return undefined;
+    }
+
+    const refSchema = this.extractSchemaByOperationId({
+      openApi: args.openApi,
+      operationId,
+    });
+    if (!refSchema) {
+      this.logger.info(
+        `The schema associated with ${operationId} could not be found. Skipping...`,
+      );
+      return undefined;
+    }
+
+    if (!functionRef.arguments) {
+      return undefined;
+    }
+
+    const schemaPropsToFilter = { ...(refSchema.properties ?? {}) };
+    const workflowArgsToFilter = {
+      ...functionRef.arguments,
+    } as WorkflowFunctionArgs;
+
+    if (operationId === FETCH_TEMPLATE_ACTION_OPERATION_ID) {
+      const skeletonValues = await this.extractTemplateValuesFromSkeleton(
+        workflowArgsToFilter,
+      );
+
+      if (!skeletonValues && !args.isConditional) {
+        return undefined;
+      }
+
+      if (skeletonValues?.length) {
+        skeletonValues.forEach(v => {
+          schemaPropsToFilter[v] = {
+            title: v,
+            description: `Extracted from ${workflowArgsToFilter.url}`,
+            type: 'string',
+          };
+          schemaPropsToFilter[this.snakeCaseToCamelCase(v)] = {
+            title: this.snakeCaseToCamelCase(v),
+            description: `Extracted from ${workflowArgsToFilter.url}`,
+            type: 'string',
+          };
+          schemaPropsToFilter[this.camelCaseToSnakeCase(v)] = {
+            title: this.camelCaseToSnakeCase(v),
+            description: `Extracted from ${workflowArgsToFilter.url}`,
+            type: 'string',
+          };
+        });
+      }
+
+      Object.keys(workflowArgsToFilter.values).forEach(k => {
+        workflowArgsToFilter[k] = workflowArgsToFilter.values[k];
+      });
+    }
+
+    if (refSchema.oneOf?.length) {
+      const oneOfSchema = (refSchema.oneOf as OpenAPIV3.SchemaObject[]).find(
+        item =>
+          Object.keys(workflowArgsToFilter).some(arg =>
+            Object.keys(item.properties!).includes(arg),
+          ),
+      );
+      if (!oneOfSchema?.properties) {
+        return undefined;
+      }
+      Object.entries(oneOfSchema.properties).forEach(([k, v]) => {
+        schemaPropsToFilter[k] = {
+          ...(v as OpenAPIV3.BaseSchemaObject),
+        };
+      });
+    }
+
+    const requiredArgsToShow =
+      this.extractRequiredArgsToShow(workflowArgsToFilter);
+    if (!Object.keys(requiredArgsToShow).length) {
+      return undefined;
+    }
+
+    const argsMap = new Map(args.workflowArgsMap);
+    const filteredProperties: OpenApiSchemaProperties = {};
+    const filteredRequired: string[] = [];
+    for (const [argKey, argValue] of Object.entries(requiredArgsToShow)) {
+      if (!schemaPropsToFilter.hasOwnProperty(argKey)) {
+        continue;
+      }
+      let argId;
+      if (argsMap.has(argKey)) {
+        if (argsMap.get(argKey) === argValue) {
+          continue;
+        }
+        argId = this.sanitizeText({
+          text: `${args.actionDescriptor.descriptor} ${argKey}`,
+          placeholder: '_',
+        });
+      } else {
+        argId = argKey;
+      }
+      argsMap.set(argId, argValue);
+
+      filteredProperties[argId] = {
+        ...schemaPropsToFilter[argKey],
+      };
+      filteredRequired.push(argKey);
+    }
+
+    const updatedSchema = {
+      properties: Object.keys(filteredProperties).length
+        ? { ...filteredProperties }
+        : undefined,
+      required: filteredRequired.length ? [...filteredRequired] : undefined,
+    };
+
+    if (!updatedSchema.properties && !args.isConditional) {
+      return undefined;
+    }
+
+    const actionSchema = this.buildJsonSchemaSkeleton({
+      owner: args.actionDescriptor.owner,
+      workflowId: args.workflow.id,
+      title: args.actionDescriptor.descriptor,
+      filename: this.sanitizeText({
+        text: args.actionDescriptor.descriptor,
+        placeholder: '_',
+      }),
+    });
+
+    actionSchema.jsonSchema = {
+      ...actionSchema.jsonSchema,
+      ...updatedSchema,
+    };
+
+    return { actionSchema, argsMap };
   }
 
   private async extractTemplateValuesFromSkeleton(
@@ -345,74 +495,27 @@ export class DataInputSchemaService {
     return args.openApi.components?.schemas?.[refKey] as OpenAPIV3.SchemaObject;
   }
 
-  private extractFunctionActionMap(
-    workflow: Specification.Workflow,
-  ): Map<string, WorkflowActionDescriptor[]> {
-    if (!Array.isArray(workflow.functions)) {
-      return new Map();
+  private extractActionsFromState(
+    state: WorkflowState,
+  ): WorkflowActionDescriptor[] {
+    if (state.type === 'operation') {
+      return this.extractActionsFromOperationState({ state });
+    } else if (state.type === 'parallel') {
+      return this.extractActionsFromParallelState({ state });
+    } else if (state.type === 'foreach') {
+      return this.extractActionsFromForeachState({ state });
+    } else if (state.type === 'event') {
+      return this.extractActionsFromEventState({ state });
+    } else if (state.type === 'callback') {
+      return this.extractActionsFromCallbackState({ state });
     }
-
-    return new Map(
-      workflow.functions.map(fn => {
-        const descriptors = this.extractActionsUsingFunction({
-          workflow,
-          functionRefName: fn.name,
-        });
-        return [fn.name, descriptors];
-      }),
-    );
-  }
-
-  private extractActionsUsingFunction(args: {
-    workflow: Specification.Workflow;
-    functionRefName: string;
-  }): WorkflowActionDescriptor[] {
-    const descriptors: WorkflowActionDescriptor[] = [];
-    for (const state of args.workflow.states) {
-      if (state.type === 'operation') {
-        descriptors.push(
-          ...this.extractActionsFromOperationStateByFunctionRefName({
-            state,
-            functionRefName: args.functionRefName,
-          }),
-        );
-      } else if (state.type === 'parallel') {
-        descriptors.push(
-          ...this.extractActionsFromParallelStateByFunctionRefName({
-            state,
-            functionRefName: args.functionRefName,
-          }),
-        );
-      } else if (state.type === 'foreach') {
-        descriptors.push(
-          ...this.extractActionsFromForeachStateByFunctionRefName({
-            state,
-            functionRefName: args.functionRefName,
-          }),
-        );
-      } else if (state.type === 'event') {
-        descriptors.push(
-          ...this.extractActionsFromEventStateByFunctionRefName({
-            state,
-            functionRefName: args.functionRefName,
-          }),
-        );
-      } else if (state.type === 'callback') {
-        descriptors.push(
-          ...this.extractActionsFromCallbackStateByFunctionRefName({
-            state,
-            functionRefName: args.functionRefName,
-          }),
-        );
-      }
-    }
-    return descriptors;
+    return [];
   }
 
   private buildActionDescriptor(args: {
     actionName?: string;
     stateName: string;
-    functionRefName: string;
+    functionRefName?: string;
     outerItem?:
       | { name: string } & (
           | { kind: 'Unique' }
@@ -428,7 +531,7 @@ export class DataInputSchemaService {
     };
   }): string {
     const separator = ' > ';
-    let descriptor = `${args.stateName}`;
+    let descriptor = args.stateName;
     if (args.outerItem) {
       if (args.outerItem.kind === 'Unique') {
         descriptor += `${separator}${args.outerItem.name}`;
@@ -441,43 +544,50 @@ export class DataInputSchemaService {
     if (args.actionName) {
       descriptor += `${separator}${args.actionName}`;
     }
-    descriptor += `${separator}${args.functionRefName}`;
+    if (args.functionRefName) {
+      descriptor += `${separator}${args.functionRefName}`;
+    }
     if (!args.actionName && args.actions && args.actions.array.length > 1) {
       descriptor += `${separator}${args.actions.idx + 1}`;
     }
     return descriptor;
   }
 
-  private extractActionsFromOperationStateByFunctionRefName(args: {
+  private extractActionsFromOperationState(args: {
     state: Specification.Operationstate;
-    functionRefName: string;
+    functionRefName?: string;
   }): WorkflowActionDescriptor[] {
     if (!args.state.actions) {
       return [];
     }
     return args.state.actions
-      .filter(
-        action =>
-          (action.functionRef as Specification.Functionref)?.refName ===
-          args.functionRefName,
-      )
+      .filter(action => {
+        if (!action.functionRef || typeof action.functionRef === 'string') {
+          return false;
+        }
+        if (!args.functionRefName) {
+          return true;
+        }
+        return action.functionRef.refName === args.functionRefName;
+      })
       .map<WorkflowActionDescriptor>((action, idx, arr) => {
         const descriptor = this.buildActionDescriptor({
           actionName: action.name,
           stateName: args.state.name!,
-          functionRefName: args.functionRefName,
+          functionRefName: (action.functionRef as Specification.Functionref)!
+            .refName,
           actions: {
             array: arr,
             idx,
           },
         });
-        return { descriptor, action };
+        return { owner: args.state.name!, descriptor, action };
       });
   }
 
-  private extractActionsFromParallelStateByFunctionRefName(args: {
+  private extractActionsFromParallelState(args: {
     state: Specification.Parallelstate;
-    functionRefName: string;
+    functionRefName?: string;
   }): WorkflowActionDescriptor[] {
     if (!args.state.branches) {
       return [];
@@ -486,11 +596,15 @@ export class DataInputSchemaService {
     return args.state.branches
       .map(branch =>
         branch.actions
-          .filter(
-            action =>
-              (action.functionRef as Specification.Functionref)?.refName ===
-              args.functionRefName,
-          )
+          .filter(action => {
+            if (!action.functionRef || typeof action.functionRef === 'string') {
+              return false;
+            }
+            if (!args.functionRefName) {
+              return true;
+            }
+            return action.functionRef.refName === args.functionRefName;
+          })
           .map<WorkflowActionDescriptor>((action, idx, arr) => {
             const descriptor = this.buildActionDescriptor({
               actionName: action.name,
@@ -499,48 +613,54 @@ export class DataInputSchemaService {
                 name: branch.name,
               },
               stateName: args.state.name!,
-              functionRefName: args.functionRefName,
+              functionRefName:
+                (action.functionRef as Specification.Functionref)!.refName,
               actions: {
                 array: arr,
                 idx,
               },
             });
-            return { descriptor, action };
+            return { owner: args.state.name!, descriptor, action };
           }),
       )
       .flat();
   }
 
-  private extractActionsFromForeachStateByFunctionRefName(args: {
+  private extractActionsFromForeachState(args: {
     state: Specification.Foreachstate;
-    functionRefName: string;
+    functionRefName?: string;
   }): WorkflowActionDescriptor[] {
     if (!args.state.actions) {
       return [];
     }
     return args.state.actions
-      .filter(
-        a =>
-          (a.functionRef as Specification.Functionref)?.refName ===
-          args.functionRefName,
-      )
+      .filter(action => {
+        if (!action.functionRef || typeof action.functionRef === 'string') {
+          return false;
+        }
+        if (!args.functionRefName) {
+          return true;
+        }
+        return action.functionRef.refName === args.functionRefName;
+      })
       .map<WorkflowActionDescriptor>((action, idx, arr) => {
         const descriptor = this.buildActionDescriptor({
           actionName: action.name,
           stateName: args.state.name!,
-          functionRefName: args.functionRefName,
+          functionRefName: (action.functionRef as Specification.Functionref)!
+            .refName,
           actions: {
             array: arr,
             idx,
           },
         });
-        return { descriptor, action };
+        return { owner: args.state.name!, descriptor, action };
       });
   }
 
-  private extractActionsFromEventStateByFunctionRefName(args: {
+  private extractActionsFromEventState(args: {
     state: Specification.Eventstate;
-    functionRefName: string;
+    functionRefName?: string;
   }): WorkflowActionDescriptor[] {
     if (!args.state.onEvents) {
       return [];
@@ -552,16 +672,21 @@ export class DataInputSchemaService {
           return [];
         }
         return onEvent.actions
-          .filter(
-            action =>
-              (action.functionRef as Specification.Functionref)?.refName ===
-              args.functionRefName,
-          )
+          .filter(action => {
+            if (!action.functionRef || typeof action.functionRef === 'string') {
+              return false;
+            }
+            if (!args.functionRefName) {
+              return true;
+            }
+            return action.functionRef.refName === args.functionRefName;
+          })
           .map<WorkflowActionDescriptor>((action, aIdx, aArr) => {
             const descriptor = this.buildActionDescriptor({
               actionName: action.name,
-              stateName: args.state.name!,
-              functionRefName: args.functionRefName,
+              stateName: args.state.name,
+              functionRefName:
+                (action.functionRef as Specification.Functionref)!.refName,
               actions: {
                 array: aArr,
                 idx: aIdx,
@@ -573,34 +698,32 @@ export class DataInputSchemaService {
                 idx: eIdx,
               },
             });
-            return { descriptor, action };
+            return { owner: args.state.name, descriptor, action };
           });
       })
       .flat();
   }
 
-  private extractActionsFromCallbackStateByFunctionRefName(args: {
+  private extractActionsFromCallbackState(args: {
     state: Specification.Callbackstate;
-    functionRefName: string;
+    functionRefName?: string;
   }): WorkflowActionDescriptor[] {
-    if (!args.state.action) {
-      return [];
-    }
-
-    const refName = (args.state.action.functionRef as Specification.Functionref)
-      ?.refName;
-
-    if (refName !== args.functionRefName) {
+    if (
+      !args.state.action?.functionRef ||
+      typeof args.state.action.functionRef === 'string' ||
+      (args.functionRefName &&
+        args.state.action.functionRef.refName !== args.functionRefName)
+    ) {
       return [];
     }
 
     const descriptor = this.buildActionDescriptor({
       actionName: args.state.action.name,
       stateName: args.state.name!,
-      functionRefName: args.functionRefName,
+      functionRefName: args.state.action.functionRef.refName,
     });
 
-    return [{ descriptor, action: args.state.action }];
+    return [{ owner: args.state.name!, descriptor, action: args.state.action }];
   }
 
   private snakeCaseToCamelCase(input: string): string {
@@ -622,15 +745,19 @@ export class DataInputSchemaService {
   private buildJsonSchemaSkeleton(args: {
     workflowId: string;
     title: string;
-    filename: string;
+    owner?: string;
+    filename?: string;
   }): JsonSchemaFile {
+    const fullFileName = args.owner
+      ? `${args.workflowId}__schema__${args.filename}.json`
+      : `${args.workflowId}__schema.json`;
     return {
-      fileName: `${args.workflowId}__schema__${args.filename}.json`,
+      owner: args.owner ?? 'Workflow',
+      fileName: fullFileName,
       jsonSchema: {
         title: args.title,
         $schema: JSON_SCHEMA_VERSION,
         type: 'object',
-        properties: {},
       },
     };
   }
@@ -711,7 +838,7 @@ export class DataInputSchemaService {
     };
   }
 
-  private async fetchGitHubFilePaths(repoInfo: GitHubPath): Promise<string[]> {
+  private async fetchGitHubRepoPaths(repoInfo: GitHubPath): Promise<string[]> {
     const response = await this.octokit.request(
       'GET /repos/:owner/:repo/git/trees/:ref',
       {
@@ -731,7 +858,7 @@ export class DataInputSchemaService {
     githubPath: GitHubPath,
   ): Promise<string[]> {
     try {
-      const filePaths = await this.fetchGitHubFilePaths(githubPath);
+      const filePaths = await this.fetchGitHubRepoPaths(githubPath);
       const fileMatchPromises: Promise<string[]>[] = [];
 
       filePaths.forEach(p => {

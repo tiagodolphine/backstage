@@ -165,11 +165,11 @@ export class ServerlessWorkflowEntityProvider
       return undefined;
     }
 
-    // TODO: Review and improve
     return this.findSchemas({ openApiDefinitions, oaSchema }).map(schema => ({
       title: schema.title,
       required: schema.required,
       properties: schema.properties,
+      oneOf: schema.oneOf,
     }));
   }
 
