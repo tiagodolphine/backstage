@@ -10,7 +10,9 @@
     {
       "name": "printStatus",
       "type": "inject",
-      "data": { "compensated": false },
+      "data": {
+        "compensated": false
+      },
       "compensatedBy": "compensating",
       "transition": "branch"
     },
@@ -20,7 +22,10 @@
       "dataConditions": [
         {
           "condition": ".shouldCompensate==true",
-          "transition": { "nextState": "finish_compensate", "compensate": true }
+          "transition": {
+            "nextState": "finish_compensate",
+            "compensate": true
+          }
         },
         {
           "condition": ".shouldCompensate==false",
@@ -30,20 +35,26 @@
           }
         }
       ],
-      "defaultCondition": { "transition": "finish_not_compensate" }
+      "defaultCondition": {
+        "transition": "finish_not_compensate"
+      }
     },
     {
       "name": "compensating",
       "usedForCompensation": true,
       "type": "inject",
-      "data": { "compensated": true },
+      "data": {
+        "compensated": true
+      },
       "transition": "compensating_more"
     },
     {
       "name": "compensating_more",
       "usedForCompensation": true,
       "type": "inject",
-      "data": { "compensating_more": "Real Betis Balompie" }
+      "data": {
+        "compensating_more": "Real Betis Balompie"
+      }
     },
     {
       "name": "finish_compensate",

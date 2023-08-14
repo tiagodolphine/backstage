@@ -16,7 +16,9 @@
     {
       "name": "Start Actions Workflow",
       "type": "inject",
-      "data": { "startMessage": "Actions Workflow started!" },
+      "data": {
+        "startMessage": "Actions Workflow started!"
+      },
       "transition": "Execute Action on SWF Plugin"
     },
     {
@@ -28,9 +30,13 @@
           "name": "Run Catalog Fetch Action",
           "functionRef": {
             "refName": "runActionCatalogFetchFunction",
-            "arguments": { "entityRef": ".entityRef" }
+            "arguments": {
+              "entityRef": ".entityRef"
+            }
           },
-          "actionDataFilter": { "toStateData": ".actionResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionResult"
+          }
         }
       ],
       "transition": "Complete Workflow"
@@ -38,7 +44,9 @@
     {
       "name": "Complete Workflow",
       "type": "inject",
-      "data": { "endMessage": "Actions Workflow Completed!" },
+      "data": {
+        "endMessage": "Actions Workflow Completed!"
+      },
       "end": true
     }
   ]

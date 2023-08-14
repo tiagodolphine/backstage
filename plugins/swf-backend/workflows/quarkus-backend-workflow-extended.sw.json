@@ -22,10 +22,17 @@
       "name": "fs:delete",
       "operation": "specs/actions-openapi.json#fs:delete"
     },
-    { "name": "sysout", "type": "custom", "operation": "sysout" }
+    {
+      "name": "sysout",
+      "type": "custom",
+      "operation": "sysout"
+    }
   ],
   "errors": [
-    { "name": "Error on Action", "code": "java.lang.RuntimeException" }
+    {
+      "name": "Error on Action",
+      "code": "java.lang.RuntimeException"
+    }
   ],
   "start": "Generating the Source Code Component",
   "states": [
@@ -66,7 +73,10 @@
         }
       ],
       "onErrors": [
-        { "errorRef": "Error on Action", "transition": "Handle Error" }
+        {
+          "errorRef": "Error on Action",
+          "transition": "Handle Error"
+        }
       ],
       "compensatedBy": "Clear File System - Source Code",
       "transition": "Generating the CI Component"
@@ -83,7 +93,9 @@
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-skeletons/github-actions-skeleton/",
               "targetPath": "source/",
-              "copyWithoutTemplating": ["\".github/workflows/\""],
+              "copyWithoutTemplating": [
+                "\".github/workflows/\""
+              ],
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -103,11 +115,16 @@
               }
             }
           },
-          "actionDataFilter": { "toStateData": ".actionTemplateFetchCIResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionTemplateFetchCIResult"
+          }
         }
       ],
       "onErrors": [
-        { "errorRef": "Error on Action", "transition": "Handle Error" }
+        {
+          "errorRef": "Error on Action",
+          "transition": "Handle Error"
+        }
       ],
       "compensatedBy": "Clear File System - CI",
       "transition": "Generating the Catalog Info Component"
@@ -148,7 +165,10 @@
         }
       ],
       "onErrors": [
-        { "errorRef": "Error on Action", "transition": "Handle Error" }
+        {
+          "errorRef": "Error on Action",
+          "transition": "Handle Error"
+        }
       ],
       "compensatedBy": "Clear File System - Catalog",
       "transition": "Publishing to the Source Code Repository"
@@ -164,7 +184,9 @@
             "refName": "runActionPublishGithub",
             "arguments": {
               "sourcePath": "source/",
-              "allowedHosts": ["\"github.com\""],
+              "allowedHosts": [
+                "\"github.com\""
+              ],
               "description": "Workflow Action",
               "repoUrl": "\"github.com?owner=\" + .githubOrg + \"&repo=\" + .repoName",
               "defaultBranch": ".defaultBranch",
@@ -173,11 +195,16 @@
               "allowRebaseMerge": true
             }
           },
-          "actionDataFilter": { "toStateData": ".actionPublishResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionPublishResult"
+          }
         }
       ],
       "onErrors": [
-        { "errorRef": "Error on Action", "transition": "Handle Error" }
+        {
+          "errorRef": "Error on Action",
+          "transition": "Handle Error"
+        }
       ],
       "compensatedBy": "Remove Source Code Repository",
       "transition": "Registering the Catalog Info Component"
@@ -196,11 +223,16 @@
               "catalogInfoPath": "\"/catalog-info.yaml\""
             }
           },
-          "actionDataFilter": { "toStateData": ".actionCatalogRegisterResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionCatalogRegisterResult"
+          }
         }
       ],
       "onErrors": [
-        { "errorRef": "Error on Action", "transition": "Handle Error" }
+        {
+          "errorRef": "Error on Action",
+          "transition": "Handle Error"
+        }
       ],
       "compensatedBy": "Remove Catalog Info Component",
       "end": true
@@ -219,7 +251,9 @@
           }
         }
       ],
-      "end": { "compensate": true }
+      "end": {
+        "compensate": true
+      }
     },
     {
       "name": "Clear File System - Source Code",
@@ -230,7 +264,11 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source/"] }
+            "arguments": {
+              "files": [
+                "source/"
+              ]
+            }
           }
         }
       ]
@@ -244,7 +282,11 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source/"] }
+            "arguments": {
+              "files": [
+                "source/"
+              ]
+            }
           }
         }
       ]
@@ -258,7 +300,11 @@
           "name": "Clear FS Action",
           "functionRef": {
             "refName": "fs:delete",
-            "arguments": { "files": ["source/"] }
+            "arguments": {
+              "files": [
+                "source/"
+              ]
+            }
           }
         }
       ]
@@ -272,7 +318,9 @@
           "name": "Remove Source Code Repository",
           "functionRef": {
             "refName": "sysout",
-            "arguments": { "message": "Remove Source Code Repository" }
+            "arguments": {
+              "message": "Remove Source Code Repository"
+            }
           }
         }
       ]
@@ -286,7 +334,9 @@
           "name": "Remove Catalog Info Component",
           "functionRef": {
             "refName": "sysout",
-            "arguments": { "message": "Remove Catalog Info Component" }
+            "arguments": {
+              "message": "Remove Catalog Info Component"
+            }
           }
         }
       ]

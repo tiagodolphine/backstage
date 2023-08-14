@@ -24,5 +24,10 @@
       "type": "string"
     }
   },
-  "required": ["component_id", "jobTemplate", "namespace", "connection_secret"]
+  "required": [
+    "component_id",
+    "jobTemplate",
+    "namespace",
+    "connection_secret"
+  ]
 }

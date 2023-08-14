@@ -12,7 +12,9 @@
           "default": true
         }
       },
-      "required": ["Generating the CI Component - GitHub"]
+      "required": [
+        "Generating the CI Component - GitHub"
+      ]
     },
     {
       "title": "Generating the CI Component - Tekton",

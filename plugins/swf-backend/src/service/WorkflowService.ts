@@ -54,7 +54,7 @@ export class WorkflowService {
   }
 
   private async saveFile(path: string, data: any): Promise<void> {
-    await fs.writeFile(path, JSON.stringify(data), 'utf8');
+    await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf8');
   }
 
   async saveWorkflowDefinitionFromUrl(

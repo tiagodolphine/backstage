@@ -85,7 +85,9 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-skeletons/github-actions-skeleton/",
-              "copyWithoutTemplating": ["\".github/workflows/\""],
+              "copyWithoutTemplating": [
+                "\".github/workflows/\""
+              ],
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -105,7 +107,9 @@
               }
             }
           },
-          "actionDataFilter": { "toStateData": ".actionTemplateFetchCIResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionTemplateFetchCIResult"
+          }
         }
       ],
       "transition": "Generating the Catalog Info Component"
@@ -121,7 +125,9 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/tekton-skeleton",
-              "copyWithoutTemplating": ["\".tekton/workflows/\""],
+              "copyWithoutTemplating": [
+                "\".tekton/workflows/\""
+              ],
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -141,7 +147,9 @@
               }
             }
           },
-          "actionDataFilter": { "toStateData": ".actionTemplateFetchCIResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionTemplateFetchCIResult"
+          }
         }
       ],
       "transition": "Generating the Catalog Info Component"
@@ -192,7 +200,9 @@
           "functionRef": {
             "refName": "runActionPublishGithub",
             "arguments": {
-              "allowedHosts": ["\"github.com\""],
+              "allowedHosts": [
+                "\"github.com\""
+              ],
               "description": "Workflow Action",
               "repoUrl": "\"github.com?owner=\" + .githubOrg + \"&repo=\" + .repoName",
               "defaultBranch": ".defaultBranch",
@@ -201,7 +211,9 @@
               "allowRebaseMerge": true
             }
           },
-          "actionDataFilter": { "toStateData": ".actionPublishResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionPublishResult"
+          }
         }
       ],
       "transition": "Registering the Catalog Info Component"
@@ -220,7 +232,9 @@
               "catalogInfoPath": "\"/catalog-info.yaml\""
             }
           },
-          "actionDataFilter": { "toStateData": ".actionCatalogRegisterResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionCatalogRegisterResult"
+          }
         }
       ],
       "end": true

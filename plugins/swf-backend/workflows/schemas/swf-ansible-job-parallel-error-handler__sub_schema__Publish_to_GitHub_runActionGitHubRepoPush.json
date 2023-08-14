@@ -14,5 +14,8 @@
       "description": "Sets the default branch on the repository. The default value is 'master'"
     }
   },
-  "required": ["repoUrl", "defaultBranch"]
+  "required": [
+    "repoUrl",
+    "defaultBranch"
+  ]
 }

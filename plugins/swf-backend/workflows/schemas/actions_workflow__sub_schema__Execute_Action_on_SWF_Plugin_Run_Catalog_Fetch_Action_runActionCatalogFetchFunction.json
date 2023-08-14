@@ -8,5 +8,7 @@
       "description": "Entity reference of the entity to get"
     }
   },
-  "required": ["entityRef"]
+  "required": [
+    "entityRef"
+  ]
 }

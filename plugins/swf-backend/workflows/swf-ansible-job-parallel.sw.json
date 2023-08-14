@@ -89,7 +89,9 @@
               "protectEnforceAdmins": false
             }
           },
-          "actionDataFilter": { "results": "." }
+          "actionDataFilter": {
+            "results": "."
+          }
         }
       ],
       "transition": "Register Catalog entry"
@@ -108,7 +110,9 @@
               "catalogInfoPath": "/catalog-info.yaml"
             }
           },
-          "actionDataFilter": { "toStateData": ".actionResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionResult"
+          }
         }
       ],
       "end": true

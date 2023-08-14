@@ -24,5 +24,10 @@
       "type": "string"
     }
   },
-  "required": ["owner", "system", "namespace", "ci"]
+  "required": [
+    "owner",
+    "system",
+    "namespace",
+    "ci"
+  ]
 }
