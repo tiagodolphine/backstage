@@ -4,7 +4,7 @@
   "specVersion": "0.8",
   "name": "[WF] Ansible Job",
   "description": "[WF] Launch an Ansible Job within Ansible Automation Platform",
-  "dataInputSchema": "schemas/swf-ansible-job__schema__swf-ansible-job.json",
+  "dataInputSchema": "schemas/swf-ansible-job__main_schema.json",
   "functions": [
     {
       "name": "runActionTemplateFetch",

@@ -4,7 +4,7 @@
   "version": "1.0",
   "name": "Catalog:Fetch Workflow BS Actions example",
   "description": "An example of how a workflow can call actions on BS Scaffolder",
-  "dataInputSchema": "schemas/actions_workflow__schema__actions_workflow.json",
+  "dataInputSchema": "schemas/actions_workflow__main_schema.json",
   "functions": [
     {
       "name": "runActionCatalogFetchFunction",

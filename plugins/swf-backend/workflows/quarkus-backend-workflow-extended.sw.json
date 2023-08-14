@@ -4,7 +4,7 @@
   "specVersion": "0.8",
   "name": "[WF] Create a Quarkus Backend application with a CI pipeline - Extended",
   "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline - Extended",
-  "dataInputSchema": "schemas/quarkus-backend-workflow-extended__schema__quarkus-backend-workflow-extended.json",
+  "dataInputSchema": "schemas/quarkus-backend-workflow-extended__main_schema.json",
   "functions": [
     {
       "name": "runActionTemplateFetch",

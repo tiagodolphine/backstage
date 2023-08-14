@@ -749,8 +749,8 @@ export class DataInputSchemaService {
     filename?: string;
   }): JsonSchemaFile {
     const fullFileName = args.owner
-      ? `${args.workflowId}__schema__${args.filename}.json`
-      : `${args.workflowId}__schema.json`;
+      ? `${args.workflowId}__sub_schema__${args.filename}.json`
+      : `${args.workflowId}__main_schema.json`;
     return {
       owner: args.owner ?? 'Workflow',
       fileName: fullFileName,

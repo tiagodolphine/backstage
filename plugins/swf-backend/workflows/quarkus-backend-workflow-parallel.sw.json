@@ -4,7 +4,7 @@
   "specVersion": "0.8",
   "name": "[WF] Create a Quarkus Backend application with a CI pipeline - Parallel",
   "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline - Parallel",
-  "dataInputSchema": "schemas/quarkus-backend-workflow-parallel__schema__quarkus-backend-workflow-parallel.json",
+  "dataInputSchema": "schemas/quarkus-backend-workflow-parallel__main_schema.json",
   "functions": [
     {
       "name": "runActionTemplateFetch",
