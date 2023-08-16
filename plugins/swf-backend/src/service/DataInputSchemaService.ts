@@ -239,7 +239,38 @@ export class DataInputSchemaService {
     }
 
     if (!actionSchemas.length) {
-      return null;
+      // Experimental
+      // Tries to extract variables from the workflow definition if no actions are found
+      const workflowVariableSet = this.extractVariablesFromWorkflow(
+        args.workflow,
+      );
+
+      if (!workflowVariableSet.size) {
+        return null;
+      }
+
+      const variableSetSchema = this.buildJsonSchemaSkeleton({
+        owner: 'Workflow',
+        workflowId: args.workflow.id,
+        title: 'Input data',
+        filename: this.sanitizeText({
+          text: 'Input data',
+          placeholder: '_',
+        }),
+      });
+
+      workflowVariableSet.forEach(item => {
+        variableSetSchema.jsonSchema.properties = {
+          ...(variableSetSchema.jsonSchema.properties ?? {}),
+          [item]: {
+            title: item,
+            type: 'string',
+            description: 'Extracted from the Workflow definition',
+          },
+        };
+      });
+
+      actionSchemas.push(variableSetSchema);
     }
 
     const compositionSchema = this.buildJsonSchemaSkeleton({
@@ -906,5 +937,53 @@ export class DataInputSchemaService {
       this.logger.error(e);
     }
     return [];
+  }
+
+  private extractVariablesFromWorkflow(
+    workflow: Specification.Workflow,
+  ): Set<string> {
+    const variableSet = new Set<string>();
+
+    function traverseValue(value: any, currentPath: string) {
+      if (typeof value === 'string') {
+        const match = value.match(
+          /(^|\s|\{)\s*\.([a-zA-Z_][a-zA-Z0-9_]*)\s*([=!<>]+)/,
+        );
+        if (match?.[2]) {
+          variableSet.add(match[2]);
+        }
+        const dotMatch = value.match(/(^|\s|\{)\s*\.([a-zA-Z_][a-zA-Z0-9_]*)/);
+        if (dotMatch?.[2]) {
+          variableSet.add(dotMatch[2]);
+        }
+      } else if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          traverseValue(item, `${currentPath}[${index}]`);
+        });
+      } else if (typeof value === 'object') {
+        traverseObject(value, currentPath);
+      }
+    }
+
+    function traverseObject(currentObj: any, currentPath: string) {
+      for (const key in currentObj) {
+        if (currentObj.hasOwnProperty(key)) {
+          const value = currentObj[key];
+          const newPath = currentPath ? `${currentPath}.${key}` : key;
+
+          traverseValue(value, newPath);
+        }
+      }
+    }
+
+    traverseObject(workflow, '');
+
+    workflow.states.forEach(state => {
+      if (state.type === 'inject' && state.data) {
+        Object.keys(state.data).forEach(k => variableSet.delete(k));
+      }
+    });
+
+    return variableSet;
   }
 }

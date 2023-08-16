@@ -1,6 +1,6 @@
 {
   "$id": "classpath:/schemas/actions_workflow__main_schema.json",
-  "title": "Data Input Schema - Catalog:Fetch Workflow BS Actions example",
+  "title": "Data Input Schema - Call action on BS Scaffolder example",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
