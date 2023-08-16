@@ -133,7 +133,7 @@ function setupInternalRoutes(
               const swfItem: SwfItem = {
                 id: swf.id,
                 name: swf.name,
-                description: swf.name,
+                description: swf.description ?? swf.name,
                 definition: '',
               };
               return swfItem;
