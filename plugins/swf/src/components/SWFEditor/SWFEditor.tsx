@@ -95,14 +95,15 @@ const DEFAULT_SWF_ITEM_FOR_AUTHORING: SwfItem = {
   definition: JSON.stringify(empty_definition, null, 2),
 };
 
-type SWFEditorProps = {
-  swfId: string | undefined;
-} & (
+export type SwfEditorView =
   | { kind: EditorViewKind.AUTHORING }
   | { kind: EditorViewKind.DIAGRAM_VIEWER }
   | { kind: EditorViewKind.EXTENDED_DIAGRAM_VIEWER }
-  | { kind: EditorViewKind.RUNTIME; processInstance: ProcessInstance }
-);
+  | { kind: EditorViewKind.RUNTIME; processInstance: ProcessInstance };
+
+type SWFEditorProps = {
+  swfId: string | undefined;
+} & SwfEditorView;
 
 const RefForwardingSWFEditor: ForwardRefRenderFunction<
   SWFEditorRef,
@@ -275,11 +276,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
 
     const swfPreviewOptionsChannelApiImpl = new SwfPreviewOptionsChannelApiImpl(
       {
-        editorMode:
-          kind === EditorViewKind.RUNTIME ||
-          kind === EditorViewKind.DIAGRAM_VIEWER
-            ? 'diagram'
-            : 'full',
+        editorMode: 'full',
         defaultWidth: kind === EditorViewKind.AUTHORING ? '50%' : '100%',
       },
     );

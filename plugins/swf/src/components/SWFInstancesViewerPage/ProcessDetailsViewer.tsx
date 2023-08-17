@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { InfoCard } from '@backstage/core-components';
 import { Button, Link, Typography } from '@material-ui/core';
@@ -81,11 +81,40 @@ const getProcessInstanceDescription = (processInstance: any) => {
 export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
   const { selectedInstance } = props;
 
+  const errorInfo = useMemo(() => {
+    if (!selectedInstance?.error?.message) {
+      return null;
+    }
+    const nodeName = selectedInstance.nodes.find(
+      n => n.definitionId === selectedInstance?.error?.nodeDefinitionId,
+    )?.name;
+    return (
+      <>
+        {nodeName && (
+          <>
+            <Typography variant="caption" style={{ fontWeight: 'bold' }}>
+              Node with error
+            </Typography>
+            <p>{nodeName}</p>
+          </>
+        )}
+        <Typography variant="caption" style={{ fontWeight: 'bold' }}>
+          Error message
+        </Typography>
+        <p>{selectedInstance.error.message}</p>
+      </>
+    );
+  }, [selectedInstance]);
+
   return (
     <InfoCard title="Details">
       {selectedInstance === undefined && <p>No instance selected</p>}
       {selectedInstance && (
         <div>
+          <Typography variant="caption" style={{ fontWeight: 'bold' }}>
+            Id
+          </Typography>
+          <p>{selectedInstance?.id}</p>
           <Typography variant="caption" style={{ fontWeight: 'bold' }}>
             Name
           </Typography>
@@ -102,10 +131,7 @@ export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
             State
           </Typography>
           {processInstanceIconCreator(selectedInstance.state)}
-          <Typography variant="caption" style={{ fontWeight: 'bold' }}>
-            Id
-          </Typography>
-          <p>{selectedInstance?.id}</p>
+          {errorInfo}
           {selectedInstance.serviceUrl && (
             <>
               <Typography variant="caption" style={{ fontWeight: 'bold' }}>

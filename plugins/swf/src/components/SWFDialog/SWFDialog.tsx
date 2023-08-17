@@ -24,7 +24,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { SWFEditor } from '../SWFEditor';
-import { EditorViewKind } from '../SWFEditor/SWFEditor';
+import { SwfEditorView } from '../SWFEditor/SWFEditor';
 import CloseIcon from '@material-ui/icons/Close';
 
 type SWFDialogProps = {
@@ -32,7 +32,7 @@ type SWFDialogProps = {
   title: string;
   open: boolean;
   close: () => void;
-};
+} & SwfEditorView;
 
 const useStyles = makeStyles(_theme => ({
   editor: {
@@ -66,10 +66,7 @@ export const SWFDialog = (props: SWFDialogProps): JSX.Element | null => {
       </DialogTitle>
       <DialogContent>
         <Box className={classes.editor}>
-          <SWFEditor
-            kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
-            swfId={swfId}
-          />
+          <SWFEditor {...props} swfId={swfId} />
         </Box>
       </DialogContent>
     </Dialog>
