@@ -27,7 +27,7 @@ import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useTemplateParameterSchema } from '../../hooks/useTemplateParameterSchema';
 import { Stepper, type StepperProps } from '../Stepper/Stepper';
 import { SecretsContextProvider } from '../../../secrets/SecretsContext';
-import { SWFDialog } from '@backstage/plugin-swf';
+import { EditorViewKind, SWFDialog } from '@backstage/plugin-swf';
 import { workflow_title, workflow_type } from '@backstage/plugin-swf-common';
 
 const useStyles = makeStyles<BackstageTheme>(() => ({
@@ -110,6 +110,7 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
                   View {workflow_title}
                 </Button>
                 <SWFDialog
+                  kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
                   swfId={manifest.name}
                   title={manifest.title}
                   open={open}
