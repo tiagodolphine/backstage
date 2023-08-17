@@ -1,0 +1,12 @@
+{
+  "$id": "classpath:/schemas/compensation__main_schema.json",
+  "title": "compensation: Data Input Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "compensation__sub_schema__Additional_input_data.json": {
+      "$ref": "compensation__sub_schema__Additional_input_data.json",
+      "type": "object"
+    }
+  }
+}

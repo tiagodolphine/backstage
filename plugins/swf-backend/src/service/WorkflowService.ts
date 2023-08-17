@@ -54,7 +54,7 @@ export class WorkflowService {
   }
 
   private async saveFile(path: string, data: any): Promise<void> {
-    await fs.writeFile(path, JSON.stringify(data), 'utf8');
+    await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf8');
   }
 
   async saveWorkflowDefinitionFromUrl(
@@ -106,6 +106,13 @@ export class WorkflowService {
       $id: `classpath:/${workflowDataInputSchemaPath}`,
       ...dataInputSchema.compositionSchema.jsonSchema,
     };
+
+    dataInputSchema.actionSchemas.forEach(actionSchema => {
+      actionSchema.jsonSchema = {
+        $id: `classpath:/${schemas_folder}/${actionSchema.fileName}`,
+        ...actionSchema.jsonSchema,
+      };
+    });
 
     const schemaFiles = [
       dataInputSchema.compositionSchema,

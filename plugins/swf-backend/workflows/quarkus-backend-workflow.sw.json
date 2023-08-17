@@ -4,7 +4,7 @@
   "specVersion": "0.8",
   "name": "[WF] Create a Quarkus Backend application with a CI pipeline",
   "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline",
-  "dataInputSchema": "schemas/quarkus-backend-workflow__schema__quarkus-backend-workflow.json",
+  "dataInputSchema": "schemas/quarkus-backend-workflow__main_schema.json",
   "functions": [
     {
       "name": "runActionTemplateFetch",
@@ -69,7 +69,9 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-skeletons/github-actions-skeleton/",
-              "copyWithoutTemplating": ["\".github/workflows/\""],
+              "copyWithoutTemplating": [
+                "\".github/workflows/\""
+              ],
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -89,7 +91,9 @@
               }
             }
           },
-          "actionDataFilter": { "toStateData": ".actionTemplateFetchCIResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionTemplateFetchCIResult"
+          }
         }
       ],
       "transition": "Generating the Catalog Info Component"
@@ -140,7 +144,9 @@
           "functionRef": {
             "refName": "runActionPublishGithub",
             "arguments": {
-              "allowedHosts": ["\"github.com\""],
+              "allowedHosts": [
+                "\"github.com\""
+              ],
               "description": "Workflow Action",
               "repoUrl": "\"github.com?owner=\" + .githubOrg + \"&repo=\" + .repoName",
               "defaultBranch": ".defaultBranch",
@@ -149,7 +155,9 @@
               "allowRebaseMerge": true
             }
           },
-          "actionDataFilter": { "toStateData": ".actionPublishResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionPublishResult"
+          }
         }
       ],
       "transition": "Registering the Catalog Info Component"
@@ -168,7 +176,9 @@
               "catalogInfoPath": "\"/catalog-info.yaml\""
             }
           },
-          "actionDataFilter": { "toStateData": ".actionCatalogRegisterResult" }
+          "actionDataFilter": {
+            "toStateData": ".actionCatalogRegisterResult"
+          }
         }
       ],
       "end": true

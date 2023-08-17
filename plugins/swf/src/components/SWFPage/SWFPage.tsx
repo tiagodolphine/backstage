@@ -46,9 +46,7 @@ export const SWFPage = () => {
         </ContentHeader>
         <Grid container spacing={3} direction="column">
           <Grid item>
-            <InfoCard title={workflow_title_plural}>
-              <SWFDefinitionsListComponent />
-            </InfoCard>
+            <SWFDefinitionsListComponent />
           </Grid>
         </Grid>
       </Content>

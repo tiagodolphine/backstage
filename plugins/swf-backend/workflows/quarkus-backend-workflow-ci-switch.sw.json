@@ -1,10 +1,9 @@
 {
-  "id": "quarkus-backend-workflow-extended",
+  "id": "quarkus-backend-workflow-ci-switch",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "[WF] Create a Quarkus Backend application with a CI pipeline - Extended",
-  "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline - Extended",
-  "dataInputSchema": "schemas/quarkus-backend-workflow-extended__main_schema.json",
+  "name": "[WF] Create a starter Quarkus Backend application with a CI pipeline - CI Switch",
+  "description": "[WF] Create a starter Quarkus Backend application with a CI pipeline - CI Switch",
   "functions": [
     {
       "name": "runActionTemplateFetch",
@@ -17,21 +16,6 @@
     {
       "name": "runActionCatalogRegister",
       "operation": "specs/actions-openapi.json#catalog:register"
-    },
-    {
-      "name": "fs:delete",
-      "operation": "specs/actions-openapi.json#fs:delete"
-    },
-    {
-      "name": "sysout",
-      "type": "custom",
-      "operation": "sysout"
-    }
-  ],
-  "errors": [
-    {
-      "name": "Error on Action",
-      "code": "java.lang.RuntimeException"
     }
   ],
   "start": "Generating the Source Code Component",
@@ -47,7 +31,6 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/quarkus-backend-template/skeleton",
-              "targetPath": "source/",
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -72,27 +55,36 @@
           }
         }
       ],
-      "onErrors": [
-        {
-          "errorRef": "Error on Action",
-          "transition": "Handle Error"
-        }
-      ],
-      "compensatedBy": "Clear File System - Source Code",
       "transition": "Generating the CI Component"
     },
     {
       "name": "Generating the CI Component",
+      "type": "switch",
+      "dataConditions": [
+        {
+          "condition": "${ .ci == \"github\" }",
+          "transition": "Generating the CI Component - GitHub"
+        },
+        {
+          "condition": "${ .ci == \"tekton\" }",
+          "transition": "Generating the CI Component - Tekton"
+        }
+      ],
+      "defaultCondition": {
+        "transition": "Generating the CI Component - GitHub"
+      }
+    },
+    {
+      "name": "Generating the CI Component - GitHub",
       "type": "operation",
       "actionMode": "sequential",
       "actions": [
         {
-          "name": "Run Template Fetch Action - CI",
+          "name": "Run Template Fetch Action - CI - GitHub",
           "functionRef": {
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/blob/main/scaffolder-skeletons/github-actions-skeleton/",
-              "targetPath": "source/",
               "copyWithoutTemplating": [
                 "\".github/workflows/\""
               ],
@@ -120,13 +112,46 @@
           }
         }
       ],
-      "onErrors": [
+      "transition": "Generating the Catalog Info Component"
+    },
+    {
+      "name": "Generating the CI Component - Tekton",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
-          "errorRef": "Error on Action",
-          "transition": "Handle Error"
+          "name": "Run Template Fetch Action - CI - Tekton",
+          "functionRef": {
+            "refName": "runActionTemplateFetch",
+            "arguments": {
+              "url": "https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/tekton-skeleton",
+              "copyWithoutTemplating": [
+                "\".tekton/workflows/\""
+              ],
+              "values": {
+                "githubOrg": ".githubOrg",
+                "repoName": ".repoName",
+                "owner": ".owner",
+                "system": ".system",
+                "applicationType": "api",
+                "description": ".description",
+                "namespace": ".namespace",
+                "imageUrl": "imageUrl",
+                "imageBuilder": ".imageBuilder",
+                "imageRepository": ".imageRepository",
+                "port": ".port",
+                "ci": ".ci",
+                "groupId": ".groupId",
+                "artifactId": ".artifactId",
+                "javaPackageName": ".javaPackageName"
+              }
+            }
+          },
+          "actionDataFilter": {
+            "toStateData": ".actionTemplateFetchCIResult"
+          }
         }
       ],
-      "compensatedBy": "Clear File System - CI",
       "transition": "Generating the Catalog Info Component"
     },
     {
@@ -139,7 +164,6 @@
             "refName": "runActionTemplateFetch",
             "arguments": {
               "url": "https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
-              "targetPath": "source/",
               "values": {
                 "githubOrg": ".githubOrg",
                 "repoName": ".repoName",
@@ -164,13 +188,6 @@
           }
         }
       ],
-      "onErrors": [
-        {
-          "errorRef": "Error on Action",
-          "transition": "Handle Error"
-        }
-      ],
-      "compensatedBy": "Clear File System - Catalog",
       "transition": "Publishing to the Source Code Repository"
     },
     {
@@ -183,7 +200,6 @@
           "functionRef": {
             "refName": "runActionPublishGithub",
             "arguments": {
-              "sourcePath": "source/",
               "allowedHosts": [
                 "\"github.com\""
               ],
@@ -200,13 +216,6 @@
           }
         }
       ],
-      "onErrors": [
-        {
-          "errorRef": "Error on Action",
-          "transition": "Handle Error"
-        }
-      ],
-      "compensatedBy": "Remove Source Code Repository",
       "transition": "Registering the Catalog Info Component"
     },
     {
@@ -228,118 +237,8 @@
           }
         }
       ],
-      "onErrors": [
-        {
-          "errorRef": "Error on Action",
-          "transition": "Handle Error"
-        }
-      ],
-      "compensatedBy": "Remove Catalog Info Component",
       "end": true
-    },
-    {
-      "name": "Handle Error",
-      "type": "operation",
-      "actions": [
-        {
-          "name": "Error Action",
-          "functionRef": {
-            "refName": "sysout",
-            "arguments": {
-              "message": "Error on workflow, triggering compensations"
-            }
-          }
-        }
-      ],
-      "end": {
-        "compensate": true
-      }
-    },
-    {
-      "name": "Clear File System - Source Code",
-      "type": "operation",
-      "usedForCompensation": true,
-      "actions": [
-        {
-          "name": "Clear FS Action",
-          "functionRef": {
-            "refName": "fs:delete",
-            "arguments": {
-              "files": [
-                "source/"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Clear File System - CI",
-      "type": "operation",
-      "usedForCompensation": true,
-      "actions": [
-        {
-          "name": "Clear FS Action",
-          "functionRef": {
-            "refName": "fs:delete",
-            "arguments": {
-              "files": [
-                "source/"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Clear File System - Catalog",
-      "type": "operation",
-      "usedForCompensation": true,
-      "actions": [
-        {
-          "name": "Clear FS Action",
-          "functionRef": {
-            "refName": "fs:delete",
-            "arguments": {
-              "files": [
-                "source/"
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Remove Source Code Repository",
-      "type": "operation",
-      "usedForCompensation": true,
-      "actions": [
-        {
-          "name": "Remove Source Code Repository",
-          "functionRef": {
-            "refName": "sysout",
-            "arguments": {
-              "message": "Remove Source Code Repository"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Remove Catalog Info Component",
-      "type": "operation",
-      "usedForCompensation": true,
-      "actions": [
-        {
-          "name": "Remove Catalog Info Component",
-          "functionRef": {
-            "refName": "sysout",
-            "arguments": {
-              "message": "Remove Catalog Info Component"
-            }
-          }
-        }
-      ]
     }
-  ]
+  ],
+  "dataInputSchema": "schemas/quarkus-backend-workflow-ci-switch__main_schema.json"
 }

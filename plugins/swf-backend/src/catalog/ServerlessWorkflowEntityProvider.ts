@@ -33,6 +33,7 @@ import {
 import YAML from 'yaml';
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
 import { JSONSchema4 } from 'json-schema';
+import { OpenAPIV3 } from 'openapi-types';
 
 export class ServerlessWorkflowEntityProvider
   implements EntityProvider, EventSubscriber
@@ -128,7 +129,7 @@ export class ServerlessWorkflowEntityProvider
       `${this.kogitoServiceUrl}/q/openapi`,
     );
     const oaBuffer = await oaResponse.buffer();
-    const oaData = YAML.parse(oaBuffer.toString());
+    const oaData = YAML.parse(oaBuffer.toString()) as OpenAPIV3.Document;
     const entities: Entity[] = items ? this.swfToEntities(items, oaData) : [];
 
     await this.connection.applyMutation({
@@ -165,11 +166,11 @@ export class ServerlessWorkflowEntityProvider
       return undefined;
     }
 
-    // TODO: Review and improve
     return this.findSchemas({ openApiDefinitions, oaSchema }).map(schema => ({
       title: schema.title,
       required: schema.required,
       properties: schema.properties,
+      oneOf: schema.oneOf,
     }));
   }
 
@@ -226,17 +227,20 @@ export class ServerlessWorkflowEntityProvider
 
   private swfToEntities(
     items: SwfItem[],
-    openApiDefinitions: any,
+    openApiDefinitions: OpenAPIV3.Document,
   ): TemplateEntityV1beta3[] {
     return items.map(i => {
       const sanitizedId = i.id.replace(/ /g, '_');
+      const description =
+        openApiDefinitions.tags?.find(t => t.name === i.id)?.description ??
+        i.description;
       return {
         apiVersion: 'scaffolder.backstage.io/v1beta3',
         kind: 'Template',
         metadata: {
           name: sanitizedId,
           title: i.name,
-          description: i.description,
+          description,
           tags: ['experimental', workflow_type],
           annotations: {
             'backstage.io/managed-by-location': `url:${this.kogitoServiceUrl}`,

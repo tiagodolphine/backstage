@@ -19,7 +19,6 @@ import {
   ContentHeader,
   Header,
   HeaderLabel,
-  InfoCard,
   Page,
   SupportButton,
 } from '@backstage/core-components';
@@ -54,12 +53,10 @@ export const SWFInstancesViewerPage = () => {
         </ContentHeader>
         <Grid container direction="row">
           <Grid item xs={12} lg={8}>
-            <InfoCard title="Instances">
-              <ProcessInstancesTable
-                selectedInstance={selectedInstance}
-                setSelectedInstance={setSelectedInstance}
-              />
-            </InfoCard>
+            <ProcessInstancesTable
+              selectedInstance={selectedInstance}
+              setSelectedInstance={setSelectedInstance}
+            />
           </Grid>
           <Grid item xs={12} lg={4}>
             <ProcessGraphViewer
@@ -68,12 +65,16 @@ export const SWFInstancesViewerPage = () => {
             />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <ProcessVariablesViewer variables={toJsonVariables()} />
+            <Grid container direction="row">
+              <Grid item xs={12}>
+                <ProcessVariablesViewer variables={toJsonVariables()} />
+              </Grid>
+              <Grid item xs={12}>
+                <ProcessTimeline selectedInstance={selectedInstance} />
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={12} lg={4}>
-            <ProcessTimeline selectedInstance={selectedInstance} />
-          </Grid>
-          <Grid item xs={12} lg={8}>
             <ProcessDetailsViewer selectedInstance={selectedInstance} />
           </Grid>
         </Grid>

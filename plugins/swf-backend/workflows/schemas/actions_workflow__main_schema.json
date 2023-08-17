@@ -1,0 +1,12 @@
+{
+  "$id": "classpath:/schemas/actions_workflow__main_schema.json",
+  "title": "actions_workflow: Data Input Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "actions_workflow__sub_schema__Execute_Action_on_SWF_Plugin_Run_Catalog_Fetch_Action_runActionCatalogFetchFunction.json": {
+      "$ref": "actions_workflow__sub_schema__Execute_Action_on_SWF_Plugin_Run_Catalog_Fetch_Action_runActionCatalogFetchFunction.json",
+      "type": "object"
+    }
+  }
+}
