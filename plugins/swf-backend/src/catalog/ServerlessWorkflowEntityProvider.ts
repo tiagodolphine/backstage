@@ -231,16 +231,13 @@ export class ServerlessWorkflowEntityProvider
   ): TemplateEntityV1beta3[] {
     return items.map(i => {
       const sanitizedId = i.id.replace(/ /g, '_');
-      const description =
-        openApiDefinitions.tags?.find(t => t.name === i.id)?.description ??
-        i.description;
       return {
         apiVersion: 'scaffolder.backstage.io/v1beta3',
         kind: 'Template',
         metadata: {
           name: sanitizedId,
           title: i.name,
-          description,
+          description: i.description,
           tags: ['experimental', workflow_type],
           annotations: {
             'backstage.io/managed-by-location': `url:${this.kogitoServiceUrl}`,
