@@ -1,6 +1,6 @@
 {
   "$id": "classpath:/schemas/swf-ansible-job__main_schema.json",
-  "title": "Data Input Schema - [WF] Ansible Job",
+  "title": "swf-ansible-job: Data Input Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

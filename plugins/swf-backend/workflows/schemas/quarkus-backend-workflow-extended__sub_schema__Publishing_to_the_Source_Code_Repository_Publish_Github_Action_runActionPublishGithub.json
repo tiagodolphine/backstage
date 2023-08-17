@@ -1,5 +1,6 @@
 {
-  "title": "Publishing to the Source Code Repository > Publish Github Action > runActionPublishGithub",
+  "$id": "classpath:/schemas/quarkus-backend-workflow-extended__sub_schema__Publishing_to_the_Source_Code_Repository_Publish_Github_Action_runActionPublishGithub.json",
+  "title": "quarkus-backend-workflow-extended: Publishing to the Source Code Repository > Publish Github Action > runActionPublishGithub",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

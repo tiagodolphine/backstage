@@ -62,11 +62,11 @@
       "type": "switch",
       "dataConditions": [
         {
-          "condition": ".ci == github",
+          "condition": "${ .ci == \"github\" }",
           "transition": "Generating the CI Component - GitHub"
         },
         {
-          "condition": ".ci == tekton",
+          "condition": "${ .ci == \"tekton\" }",
           "transition": "Generating the CI Component - Tekton"
         }
       ],

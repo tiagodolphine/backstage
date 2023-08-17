@@ -1,5 +1,6 @@
 {
-  "title": "Register Catalog entry > runActionCatalogRegister",
+  "$id": "classpath:/schemas/swf-ansible-job__sub_schema__Register_Catalog_entry_runActionCatalogRegister.json",
+  "title": "swf-ansible-job: Register Catalog entry > runActionCatalogRegister",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

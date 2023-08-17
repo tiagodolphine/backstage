@@ -1,5 +1,6 @@
 {
-  "title": "Publish to GitHub > runActionGitHubRepoPush",
+  "$id": "classpath:/schemas/swf-ansible-job-parallel-error-handler__sub_schema__Publish_to_GitHub_runActionGitHubRepoPush.json",
+  "title": "swf-ansible-job-parallel-error-handler: Publish to GitHub > runActionGitHubRepoPush",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

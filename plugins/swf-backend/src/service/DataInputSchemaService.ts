@@ -238,44 +238,47 @@ export class DataInputSchemaService {
       }
     }
 
-    if (!actionSchemas.length) {
-      // Experimental
-      // Tries to extract variables from the workflow definition if no actions are found
-      const workflowVariableSet = this.extractVariablesFromWorkflow(
-        args.workflow,
-      );
+    const workflowVariableSet = this.extractVariablesFromWorkflow(
+      args.workflow,
+    );
 
-      if (!workflowVariableSet.size) {
-        return null;
-      }
+    if (!actionSchemas.length && !workflowVariableSet.size) {
+      return null;
+    }
 
+    if (workflowVariableSet.size) {
+      const additionalInputTitle = 'Additional input data';
       const variableSetSchema = this.buildJsonSchemaSkeleton({
         owner: 'Workflow',
         workflowId: args.workflow.id,
-        title: 'Input data',
+        title: additionalInputTitle,
         filename: this.sanitizeText({
-          text: 'Input data',
+          text: additionalInputTitle,
           placeholder: '_',
         }),
       });
 
-      workflowVariableSet.forEach(item => {
-        variableSetSchema.jsonSchema.properties = {
-          ...(variableSetSchema.jsonSchema.properties ?? {}),
-          [item]: {
-            title: item,
-            type: 'string',
-            description: 'Extracted from the Workflow definition',
-          },
-        };
-      });
+      Array.from(workflowVariableSet)
+        .filter(v => !workflowArgsMap.get(v))
+        .forEach(item => {
+          variableSetSchema.jsonSchema.properties = {
+            ...(variableSetSchema.jsonSchema.properties ?? {}),
+            [item]: {
+              title: item,
+              type: 'string',
+              description: 'Extracted from the Workflow definition',
+            },
+          };
+        });
 
-      actionSchemas.push(variableSetSchema);
+      if (Object.keys(variableSetSchema.jsonSchema.properties ?? {}).length) {
+        actionSchemas.push(variableSetSchema);
+      }
     }
 
     const compositionSchema = this.buildJsonSchemaSkeleton({
       workflowId: args.workflow.id,
-      title: `Data Input Schema - ${args.workflow.name ?? args.workflow.id}`,
+      title: 'Data Input Schema',
     });
 
     actionSchemas.forEach(actionSchema => {
@@ -786,7 +789,7 @@ export class DataInputSchemaService {
       owner: args.owner ?? 'Workflow',
       fileName: fullFileName,
       jsonSchema: {
-        title: args.title,
+        title: `${args.workflowId}: ${args.title}`,
         $schema: JSON_SCHEMA_VERSION,
         type: 'object',
       },
@@ -942,9 +945,13 @@ export class DataInputSchemaService {
   private extractVariablesFromWorkflow(
     workflow: Specification.Workflow,
   ): Set<string> {
+    const blockList = ['.actionDataFilter'];
     const variableSet = new Set<string>();
 
     function traverseValue(value: any, currentPath: string) {
+      if (blockList.some(b => currentPath.includes(b))) {
+        return;
+      }
       if (typeof value === 'string') {
         const match = value.match(
           /(^|\s|\{)\s*\.([a-zA-Z_][a-zA-Z0-9_]*)\s*([=!<>]+)/,
@@ -952,7 +959,9 @@ export class DataInputSchemaService {
         if (match?.[2]) {
           variableSet.add(match[2]);
         }
-        const dotMatch = value.match(/(^|\s|\{)\s*\.([a-zA-Z_][a-zA-Z0-9_]*)/);
+        const dotMatch = value.match(
+          /(^|\s|\{)\s*\.(?![a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)([a-zA-Z_][a-zA-Z0-9_]*)/,
+        );
         if (dotMatch?.[2]) {
           variableSet.add(dotMatch[2]);
         }

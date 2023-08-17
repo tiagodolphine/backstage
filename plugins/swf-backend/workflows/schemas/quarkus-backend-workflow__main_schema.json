@@ -1,6 +1,6 @@
 {
   "$id": "classpath:/schemas/quarkus-backend-workflow__main_schema.json",
-  "title": "Data Input Schema - [WF] Create a Quarkus Backend application with a CI pipeline",
+  "title": "quarkus-backend-workflow: Data Input Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
@@ -14,6 +14,10 @@
     },
     "quarkus-backend-workflow__sub_schema__Publishing_to_the_Source_Code_Repository_Publish_Github_Action_runActionPublishGithub.json": {
       "$ref": "quarkus-backend-workflow__sub_schema__Publishing_to_the_Source_Code_Repository_Publish_Github_Action_runActionPublishGithub.json",
+      "type": "object"
+    },
+    "quarkus-backend-workflow__sub_schema__Additional_input_data.json": {
+      "$ref": "quarkus-backend-workflow__sub_schema__Additional_input_data.json",
       "type": "object"
     }
   }

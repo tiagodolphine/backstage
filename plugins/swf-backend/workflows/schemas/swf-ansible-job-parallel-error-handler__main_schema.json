@@ -1,6 +1,6 @@
 {
   "$id": "classpath:/schemas/swf-ansible-job-parallel-error-handler__main_schema.json",
-  "title": "Data Input Schema - [WF] Ansible Job - Parallel - Error Handler",
+  "title": "swf-ansible-job-parallel-error-handler: Data Input Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

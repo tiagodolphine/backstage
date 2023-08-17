@@ -107,6 +107,13 @@ export class WorkflowService {
       ...dataInputSchema.compositionSchema.jsonSchema,
     };
 
+    dataInputSchema.actionSchemas.forEach(actionSchema => {
+      actionSchema.jsonSchema = {
+        $id: `classpath:/${schemas_folder}/${actionSchema.fileName}`,
+        ...actionSchema.jsonSchema,
+      };
+    });
+
     const schemaFiles = [
       dataInputSchema.compositionSchema,
       ...dataInputSchema.actionSchemas,

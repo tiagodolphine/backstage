@@ -21,14 +21,14 @@
       "type": "switch",
       "dataConditions": [
         {
-          "condition": ".shouldCompensate==true",
+          "condition": "${ .shouldCompensate == \"true\" }",
           "transition": {
             "nextState": "finish_compensate",
             "compensate": true
           }
         },
         {
-          "condition": ".shouldCompensate==false",
+          "condition": "${ .shouldCompensate == \"false\" }",
           "transition": {
             "nextState": "finish_not_compensate",
             "compensate": false

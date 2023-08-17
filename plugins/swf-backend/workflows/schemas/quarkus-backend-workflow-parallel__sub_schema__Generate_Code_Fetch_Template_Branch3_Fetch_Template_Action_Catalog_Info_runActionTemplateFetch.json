@@ -1,5 +1,6 @@
 {
-  "title": "Generate Code Fetch Template > Branch3 > Fetch Template Action - Catalog Info > runActionTemplateFetch",
+  "$id": "classpath:/schemas/quarkus-backend-workflow-parallel__sub_schema__Generate_Code_Fetch_Template_Branch3_Fetch_Template_Action_Catalog_Info_runActionTemplateFetch.json",
+  "title": "quarkus-backend-workflow-parallel: Generate Code Fetch Template > Branch3 > Fetch Template Action - Catalog Info > runActionTemplateFetch",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

@@ -1,0 +1,12 @@
+{
+  "$id": "classpath:/schemas/jsongreet__main_schema.json",
+  "title": "jsongreet: Data Input Schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "jsongreet__sub_schema__Additional_input_data.json": {
+      "$ref": "jsongreet__sub_schema__Additional_input_data.json",
+      "type": "object"
+    }
+  }
+}

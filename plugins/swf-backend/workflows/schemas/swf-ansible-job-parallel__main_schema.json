@@ -1,6 +1,6 @@
 {
   "$id": "classpath:/schemas/swf-ansible-job-parallel__main_schema.json",
-  "title": "Data Input Schema - [WF] Ansible Job - Parallel",
+  "title": "swf-ansible-job-parallel: Data Input Schema",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

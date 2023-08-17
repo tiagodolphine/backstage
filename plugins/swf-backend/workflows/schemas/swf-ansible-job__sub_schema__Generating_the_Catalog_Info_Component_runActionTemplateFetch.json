@@ -1,5 +1,6 @@
 {
-  "title": "Generating the Catalog Info Component > runActionTemplateFetch",
+  "$id": "classpath:/schemas/swf-ansible-job__sub_schema__Generating_the_Catalog_Info_Component_runActionTemplateFetch.json",
+  "title": "swf-ansible-job: Generating the Catalog Info Component > runActionTemplateFetch",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
