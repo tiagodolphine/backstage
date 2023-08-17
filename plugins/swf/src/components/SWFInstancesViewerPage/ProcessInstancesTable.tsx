@@ -88,23 +88,25 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
 
   return (
     <InfoCard title="Instances">
-      <Table<Row>
-        data={data}
-        columns={[column1, column2, column3]}
-        onRowClick={(_, rowData) => {
-          if (rowData && rowData.pid !== selectedInstance?.id) {
-            loadInstance(rowData.pid);
-          }
-        }}
-        options={{
-          padding: 'dense',
-          rowStyle: (rowData: Row) => {
-            return rowData.pid === selectedInstance?.id
-              ? { backgroundColor: '#a266e5' }
-              : {};
-          },
-        }}
-      />
+      <div style={{ height: '500px', padding: '10px' }}>
+        <Table<Row>
+          data={data}
+          columns={[column1, column2, column3]}
+          onRowClick={(_, rowData) => {
+            if (rowData && rowData.pid !== selectedInstance?.id) {
+              loadInstance(rowData.pid);
+            }
+          }}
+          options={{
+            padding: 'dense',
+            rowStyle: (rowData: Row) => {
+              return rowData.pid === selectedInstance?.id
+                ? { backgroundColor: '#a266e5' }
+                : {};
+            },
+          }}
+        />
+      </div>
     </InfoCard>
   );
 };
