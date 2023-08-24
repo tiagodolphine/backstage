@@ -31,6 +31,8 @@ import { resolve } from 'path';
 import { WorkflowService } from './WorkflowService';
 import { OpenApiService } from './OpenApiService';
 import { DataInputSchemaService } from './DataInputSchemaService';
+import { CloudEventService } from './CloudEventService';
+import { JiraEvent, JiraService } from './JiraService';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
@@ -73,8 +75,11 @@ export async function createRouter(
     '/home/kogito/persistence';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
-  // TODO: uncomment when starting using it
-  // const cloudEventService = new CloudEventService(logger);
+  const cloudEventService = new CloudEventService(
+    logger,
+    `${kogitoBaseUrl}:${kogitoPort}`,
+  );
+  const jiraService = new JiraService(logger, cloudEventService);
   const openApiService = new OpenApiService(logger, discovery);
   const dataInputSchemaService = new DataInputSchemaService(
     logger,
@@ -92,6 +97,7 @@ export async function createRouter(
     kogitoPort,
     workflowService,
     openApiService,
+    jiraService,
   );
   setupExternalRoutes(router, discovery);
 
@@ -122,6 +128,7 @@ function setupInternalRoutes(
   kogitoPort: number,
   workflowService: WorkflowService,
   openApiService: OpenApiService,
+  jiraService: JiraService,
 ) {
   router.get('/items', async (_, res) => {
     const svcResponse = await executeWithRetry(() =>
@@ -260,6 +267,12 @@ function setupInternalRoutes(
   router.put('/actions/schema', async (_, res) => {
     const openApi = await workflowService.saveOpenApi();
     res.json(openApi).status(200).send();
+  });
+
+  router.post('/webhook/jira', async (req, res) => {
+    const event = req.body as JiraEvent;
+    await jiraService.handleEvent(event);
+    res.status(200).send();
   });
 }
 
