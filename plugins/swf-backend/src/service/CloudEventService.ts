@@ -22,19 +22,25 @@ export type CloudEventResponse =
   | { success: false; error: string };
 
 export class CloudEventService {
-  constructor(private readonly logger: Logger) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly baseUrl: string,
+  ) {}
 
   public async send<T>(args: {
-    targetUrl: string;
     event: CloudEvent<T>;
+    endpoint?: string;
   }): Promise<CloudEventResponse> {
     try {
+      const targetUrl = args.endpoint
+        ? `${this.baseUrl}/${args.endpoint}`
+        : this.baseUrl;
       this.logger.info(
-        `Sending CloudEvent to ${args.targetUrl} with data ${JSON.stringify(
+        `Sending CloudEvent to ${targetUrl} with data ${JSON.stringify(
           args.event,
         )}`,
       );
-      const emit = emitterFor(httpTransport(args.targetUrl));
+      const emit = emitterFor(httpTransport(targetUrl));
       await emit(args.event);
       return { success: true };
     } catch (e) {
