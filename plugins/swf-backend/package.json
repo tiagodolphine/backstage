@@ -39,6 +39,7 @@
     "@severlessworkflow/sdk-typescript": "^3.0.3",
     "@types/express": "*",
     "@types/node-fetch": "^2.6.4",
+    "cloudevents": "^8.0.0",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.3",
     "express-promise-router": "^4.1.0",
