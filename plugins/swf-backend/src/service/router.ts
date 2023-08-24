@@ -68,6 +68,9 @@ export async function createRouter(
   const kogitoServiceContainer =
     config.getOptionalString('swf.workflow-service.container') ??
     'quay.io/kiegroup/kogito-swf-devmode:1.42';
+  const kogitoPersistencePath =
+    config.getOptionalString('swf.workflow-service.persistence.path') ??
+    '/home/kogito/persistence';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
   const openApiService = new OpenApiService(logger, discovery);
@@ -95,6 +98,7 @@ export async function createRouter(
     kogitoPort,
     kogitoResourcesPath,
     kogitoServiceContainer,
+    kogitoPersistencePath,
     logger,
   );
 
@@ -296,10 +300,11 @@ async function setupKogitoService(
   kogitoPort: number,
   kogitoResourcesPath: string,
   kogitoServiceContainer: string,
+  kogitoPersistencePath: string,
   logger: Logger,
 ) {
   const kogitoResourcesAbsPath = resolve(`${kogitoResourcesPath}`);
-  const launcher = `docker run --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false ${kogitoServiceContainer}`;
+  const launcher = `docker run --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false -e QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${kogitoPersistencePath} ${kogitoServiceContainer}`;
   exec(
     launcher,
     (error: ExecException | null, stdout: string, stderr: string) => {
