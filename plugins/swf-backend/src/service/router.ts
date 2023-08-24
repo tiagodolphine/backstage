@@ -73,6 +73,8 @@ export async function createRouter(
     '/home/kogito/persistence';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
+  // TODO: uncomment when starting using it
+  // const cloudEventService = new CloudEventService(logger);
   const openApiService = new OpenApiService(logger, discovery);
   const dataInputSchemaService = new DataInputSchemaService(
     logger,
