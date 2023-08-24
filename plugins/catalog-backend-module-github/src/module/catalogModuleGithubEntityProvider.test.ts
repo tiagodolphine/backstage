@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  PluginTaskScheduler,
-  TaskScheduleDefinition,
-} from '@backstage/backend-tasks';
+import { TaskScheduleDefinition } from '@backstage/backend-tasks';
 import { mockServices, startTestBackend } from '@backstage/backend-test-utils';
 import { catalogProcessingExtensionPoint } from '@backstage/plugin-catalog-node/alpha';
 import { Duration } from 'luxon';
@@ -39,12 +36,12 @@ describe('catalogModuleGithubEntityProvider', () => {
       },
     };
     const runner = jest.fn();
-    const scheduler = {
-      createScheduledTaskRunner: (schedule: TaskScheduleDefinition) => {
+    const scheduler = mockServices.scheduler.mock({
+      createScheduledTaskRunner(schedule) {
         usedSchedule = schedule;
-        return runner;
+        return { run: runner };
       },
-    } as unknown as PluginTaskScheduler;
+    });
 
     const config = {
       catalog: {
@@ -65,11 +62,7 @@ describe('catalogModuleGithubEntityProvider', () => {
       features: [
         catalogModuleGithubEntityProvider(),
         mockServices.rootConfig.factory({ data: config }),
-        createServiceFactory({
-          service: coreServices.scheduler,
-          deps: {},
-          factory: async () => scheduler,
-        }),
+        scheduler.factory,
       ],
     });
 

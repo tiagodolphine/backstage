@@ -1,7 +1,5 @@
-import { parseStringParam } from './common';
-
 /*
- * Copyright 2023 The Backstage Authors
+ * Copyright 2020 The Backstage Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +13,9 @@ import { parseStringParam } from './common';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export function parseFullTextFilterFields(params: Record<string, unknown>) {
-  const fullTextFilterFields = parseStringParam(
-    params.fullTextFilterFields,
-    'fullTextFilterFields',
-  );
-  if (!fullTextFilterFields) {
-    return undefined;
-  }
 
-  return fullTextFilterFields.split(',');
-}
+// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// allows you to do things like:
+// expect(element).toHaveTextContent(/react/i)
+// learn more: https://github.com/testing-library/jest-dom
+import '@testing-library/jest-dom';
