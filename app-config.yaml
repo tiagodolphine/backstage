@@ -194,6 +194,9 @@ swf:
   workflowService:
     path: ../../plugins/swf-backend/workflows
     container: quay.io/kiegroup/kogito-swf-devmode-nightly:latest
+    jira:
+      url: ${JIRA_URL}
+      bearer-token: ${JIRA_BEARER_TOKEN}
   editor:
     path: https://kiegroup.github.io/kogito-online/swf-chrome-extension/0.31.0
 
