@@ -42,7 +42,7 @@ import {
   to_be_entered,
 } from '@backstage/plugin-swf-common';
 import { Notification } from '@kie-tools-core/notifications/dist/api';
-import { useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { swfApiRef } from '../../api';
 import {
   EmbeddedEditorFile,
@@ -81,7 +81,6 @@ export interface SWFEditorRef {
   isReady: boolean;
 }
 
-const EDITOR_CONTEXT_PATH = '/swf';
 const LOCALE = 'en';
 const DEFAULT_FILENAME = 'fileName.sw.json';
 const NODE_COLORS = {
@@ -110,6 +109,8 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
   SWFEditorProps
 > = (props, forwardedRef) => {
   const swfApi = useApi(swfApiRef);
+  const configApi = useApi(configApiRef);
+  const contextPath = configApi.getString('swf.editor.path');
   const { swfId, kind } = props;
   const { editor, editorRef } = useEditorRef();
   const [embeddedFile, setEmbeddedFile] = useState<EmbeddedEditorFile>();
@@ -133,14 +134,14 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
         new EnvelopeMapping({
           type: 'swf',
           filePathGlob: '**/*.sw.json',
-          resourcesPathPrefix: EDITOR_CONTEXT_PATH,
+          resourcesPathPrefix: contextPath,
           envelopeContent: {
             type: EnvelopeContentType.PATH,
-            path: `${EDITOR_CONTEXT_PATH}/serverless-workflow-combined-editor-envelope.html`,
+            path: `${contextPath}/serverless-workflow-combined-editor-envelope.html`,
           },
         }),
       ]),
-    [],
+    [contextPath],
   );
 
   const stateControl = useMemo(() => new StateControl(), []);

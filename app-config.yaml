@@ -191,9 +191,11 @@ allure:
 swf:
   baseUrl: http://localhost
   port: 8899
-  workflow-service:
+  workflowService:
     path: ../../plugins/swf-backend/workflows
     container: quay.io/kiegroup/kogito-swf-devmode-nightly:latest
+  editor:
+    path: https://kiegroup.github.io/kogito-online/swf-chrome-extension/0.31.0
 
 integrations:
   github:

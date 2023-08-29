@@ -65,13 +65,13 @@ export async function createRouter(
     `Using kogito Serverless Workflow Url of: ${kogitoBaseUrl}:${kogitoPort}`,
   );
   const kogitoResourcesPath =
-    config.getOptionalString('swf.workflow-service.path') ??
+    config.getOptionalString('swf.workflowService.path') ??
     '../../plugins/swf-backend/workflows:/home/kogito/serverless-workflow-project/src/main/resources';
   const kogitoServiceContainer =
-    config.getOptionalString('swf.workflow-service.container') ??
+    config.getOptionalString('swf.workflowService.container') ??
     'quay.io/kiegroup/kogito-swf-devmode:1.42';
   const kogitoPersistencePath =
-    config.getOptionalString('swf.workflow-service.persistence.path') ??
+    config.getOptionalString('swf.workflowService.persistence.path') ??
     '/home/kogito/persistence';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;

@@ -45,9 +45,9 @@ export default async function createPlugin(
     `Using kogito Serverless Workflow Url of: ${kogitoBaseUrl}:${kogitoPort}`,
   );
   const owner =
-    config.getOptionalString('swf.workflow-service.owner') ?? 'infrastructure';
+    config.getOptionalString('swf.workflowService.owner') ?? 'infrastructure';
   const environment =
-    config.getOptionalString('swf.workflow-service.environment') ??
+    config.getOptionalString('swf.workflowService.environment') ??
     'development';
 
   const swfProvider = new ServerlessWorkflowEntityProvider({
