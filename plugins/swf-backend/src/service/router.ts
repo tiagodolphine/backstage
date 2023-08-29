@@ -74,9 +74,9 @@ export async function createRouter(
     config.getOptionalString('swf.workflowService.persistence.path') ??
     '/home/kogito/persistence';
   const jiraHost =
-    config.getOptionalString('swf.workflow-service.jira.host') ?? 'localhost';
+    config.getOptionalString('swf.workflowService.jira.host') ?? 'localhost';
   const jiraBearerToken =
-    config.getOptionalString('swf.workflow-service.jira.bearerToken') ?? '';
+    config.getOptionalString('swf.workflowService.jira.bearerToken') ?? '';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
   // @ts-ignore
