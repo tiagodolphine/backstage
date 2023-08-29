@@ -1,0 +1,71 @@
+{
+  "id": "jira",
+  "version": "1.0",
+  "specVersion": "0.8",
+  "name": "[WF] Ansible Job Long Running",
+  "description": "[WF] Launch an Ansible Job within Ansible Automation Platform",
+  "functions": [
+    {
+      "name": "jiraCreateIssue",
+      "operation": "specs/jira-openapi.json#createIssue"
+    }
+  ],
+  "events": [
+    {
+      "name": "callbackEvent",
+      "type": "callback_event_type"
+    }
+  ],
+  "errors": [
+    {
+      "name": "Error on Action",
+      "code": "java.lang.RuntimeException"
+    }
+  ],
+  "start": "Create Repository on Github",
+  "states": [
+    {
+      "name": "Create Repository on Github",
+      "type": "callback",
+      "action": {
+        "name": "callbackAction",
+        "functionRef": {
+          "refName": "jiraCreateIssue",
+          "arguments": {
+            "input": "test",
+            "fields": {
+              "assignee": {
+                "name": "tiagodolphine"
+              },
+              "description": "Order entry fails when selecting supplier",
+              "issuetype": {
+                "id": "10001"
+              },
+              "labels": [
+                "bugfix"
+              ],
+              "project": {
+                "id": "10000"
+              },
+              "reporter": {
+                "name": "tiagodolphine"
+              },
+              "summary": "Main order flow broken",
+              "customfield_10104":"test field"
+            }
+        }
+      }
+    },
+      "eventRef": "callbackEvent",
+      "transition": "Register Catalog entry"
+    },
+    {
+      "name": "Register Catalog entry",
+      "type": "inject",
+      "data": {
+
+      },
+      "end": true
+    }
+  ]
+}

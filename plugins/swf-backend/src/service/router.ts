@@ -73,8 +73,13 @@ export async function createRouter(
   const kogitoPersistencePath =
     config.getOptionalString('swf.workflowService.persistence.path') ??
     '/home/kogito/persistence';
+  const jiraHost =
+    config.getOptionalString('swf.workflowService.jira.host') ?? 'localhost';
+  const jiraBearerToken =
+    config.getOptionalString('swf.workflowService.jira.bearerToken') ?? '';
 
   const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
+  // @ts-ignore
   const cloudEventService = new CloudEventService(
     logger,
     `${kogitoBaseUrl}:${kogitoPort}`,
@@ -107,6 +112,8 @@ export async function createRouter(
     kogitoResourcesPath,
     kogitoServiceContainer,
     kogitoPersistencePath,
+    jiraHost,
+    jiraBearerToken,
     logger,
   );
 
@@ -316,10 +323,12 @@ async function setupKogitoService(
   kogitoResourcesPath: string,
   kogitoServiceContainer: string,
   kogitoPersistencePath: string,
+  jiraHost: string,
+  jiraBearerToken: string,
   logger: Logger,
 ) {
   const kogitoResourcesAbsPath = resolve(`${kogitoResourcesPath}`);
-  const launcher = `docker run --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false -e QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${kogitoPersistencePath} ${kogitoServiceContainer}`;
+  const launcher = `docker run --add-host jira.test:${jiraHost} --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false -e QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${kogitoPersistencePath} -e QUARKUS_REST_CLIENT_JIRA_OPENAPI_JSON_URL=http://jira.test:8080 -e JIRABEARERTOKEN=${jiraBearerToken} ${kogitoServiceContainer}`;
   exec(
     launcher,
     (error: ExecException | null, stdout: string, stderr: string) => {
