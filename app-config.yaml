@@ -193,10 +193,12 @@ swf:
   port: 8899
   workflowService:
     path: ../../plugins/swf-backend/workflows
-    container: quay.io/kiegroup/kogito-swf-devmode-nightly:latest
+    container: quay.io/kiegroup/kogito-swf-devmode-nightly
+    persistence:
+      path: ${POSTGRE_PERSISTENCE_PATH}
     jira:
       url: ${JIRA_URL}
-      bearer-token: ${JIRA_BEARER_TOKEN}
+      bearerToken: ${JIRA_BEARER_TOKEN}
   editor:
     path: https://kiegroup.github.io/kogito-online/swf-chrome-extension/0.31.0
 

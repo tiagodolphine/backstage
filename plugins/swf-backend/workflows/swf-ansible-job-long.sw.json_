@@ -20,7 +20,7 @@
     },
     {
       "name": "jiraCreateIssue",
-      "operation": "specs/jira-v3.v3.json#createIssue"
+      "operation": "specs/jira-openapi.json#createIssue"
     }
   ],
   "events": [
