@@ -73,9 +73,8 @@ export async function createRouter(
   const kogitoPersistencePath =
     config.getOptionalString('swf.workflowService.persistence.path') ??
     '/home/kogito/persistence';
-  const jiraUrl =
-    config.getOptionalString('swf.workflow-service.jira.url') ??
-    'http://localhost:8080';
+  const jiraHost =
+    config.getOptionalString('swf.workflow-service.jira.host') ?? 'localhost';
   const jiraBearerToken =
     config.getOptionalString('swf.workflow-service.jira.bearerToken') ?? '';
 
@@ -113,7 +112,7 @@ export async function createRouter(
     kogitoResourcesPath,
     kogitoServiceContainer,
     kogitoPersistencePath,
-    jiraUrl,
+    jiraHost,
     jiraBearerToken,
     logger,
   );
@@ -324,12 +323,12 @@ async function setupKogitoService(
   kogitoResourcesPath: string,
   kogitoServiceContainer: string,
   kogitoPersistencePath: string,
-  jiraUrl: string,
+  jiraHost: string,
   jiraBearerToken: string,
   logger: Logger,
 ) {
   const kogitoResourcesAbsPath = resolve(`${kogitoResourcesPath}`);
-  const launcher = `docker run --add-host jira.test:${jiraUrl} --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false -e QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${kogitoPersistencePath} -e QUARKUS_REST_CLIENT_JIRA_OPENAPI_JSON_URL=http://jira.test:8080 -e JIRABEARERTOKEN=${jiraBearerToken} ${kogitoServiceContainer}`;
+  const launcher = `docker run --add-host jira.test:${jiraHost} --add-host host.docker.internal:host-gateway --rm -p ${kogitoPort}:8080 -v ${kogitoResourcesAbsPath}:/home/kogito/serverless-workflow-project/src/main/resources -e KOGITO.CODEGEN.PROCESS.FAILONERROR=false -e QUARKUS_EMBEDDED_POSTGRESQL_DATA_DIR=${kogitoPersistencePath} -e QUARKUS_REST_CLIENT_JIRA_OPENAPI_JSON_URL=http://jira.test:8080 -e JIRABEARERTOKEN=${jiraBearerToken} ${kogitoServiceContainer}`;
   exec(
     launcher,
     (error: ExecException | null, stdout: string, stderr: string) => {

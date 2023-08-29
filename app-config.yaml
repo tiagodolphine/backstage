@@ -197,7 +197,7 @@ swf:
     persistence:
       path: ${POSTGRE_PERSISTENCE_PATH}
     jira:
-      url: ${JIRA_URL}
+      host: ${JIRA_HOST}
       bearerToken: ${JIRA_BEARER_TOKEN}
   editor:
     path: https://kiegroup.github.io/kogito-online/swf-chrome-extension/0.31.0
