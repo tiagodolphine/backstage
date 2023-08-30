@@ -23,6 +23,9 @@ export interface BaseIssueEvent {
   issue: {
     id: string;
     key: string;
+    fields: {
+      labels: Array<String>;
+    };
   };
 }
 
@@ -64,14 +67,18 @@ export class JiraService {
       const newStatus = event.changelog.items.find(
         item => item.field === 'status',
       )?.toString;
+      const label: String = event.issue.fields.labels.find(l =>
+        l.includes('workflowId'),
+      );
+      const workflowInstanceId: String = label?.slice(label.indexOf('=') + 1);
       if (newStatus === 'Done') {
-        // TODO: send cloud event
         const response = await this.cloudEventService.send({
           event: new CloudEvent({
-            type: 'my.cloud.event.type',
-            source: 'my.cloud.event.source',
+            type: 'jira_webhook_callback', // same defined in the workflow
+            source: 'jira',
+            kogitoprocrefid: workflowInstanceId, // correlation
             data: {
-              asdf: 1,
+              jiraEvent: event,
             },
           }),
         });

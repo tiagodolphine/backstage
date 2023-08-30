@@ -31,13 +31,13 @@
   "events": [
     {
       "name": "callbackEvent",
-      "type": "callback_event_type",
-      "source" : "jira"
+      "type": "jira_webhook_callback",
+      "source": "jira"
     }
   ],
   "errors": [
     {
-      "name": "Error on Action",
+      "name": "Error",
       "code": "java.lang.RuntimeException"
     }
   ],
@@ -57,17 +57,20 @@
               "url": "https://github.com/manstis/janus-software-templates/tree/main/scaffolder-templates/ansible-job/skeleton",
               "targetPath": "argo/ansibleJobs/",
               "values": {
-                "component_id": "${.component_id}",
-                "jobTemplate": "${.jobTemplate}",
-                "name": "${.component_id}",
-                "namespace": "${.namespace}",
-                "connection_secret": "${.connection_secret}"
+                "component_id": ".component_id",
+                "jobTemplate": ".jobTemplate",
+                "name": ".component_id",
+                "namespace": ".namespace",
+                "connection_secret": ".connection_secret"
               }
             }
+          },
+          "actionDataFilter": {
+            "toStateData": ".actionAnsibleJobResult"
           }
         }
       ],
-      "compensatedBy" : "Clean resources",
+      "compensatedBy": "Clean resources",
       "transition": "Generating the Catalog Info Component"
     },
     {
@@ -82,18 +85,21 @@
               "id": "$WORKFLOW.instanceId",
               "url": "https://github.com/manstis/janus-software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton/",
               "values": {
-                "githubOrg": "${.githubOrg}",
-                "repoName": "${.repoName}",
-                "owner": "${.owner}",
+                "githubOrg": ".githubOrg",
+                "repoName": ".repoName",
+                "owner": ".owner",
                 "applicationType": "api",
                 "system": "system:default/podcast",
-                "description": "${.description}"
+                "description": ".description"
               }
+            },
+            "actionDataFilter": {
+              "toStateData": ".actionCatalogResult"
             }
           }
         }
       ],
-      "compensatedBy": "Clean resources", 
+      "compensatedBy": "Clean resources",
       "transition": "Publish to GitHub"
     },
     {
@@ -106,20 +112,20 @@
             "refName": "runActionGitHubRepoPush",
             "arguments": {
               "id": "$WORKFLOW.instanceId",
-              "repoUrl": "${.repoUrl}",
-              "defaultBranch": "${.defaultBranch}",
+              "repoUrl": "\"github.com?owner=\" + .githubOrg + \"&repo=\" + .repoName",
+              "defaultBranch": ".defaultBranch",
               "protectDefaultBranch": false,
               "protectEnforceAdmins": false
             }
           },
           "actionDataFilter": {
-            "results": "."
+            "toStateData": ".actionPublishResult"
           }
         }
       ],
       "onErrors": [
         {
-          "errorRef": "Error on Action",
+          "errorRef": "Error",
           "transition": "Handle Github Error"
         }
       ],
@@ -132,17 +138,17 @@
         {
           "name": "Handle Github Error",
           "functionRef": {
-            "refName" : "print",
-            "arguments":{
-              "message" : "Error publising to github"
+            "refName": "print",
+            "arguments": {
+              "message": "Error publishing to github"
             }
           }
         }
       ],
-      "transition": "Create Repository on Github"
-    },    
+      "transition": "Open Jira issue"
+    },
     {
-      "name": "Create Repository on Github",
+      "name": "Open Jira issue",
       "type": "callback",
       "action": {
         "name": "callbackAction",
@@ -150,46 +156,55 @@
           "refName": "jiraCreateIssue",
           "arguments": {
             "fields": {
-                "assignee": {
-                  "name": "tiagodolphine"
-                },    
-                "description": "Create Github Repository",
-                "issuetype": {
-                  "id": "10001"
-                },
-                "labels": [
-                  "backstage"
-                ],
-                "project": {
-                  "id": "10000"
-                },
-                "reporter": {
-                  "name": "tiagodolphine"
-                },
-                "summary": "New Repository for Ansible project on Backstage",
-                "customfield_10104":"testing custom field"  
-            }          
+              "assignee": {
+                "name": ".jiraAssignee"
+              },
+              "description": "${`Create Github Repository: ` .repoName .repoUrl}",
+              "id": "$WORKFLOW.instanceId",
+              "repoUrl": "${.repoUrl}",
+              "issuetype": {
+                "id": "10001"
+              },
+              "labels": [
+                "backstage-workflow"
+              ],
+              "project": {
+                "id": "10000"
+              },
+              "reporter": {
+                "name": ".jiraReporter"
+              },
+              "summary": "New Repository for Ansible project on Backstage",
+              "customfield_10104": "testing custom field"
+            }
+          }
+        },
+        "actionDataFilter": {
+          "toStateData": "."
         }
-      }
-    },
+      },
       "eventRef": "callbackEvent",
       "compensatedBy": "Close Jira issue",
       "transition": "Check Repository Created"
     },
-{
-  "name": "Check Repository Created",
-  "type": "switch",  
-  "dataConditions": [ 
     {
-          "condition": "${ .issue != null }",
-          "transition": "Publish to GitHub"
-        }],
-  "defaultCondition": {    
-    "end": {
-      "compensate": true
-    }
-  }
-},
+      "name": "Check Repository Created",
+      "type": "switch",
+      "dataConditions": [
+        {
+          "condition": ".jiraEvent != null",
+          "transition": "Publish to GitHub",
+          "name": "created"
+        },
+        {
+          "condition": ".jiraEvent = null",
+          "name": "timeout",
+          "end": {
+            "compensate": true
+          }
+        }
+      ]
+    },
     {
       "name": "Register Catalog entry",
       "type": "operation",
@@ -200,12 +215,12 @@
             "refName": "runActionCatalogRegister",
             "arguments": {
               "id": "$WORKFLOW.instanceId",
-              "repoContentsUrl": "${.repoContentsUrl}",
-              "catalogInfoPath": "/catalog-info.yaml"
+              "repoContentsUrl": ".actionPublishResult.repoContentsUrl",
+              "catalogInfoPath": "\"/catalog-info.yaml\""
             }
           },
           "actionDataFilter": {
-            "toStateData": ".actionResult"
+            "toStateData": ".actionCatalogRegisterResult"
           }
         }
       ],
@@ -218,14 +233,14 @@
         {
           "name": "Clean resources",
           "functionRef": {
-            "refName" : "print",
-            "arguments":{
-              "message" : "Cleaning resources"
+            "refName": "print",
+            "arguments": {
+              "message": "Cleaning resources"
             }
           }
         }
       ],
-      "usedForCompensation" : true
+      "usedForCompensation": true
     },
     {
       "name": "Close Jira issue",
@@ -233,35 +248,38 @@
       "actionMode": "sequential",
       "actions": [
         {
-        "name": "callbackAction",
-        "functionRef": {
-          "refName": "jiraCreateIssue",
-          "arguments": {
-            "fields": {
+          "name": "callbackAction",
+          "functionRef": {
+            "refName": "jiraCreateIssue",
+            "arguments": {
+              "fields": {
                 "assignee": {
-                  "name": "tiagodolphine"
-                },    
-                "description": "Create Github Repository",
+                  "name": ".jiraAssignee"
+                },
+                "description": "${`Create Github Repository: ` .repoName .repoUrl}",
+                "id": "$WORKFLOW.instanceId",
+                "repoUrl": "${.repoUrl}",
                 "issuetype": {
                   "id": "10001"
                 },
                 "labels": [
-                  "backstage"
+                  "backstage-workflow"
                 ],
                 "project": {
                   "id": "10000"
                 },
                 "reporter": {
-                  "name": "tiagodolphine"
+                  "name": ".jiraReporter"
                 },
                 "summary": "New Repository for Ansible project on Backstage",
-                "customfield_10104":"testing custom field"  
+                "customfield_10104": "testing custom field",
+                "customfield_workflowId": "$WORKFLOW.instanceId"
+              }
             }
+          }
         }
-      }
-      }
       ],
-      "usedForCompensation" : true      
-    }  
+      "usedForCompensation": true
+    }
   ]
 }
