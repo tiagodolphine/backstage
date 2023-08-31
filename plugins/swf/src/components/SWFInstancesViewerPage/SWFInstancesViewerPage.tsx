@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Content,
   ContentHeader,
@@ -32,11 +32,6 @@ import { ProcessTimeline } from './ProcessTimeline';
 
 export const SWFInstancesViewerPage = () => {
   const [selectedInstance, setSelectedInstance] = useState<ProcessInstance>();
-
-  const toJsonVariables = useCallback(() => {
-    const variables: string | undefined = selectedInstance?.variables;
-    return variables ? JSON.parse(variables) : undefined;
-  }, [selectedInstance]);
 
   return (
     <Page themeId="tool">
@@ -67,7 +62,9 @@ export const SWFInstancesViewerPage = () => {
           <Grid item xs={12} lg={8}>
             <Grid container direction="row">
               <Grid item xs={12}>
-                <ProcessVariablesViewer variables={toJsonVariables()} />
+                <ProcessVariablesViewer
+                  variables={selectedInstance?.variables}
+                />
               </Grid>
               <Grid item xs={12}>
                 <ProcessTimeline selectedInstance={selectedInstance} />
