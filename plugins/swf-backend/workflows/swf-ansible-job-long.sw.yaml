@@ -107,7 +107,7 @@ states:
               name: .jiraAssignee
             description: '"Create Github Repository: " + .githubOrg + "/" + .repoName'
             issuetype:
-              id: '10001'
+              name: Task
             labels:
               - backstage-workflow
               - '"workflowId=" + $WORKFLOW.instanceId'
@@ -115,8 +115,9 @@ states:
               key: .jiraProjectKey
             reporter:
               name: .jiraReporter
+            priority:
+              name: High
             summary: New Repository for Ansible project on Backstage
-            customfield_10104: testing custom field
       actionDataFilter:
         toStateData: .
     stateDataFilter:

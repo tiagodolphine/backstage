@@ -40,7 +40,7 @@
               },
               "description": "Order entry fails when selecting supplier",
               "issuetype": {
-                "id": "10001"
+                "name": "Task"
               },
               "labels": [
                 "bugfix",
@@ -52,8 +52,7 @@
               "reporter": {
                 "name": ".jiraReporter"
               },
-              "summary": "Main order flow broken",
-              "customfield_10104": "test field"
+              "summary": "Main order flow broken"
             }
           }
         }
