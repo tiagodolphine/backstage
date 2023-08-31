@@ -36,7 +36,7 @@
             "input": "test",
             "fields": {
               "assignee": {
-                "name": "tiagodolphine"
+                "name": ".jiraAssignee"
               },
               "description": "Order entry fails when selecting supplier",
               "issuetype": {
@@ -50,7 +50,7 @@
                 "id": "10000"
               },
               "reporter": {
-                "name": "tiagodolphine"
+                "name": ".jiraReporter"
               },
               "summary": "Main order flow broken",
               "customfield_10104": "test field"
@@ -64,9 +64,9 @@
     {
       "name": "Register Catalog entry",
       "type": "inject",
-      "data": {
-      },
+      "data": {},
       "end": true
     }
-  ]
+  ],
+  "dataInputSchema": "schemas/jira__main_schema.json"
 }
