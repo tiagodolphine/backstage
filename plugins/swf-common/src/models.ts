@@ -71,7 +71,7 @@ export interface ProcessInstance {
   serviceUrl?: string;
   nodes: NodeInstance[];
   milestones?: Milestone[];
-  variables?: string;
+  variables?: Record<string, unknown>;
   start: Date;
   end?: Date;
   parentProcessInstance?: ProcessInstance;
