@@ -36,24 +36,23 @@
             "input": "test",
             "fields": {
               "assignee": {
-                "name": "tiagodolphine"
+                "name": ".jiraAssignee"
               },
               "description": "Order entry fails when selecting supplier",
               "issuetype": {
-                "id": "10001"
+                "name": "Task"
               },
               "labels": [
                 "bugfix",
                 "\"workflowId=\" + $WORKFLOW.instanceId"
               ],
               "project": {
-                "id": "10000"
+                "key": ".jiraProjectKey"
               },
               "reporter": {
-                "name": "tiagodolphine"
+                "name": ".jiraReporter"
               },
-              "summary": "Main order flow broken",
-              "customfield_10104": "test field"
+              "summary": "Main order flow broken"
             }
           }
         }
@@ -64,9 +63,9 @@
     {
       "name": "Register Catalog entry",
       "type": "inject",
-      "data": {
-      },
+      "data": {},
       "end": true
     }
-  ]
+  ],
+  "dataInputSchema": "schemas/jira__main_schema.json"
 }
