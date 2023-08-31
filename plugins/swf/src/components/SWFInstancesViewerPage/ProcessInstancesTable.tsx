@@ -17,13 +17,19 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { InfoCard, Table } from '@backstage/core-components';
 import { swfApiRef } from '../../api';
-import { useApi, useRouteRefParams } from '@backstage/core-plugin-api';
+import {
+  useApi,
+  useRouteRef,
+  useRouteRefParams,
+} from '@backstage/core-plugin-api';
 import { swfInstanceRouteRef } from '../../routes';
 import { ProcessInstance } from '@backstage/plugin-swf-common';
+import { Button, Typography } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
 
 interface ProcessInstancesTableProps {
   selectedInstance: ProcessInstance | undefined;
-  setSelectedInstance: (instance: ProcessInstance) => void;
+  setSelectedInstance: (instance: ProcessInstance | undefined) => void;
 }
 
 type Row = {
@@ -32,11 +38,19 @@ type Row = {
   state: string;
 };
 
+const REFRESH_COUNTDOWN_INITIAL_VALUE_IN_SECONDS = 30;
+
 export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
   const swfApi = useApi(swfApiRef);
   const { instanceId } = useRouteRefParams(swfInstanceRouteRef);
   const [data, setData] = useState<Row[]>([]);
   const { selectedInstance, setSelectedInstance } = props;
+  const [isLoadingInstances, setIsLoadingInstances] = useState(false);
+  const [refreshCountdownInSeconds, setRefreshCountdownInSeconds] = useState(
+    REFRESH_COUNTDOWN_INITIAL_VALUE_IN_SECONDS,
+  );
+  const instanceLink = useRouteRef(swfInstanceRouteRef);
+  const navigate = useNavigate();
 
   const column1 = {
     title: 'Id',
@@ -53,9 +67,11 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     field: 'state',
   };
 
-  useEffect(() => {
-    swfApi.getInstances().then(value => {
-      const rows: Row[] = value
+  const loadInstances = useCallback(async () => {
+    try {
+      setIsLoadingInstances(true);
+      const instances = await swfApi.getInstances();
+      const rows: Row[] = instances
         .map(pi => {
           return {
             pid: pi.id,
@@ -65,18 +81,28 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
         })
         .reverse();
       setData(rows);
-    });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    } finally {
+      setIsLoadingInstances(false);
+    }
   }, [swfApi]);
+
+  useEffect(() => {
+    loadInstances();
+  }, [loadInstances]);
 
   const loadInstance = useCallback(
     (pid: string | undefined) => {
       if (pid) {
         swfApi.getInstance(pid).then(value => {
           setSelectedInstance(value);
+          navigate(instanceLink({ instanceId: pid }));
         });
       }
     },
-    [swfApi, setSelectedInstance],
+    [swfApi, navigate, instanceLink, setSelectedInstance],
   );
 
   useEffect(() => {
@@ -86,12 +112,66 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     }
   }, [loadInstance, data, instanceId]);
 
+  useEffect(() => {
+    if (!selectedInstance || !data.length) {
+      return undefined;
+    }
+
+    const updatedItem = data.find(pi => pi.pid === selectedInstance.id);
+    if (!updatedItem) {
+      return undefined;
+    }
+
+    if (selectedInstance.state !== updatedItem.state) {
+      setSelectedInstance(undefined);
+      loadInstance(updatedItem.pid);
+    }
+
+    return () => {
+      setRefreshCountdownInSeconds(REFRESH_COUNTDOWN_INITIAL_VALUE_IN_SECONDS);
+    };
+  }, [data, loadInstance, selectedInstance, setSelectedInstance]);
+
+  useEffect(() => {
+    if (isLoadingInstances) {
+      return undefined;
+    }
+
+    const interval = window.setInterval(() => {
+      setRefreshCountdownInSeconds(prev => prev - 1);
+    }, 1000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, [isLoadingInstances]);
+
+  useEffect(() => {
+    if (refreshCountdownInSeconds > 0) {
+      return;
+    }
+
+    loadInstances();
+  }, [loadInstances, refreshCountdownInSeconds]);
+
   return (
-    <InfoCard title="Instances">
+    <InfoCard
+      title="Instances"
+      action={
+        <Button
+          style={{ marginTop: 8, marginRight: 8 }}
+          disabled={isLoadingInstances}
+          onClick={() => loadInstances()}
+        >
+          {isLoadingInstances ? 'Refreshing ...' : 'Refresh'}
+        </Button>
+      }
+    >
       <div style={{ height: '500px', padding: '10px' }}>
         <Table<Row>
           data={data}
           columns={[column1, column2, column3]}
+          isLoading={isLoadingInstances}
           onRowClick={(_, rowData) => {
             if (rowData && rowData.pid !== selectedInstance?.id) {
               loadInstance(rowData.pid);
@@ -108,6 +188,12 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
             },
           }}
         />
+        <Typography
+          variant="caption"
+          style={{ marginTop: '6px', float: 'right' }}
+        >
+          <i>Auto refreshing in {refreshCountdownInSeconds} seconds</i>
+        </Typography>
       </div>
     </InfoCard>
   );
