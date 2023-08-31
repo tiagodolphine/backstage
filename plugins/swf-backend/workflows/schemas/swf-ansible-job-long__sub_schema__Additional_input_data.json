@@ -1,0 +1,28 @@
+{
+  "$id": "classpath:/schemas/swf-ansible-job-long__sub_schema__Additional_input_data.json",
+  "title": "swf-ansible-job-long: Additional input data",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "jiraAssignee": {
+      "title": "jiraAssignee",
+      "type": "string",
+      "description": "Extracted from the Workflow definition"
+    },
+    "repoUrl": {
+      "title": "repoUrl",
+      "type": "string",
+      "description": "Extracted from the Workflow definition"
+    },
+    "jiraReporter": {
+      "title": "jiraReporter",
+      "type": "string",
+      "description": "Extracted from the Workflow definition"
+    },
+    "jiraEvent": {
+      "title": "jiraEvent",
+      "type": "string",
+      "description": "Extracted from the Workflow definition"
+    }
+  }
+}
