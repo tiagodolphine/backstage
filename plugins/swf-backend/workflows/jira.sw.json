@@ -47,7 +47,7 @@
                 "\"workflowId=\" + $WORKFLOW.instanceId"
               ],
               "project": {
-                "id": "10000"
+                "key": ".jiraProjectKey"
               },
               "reporter": {
                 "name": ".jiraReporter"

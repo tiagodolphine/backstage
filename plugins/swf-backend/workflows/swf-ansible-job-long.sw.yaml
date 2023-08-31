@@ -112,7 +112,7 @@ states:
               - backstage-workflow
               - '"workflowId=" + $WORKFLOW.instanceId'
             project:
-              id: '10000'
+              key: .jiraProjectKey
             reporter:
               name: .jiraReporter
             summary: New Repository for Ansible project on Backstage
