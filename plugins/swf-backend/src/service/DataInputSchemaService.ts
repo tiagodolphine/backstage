@@ -29,6 +29,7 @@ import { Foreachstate } from '@severlessworkflow/sdk-typescript/lib/definitions/
 import { Callbackstate } from '@severlessworkflow/sdk-typescript/lib/definitions/callbackstate';
 import { Databasedswitchstate } from '@severlessworkflow/sdk-typescript/lib/definitions/databasedswitchstate';
 import { Transitiondatacondition } from '@severlessworkflow/sdk-typescript/lib/definitions/transitiondatacondition';
+import { SwfDefinition } from '@backstage/plugin-swf-common';
 
 type OpenApiSchemaProperties = {
   [k: string]: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
@@ -110,10 +111,12 @@ export class DataInputSchemaService {
   }
 
   public async generate(args: {
-    workflow: Specification.Workflow;
+    swfDefinition: SwfDefinition;
     openApi: OpenAPIV3.Document;
   }): Promise<ComposedJsonSchema | null> {
-    if (!args.workflow.states.length) {
+    const workflow = args.swfDefinition as Specification.Workflow;
+
+    if (!workflow.states.length) {
       this.logger.info(`No state found on workflow. Skipping...`);
       return null;
     }
@@ -123,7 +126,7 @@ export class DataInputSchemaService {
 
     const stateHandled = new Set<string>();
 
-    for (const state of args.workflow.states) {
+    for (const state of workflow.states) {
       if (stateHandled.has(state.name!)) {
         continue;
       }
@@ -146,7 +149,7 @@ export class DataInputSchemaService {
             return transition.nextState;
           });
 
-        const conditionalStates = args.workflow.states.filter(s =>
+        const conditionalStates = workflow.states.filter(s =>
           conditionalStateNames.includes(s.name!),
         );
 
@@ -158,7 +161,7 @@ export class DataInputSchemaService {
             conditionalState,
           )) {
             const result = await this.extractSchemaFromState({
-              workflow: args.workflow,
+              workflow: workflow,
               openApi: args.openApi,
               actionDescriptor,
               workflowArgsMap,
@@ -189,7 +192,7 @@ export class DataInputSchemaService {
         });
         const oneOfSchema = this.buildJsonSchemaSkeleton({
           owner: state.name,
-          workflowId: args.workflow.id,
+          workflowId: workflow.id,
           title: conditionalDescriptor,
           filename: this.sanitizeText({
             text: conditionalDescriptor,
@@ -216,7 +219,7 @@ export class DataInputSchemaService {
       } else {
         for (const actionDescriptor of this.extractActionsFromState(state)) {
           const result = await this.extractSchemaFromState({
-            workflow: args.workflow,
+            workflow,
             openApi: args.openApi,
             actionDescriptor,
             workflowArgsMap,
@@ -238,9 +241,7 @@ export class DataInputSchemaService {
       }
     }
 
-    const workflowVariableSet = this.extractVariablesFromWorkflow(
-      args.workflow,
-    );
+    const workflowVariableSet = this.extractVariablesFromWorkflow(workflow);
 
     if (!actionSchemas.length && !workflowVariableSet.size) {
       return null;
@@ -250,7 +251,7 @@ export class DataInputSchemaService {
       const additionalInputTitle = 'Additional input data';
       const variableSetSchema = this.buildJsonSchemaSkeleton({
         owner: 'Workflow',
-        workflowId: args.workflow.id,
+        workflowId: workflow.id,
         title: additionalInputTitle,
         filename: this.sanitizeText({
           text: additionalInputTitle,
@@ -277,7 +278,7 @@ export class DataInputSchemaService {
     }
 
     const compositionSchema = this.buildJsonSchemaSkeleton({
-      workflowId: args.workflow.id,
+      workflowId: workflow.id,
       title: 'Data Input Schema',
     });
 

@@ -20,16 +20,21 @@ import {
 import {
   SwfJsonLanguageService,
   SwfLanguageServiceArgs,
+  SwfYamlLanguageService,
 } from '@kie-tools/serverless-workflow-language-service/dist/channel';
 import { SwfServiceCatalogService } from '@kie-tools/serverless-workflow-service-catalog/dist/api';
 
 export class SwfLanguageService {
   constructor(private readonly services: SwfServiceCatalogService[]) {}
-  public getLs(relativePath: string): SwfJsonLanguageService {
+  public getLs(
+    relativePath: string,
+  ): SwfJsonLanguageService | SwfYamlLanguageService {
     const swfLanguageLsArgs = this.getDefaultLsArgs({});
 
     const fileLanguage = getFileLanguageOrThrow(relativePath);
-    if (fileLanguage === FileLanguage.JSON) {
+    if (fileLanguage === FileLanguage.YAML) {
+      return new SwfYamlLanguageService(swfLanguageLsArgs);
+    } else if (fileLanguage === FileLanguage.JSON) {
       return new SwfJsonLanguageService(swfLanguageLsArgs);
     }
     throw new Error(`Could not determine LS for ${relativePath}`);

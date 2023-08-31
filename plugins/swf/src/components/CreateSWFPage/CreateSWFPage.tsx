@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import {
   Content,
@@ -38,13 +38,13 @@ import {
   useRouteRef,
   useRouteRefParams,
 } from '@backstage/core-plugin-api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { definitionsRouteRef, editWorkflowRouteRef } from '../../routes';
-import { to_be_entered, workflow_title } from '@backstage/plugin-swf-common';
-import { Specification } from '@severlessworkflow/sdk-typescript';
+import { workflow_title } from '@backstage/plugin-swf-common';
 
 export const CreateSWFPage = () => {
-  const swfId = useRouteRefParams(editWorkflowRouteRef).swfId;
+  const { format } = useParams();
+  const { swfId } = useRouteRefParams(editWorkflowRouteRef);
   const [swfEditor, swfEditorRef] = useController<SWFEditorRef>();
   const errorApi = useApi(errorApiRef);
   const alertApi = useApi(alertApiRef);
@@ -53,59 +53,64 @@ export const CreateSWFPage = () => {
   const definitionLink = useRouteRef(definitionsRouteRef);
   const [loading, setLoading] = useState(false);
 
+  const workflowFormat = useMemo(
+    () => (format === 'json' ? 'json' : 'yaml'),
+    [format],
+  );
+
   const handleResult = useCallback(
     async (content: string) => {
+      if (!swfEditor?.swfItem) {
+        return;
+      }
+
       try {
-        // Check basic details have been entered
-        const workflow = Specification.Workflow.fromSource(content);
-        if (workflow.id === to_be_entered) {
-          errorApi.post(new Error(`The 'id' must be entered.`));
-          return;
-        }
-        if (workflow.name === to_be_entered) {
-          errorApi.post(new Error(`The 'name' must be entered.`));
-          return;
-        }
-        if (workflow.description === to_be_entered) {
-          errorApi.post(new Error(`The 'description' must be entered.`));
+        const notifications = await swfEditor.validate();
+        if (notifications.length !== 0) {
+          const messages = notifications.map(n => n.message).join('; ');
+          errorApi.post({
+            name: 'Validation error',
+            message: `The workflow cannot be saved due to: ${messages}`,
+          });
           return;
         }
 
-        // Check validate as provided by the Stunner editor
-        swfEditor?.validate().then(notifications => {
-          if (notifications.length !== 0) {
-            const messages = notifications.map(n => n.message).join('; ');
-            errorApi.post({
-              name: 'Validation error',
-              message: `The workflow cannot be saved due to: ${messages}`,
-            });
-            return;
-          }
+        setLoading(true);
 
-          setLoading(true);
+        const swfItem = await swfApi.createWorkflowDefinition(
+          swfEditor.swfItem.uri,
+          content,
+        );
+        if (!swfItem?.definition.id) {
+          errorApi.post(new Error('Error creating workflow'));
+          return;
+        }
 
-          // Try to save
-          swfApi
-            .createWorkflowDefinition('', content)
-            .then(swf => {
-              if (!swf?.id) {
-                errorApi.post(new Error('Error creating workflow'));
-              } else {
-                alertApi.post({
-                  severity: 'info',
-                  message: `Workflow ${swf.id} has been saved.`,
-                });
-                navigate(definitionLink({ swfId: swf.id }));
-              }
-            })
-            .finally(() => setLoading(false));
+        alertApi.post({
+          severity: 'info',
+          message: `Workflow ${swfItem.definition.id} has been saved.`,
         });
+        navigate(
+          definitionLink({
+            swfId: swfItem.definition.id,
+            format: workflowFormat,
+          }),
+        );
       } catch (e: any) {
         errorApi.post(new Error(e));
+      } finally {
         setLoading(false);
       }
     },
-    [swfEditor, errorApi, swfApi, alertApi, navigate, definitionLink],
+    [
+      swfEditor,
+      errorApi,
+      swfApi,
+      alertApi,
+      navigate,
+      definitionLink,
+      workflowFormat,
+    ],
   );
 
   return (
@@ -156,6 +161,7 @@ export const CreateSWFPage = () => {
                   ref={swfEditorRef}
                   kind={EditorViewKind.AUTHORING}
                   swfId={swfId}
+                  format={workflowFormat}
                 />
               </div>
             </InfoCard>

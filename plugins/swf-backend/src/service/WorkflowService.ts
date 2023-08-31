@@ -17,12 +17,15 @@ import { resolvePackagePath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { OpenApiService } from './OpenApiService';
 import {
+  SwfItem,
   actions_open_api_file_path,
   schemas_folder,
+  toWorkflowString,
+  fromWorkflowSource,
+  extractWorkflowFormatFromUri,
 } from '@backstage/plugin-swf-common';
-import { Specification } from '@severlessworkflow/sdk-typescript';
 import { DataInputSchemaService } from './DataInputSchemaService';
-import { join } from 'path';
+import { join, extname } from 'path';
 
 export class WorkflowService {
   private openApiService: OpenApiService;
@@ -37,39 +40,54 @@ export class WorkflowService {
     this.dataInputSchemaService = dataInputSchemaService;
   }
 
-  async saveWorkflowDefinition(
-    workflow: Specification.Workflow,
-  ): Promise<Specification.Workflow> {
+  async saveWorkflowDefinition(item: SwfItem): Promise<SwfItem> {
+    const workflowFormat = extractWorkflowFormatFromUri(item.uri);
     const definitionsPath = resolvePackagePath(
       `@backstage/plugin-swf-backend`,
-      `${this.resourcesPath}/${workflow.id}.sw.json`,
+      `${this.resourcesPath}/${item.definition.id}.sw.${workflowFormat}`,
     );
-    const dataInputSchemaPath = await this.saveDataInputSchema(workflow);
+    const dataInputSchemaPath = await this.saveDataInputSchema(item);
     if (dataInputSchemaPath) {
-      workflow.dataInputSchema = dataInputSchemaPath;
+      item.definition.dataInputSchema = dataInputSchemaPath;
     }
 
-    await this.saveFile(definitionsPath, workflow);
-    return workflow;
+    await this.saveFile(definitionsPath, item.definition);
+    return item;
   }
 
   private async saveFile(path: string, data: any): Promise<void> {
-    await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf8');
+    const fileExtension = extname(path);
+    const isWorkflow = /\.sw\.(json|yaml|yml)$/.test(path);
+    let contentToSave;
+    if (isWorkflow) {
+      contentToSave = toWorkflowString(
+        data,
+        fileExtension === '.json' ? 'json' : 'yaml',
+      );
+    } else if (fileExtension === '.json') {
+      contentToSave = JSON.stringify(data, null, 2);
+    } else {
+      contentToSave = data;
+    }
+    await fs.writeFile(path, contentToSave, 'utf8');
   }
 
-  async saveWorkflowDefinitionFromUrl(
-    url: string,
-  ): Promise<Specification.Workflow> {
+  async saveWorkflowDefinitionFromUrl(url: string): Promise<SwfItem> {
     const workflow = await this.fetchWorkflowDefinitionFromUrl(url);
     await this.saveWorkflowDefinition(workflow);
     return workflow;
   }
 
-  async fetchWorkflowDefinitionFromUrl(
-    url: string,
-  ): Promise<Specification.Workflow> {
+  async fetchWorkflowDefinitionFromUrl(url: string): Promise<SwfItem> {
     const response = await fetch(url);
-    return await response.json();
+    const content = await response.text();
+    const definition = fromWorkflowSource(content);
+    const urlParts = url.split('/');
+    const fileName = urlParts[urlParts.length - 1];
+    return {
+      uri: fileName,
+      definition,
+    };
   }
 
   async saveOpenApi(): Promise<void> {
@@ -84,12 +102,10 @@ export class WorkflowService {
     await this.saveFile(path, openApi);
   }
 
-  async saveDataInputSchema(
-    workflow: Specification.Workflow,
-  ): Promise<string | undefined> {
+  async saveDataInputSchema(swfItem: SwfItem): Promise<string | undefined> {
     const openApi = await this.openApiService.generateOpenApi();
     const dataInputSchema = await this.dataInputSchemaService.generate({
-      workflow,
+      swfDefinition: swfItem.definition,
       openApi,
     });
 
@@ -132,10 +148,10 @@ export class WorkflowService {
     return workflowDataInputSchemaPath;
   }
 
-  async deleteWorkflowDefinitionById(swfId: string): Promise<void> {
+  async deleteWorkflowDefinitionById(uri: string): Promise<void> {
     const definitionsPath = resolvePackagePath(
       `@backstage/plugin-swf-backend`,
-      `${this.resourcesPath}/${swfId}.sw.json`,
+      `${this.resourcesPath}/${uri}`,
     );
     await fs.rm(definitionsPath, { force: true });
   }

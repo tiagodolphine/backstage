@@ -38,8 +38,7 @@ export class SwfClient implements SwfApi {
     if (!res.ok) {
       throw await ResponseError.fromResponse(res);
     }
-    const data: SwfItem = await res.json();
-    return data;
+    return await res.json();
   }
   async listSwfs(): Promise<SwfListResult> {
     const baseUrl = await this.discoveryApi.getBaseUrl('swf');
@@ -71,20 +70,21 @@ export class SwfClient implements SwfApi {
     return data;
   }
   async createWorkflowDefinition(
-    url: string,
+    uri: string,
     content: string,
   ): Promise<SwfItem> {
     const baseUrl = await this.discoveryApi.getBaseUrl('swf');
-    const res = await fetch(`${baseUrl}/workflows?url=${url}`, {
+    const res = await fetch(`${baseUrl}/workflows?uri=${uri}`, {
       method: 'POST',
       body: content,
-      headers: { 'content-type': 'application/json' },
+      headers: {
+        'content-type': 'text/plain',
+      },
     });
     if (!res.ok) {
       throw await ResponseError.fromResponse(res);
     }
-    const data: SwfItem = await res.json();
-    return data;
+    return await res.json();
   }
 
   async deleteWorkflowDefinition(swfId: string): Promise<any> {

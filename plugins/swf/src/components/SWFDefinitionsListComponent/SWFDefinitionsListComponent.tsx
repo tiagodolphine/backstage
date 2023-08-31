@@ -23,7 +23,10 @@ import {
 import { useApi, useRouteRef } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
 import { swfApiRef } from '../../api';
-import { SwfItem } from '@backstage/plugin-swf-common';
+import {
+  SwfItem,
+  extractWorkflowFormatFromUri,
+} from '@backstage/plugin-swf-common';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Pageview from '@material-ui/icons/Pageview';
 import PlayArrow from '@material-ui/icons/PlayArrow';
@@ -53,18 +56,20 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
   interface Row {
     id: string;
     name: string;
+    format: string;
   }
 
   const columns: TableColumn[] = [{ title: 'Name', field: 'name' }];
   const data: Row[] = items.map(item => {
     return {
-      id: item.id,
-      name: item.name,
+      id: item.definition.id,
+      name: item.definition.name ?? '',
+      format: extractWorkflowFormatFromUri(item.uri),
     };
   });
 
   const doView = (rowData: Row) => {
-    navigate(definitionLink({ swfId: rowData.id }));
+    navigate(definitionLink({ swfId: rowData.id, format: rowData.format }));
   };
 
   const doExecute = (rowData: Row) => {
@@ -80,13 +85,13 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
   };
 
   const doEdit = (rowData: Row) => {
-    navigate(editLink({ swfId: `${rowData.id}` }));
+    navigate(editLink({ swfId: `${rowData.id}`, format: rowData.format }));
   };
 
   const doDelete = (rowData: Row) => {
     // Lazy use of window.confirm vs writing a popup.
-    // eslint-disable-next-line no-alert
     if (
+      // eslint-disable-next-line no-alert
       window.confirm(
         `Please confirm you want to delete '${rowData.id}' permanently.`,
       )
@@ -98,7 +103,7 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
   return (
     <Table
       title="Definitions"
-      options={{ search: false, paging: false, actionsColumnIndex: 1 }}
+      options={{ search: true, paging: false, actionsColumnIndex: 1 }}
       columns={columns}
       data={data}
       actions={[
@@ -145,5 +150,5 @@ export const SWFDefinitionsListComponent = () => {
     return <ResponseErrorPanel error={error} />;
   }
 
-  return <SwfItemsTable items={value || []} />;
+  return <SwfItemsTable items={value ?? []} />;
 };

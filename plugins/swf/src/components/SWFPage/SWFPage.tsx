@@ -16,7 +16,6 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import {
-  InfoCard,
   Header,
   Page,
   Content,
@@ -25,10 +24,7 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { SWFDefinitionsListComponent } from '../SWFDefinitionsListComponent';
-import {
-  workflow_title,
-  workflow_title_plural,
-} from '@backstage/plugin-swf-common';
+import { workflow_title } from '@backstage/plugin-swf-common';
 
 export const SWFPage = () => {
   return (

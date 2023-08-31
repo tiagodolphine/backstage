@@ -26,6 +26,11 @@ export interface Config {
       container: string;
       owner?: string;
       environment?: string;
+      jira?: {
+        host?: string;
+        /** @visibility secret */
+        bearerToken?: string;
+      };
     };
     /**
      * Editor-specific configuration.

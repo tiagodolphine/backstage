@@ -52,10 +52,7 @@ import {
   viewTechDocRouteRef,
 } from '../../routes';
 import { parseEntityRef, stringifyEntityRef } from '@backstage/catalog-model';
-import {
-  importWorkflowRouteRef,
-  createWorkflowRouteRef,
-} from '@backstage/plugin-swf';
+import { newWorkflowRef } from '@backstage/plugin-swf';
 import { Grid } from '@material-ui/core';
 
 /**
@@ -94,8 +91,7 @@ const createGroupsWithOther = (
  */
 export const TemplateListPage = (props: TemplateListPageProps) => {
   const registerComponentLink = useRouteRef(registerComponentRouteRef);
-  const importWorkflowLink = useRouteRef(importWorkflowRouteRef);
-  const createWorkflowLink = useRouteRef(createWorkflowRouteRef);
+  const newWorkflow = useRouteRef(newWorkflowRef);
   const {
     TemplateCardComponent,
     groups: givenGroups = [],
@@ -177,14 +173,8 @@ export const TemplateListPage = (props: TemplateListPageProps) => {
               </Grid>
               <Grid item>
                 <RegisterExistingButton
-                  title="Import New Workflow"
-                  to={importWorkflowLink && importWorkflowLink()}
-                />
-              </Grid>
-              <Grid item>
-                <RegisterExistingButton
-                  title="Create New Workflow"
-                  to={createWorkflowLink && createWorkflowLink()}
+                  title="New Workflow"
+                  to={newWorkflow?.()}
                 />
               </Grid>
               <Grid item>

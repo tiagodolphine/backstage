@@ -149,7 +149,7 @@ export class ServerlessWorkflowEntityProvider
     item: SwfItem,
     openApiDefinitions: any,
   ): TemplateParametersV1beta3[] | undefined {
-    const id: string = item.id;
+    const id: string = item.definition.id;
     const oaPaths: any = openApiDefinitions.paths;
     if (oaPaths === undefined) {
       this.logger.error(
@@ -230,14 +230,14 @@ export class ServerlessWorkflowEntityProvider
     openApiDefinitions: OpenAPIV3.Document,
   ): TemplateEntityV1beta3[] {
     return items.map(i => {
-      const sanitizedId = i.id.replace(/ /g, '_');
+      const sanitizedId = i.definition.id.replace(/ /g, '_');
       return {
         apiVersion: 'scaffolder.backstage.io/v1beta3',
         kind: 'Template',
         metadata: {
           name: sanitizedId,
-          title: i.name,
-          description: i.description,
+          title: i.definition.name,
+          description: i.definition.description,
           tags: ['experimental', workflow_type],
           annotations: {
             'backstage.io/managed-by-location': `url:${this.kogitoServiceUrl}`,

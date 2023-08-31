@@ -9039,6 +9039,9 @@ __metadata:
     "@backstage/cli": "workspace:^"
     "@backstage/plugin-permission-common": "workspace:^"
     "@backstage/types": "workspace:^"
+    "@kie-tools/json-yaml-language-service": ^0.31.0
+    "@severlessworkflow/sdk-typescript": ^3.0.3
+    js-yaml: ^4.1.0
     json-schema: ^0.4.0
   languageName: unknown
   linkType: soft
@@ -12664,7 +12667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kie-tools/json-yaml-language-service@npm:0.31.0":
+"@kie-tools/json-yaml-language-service@npm:0.31.0, @kie-tools/json-yaml-language-service@npm:^0.31.0":
   version: 0.31.0
   resolution: "@kie-tools/json-yaml-language-service@npm:0.31.0"
   dependencies:

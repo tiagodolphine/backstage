@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, {
   ForwardRefRenderFunction,
   forwardRef,
@@ -36,13 +37,15 @@ import {
 import {
   ProcessInstance,
   SwfItem,
+  WorkflowFormat,
   actions_open_api_file,
   actions_open_api_file_path,
   empty_definition,
-  to_be_entered,
+  extractWorkflowFormatFromUri,
+  toWorkflowString,
 } from '@backstage/plugin-swf-common';
 import { Notification } from '@kie-tools-core/notifications/dist/api';
-import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi, useRouteRef } from '@backstage/core-plugin-api';
 import { swfApiRef } from '../../api';
 import {
   EmbeddedEditorFile,
@@ -66,6 +69,8 @@ import {
   PromiseStateWrapper,
   usePromiseState,
 } from '@kie-tools-core/react-hooks/dist/PromiseState';
+import { useNavigate } from 'react-router-dom';
+import { definitionsRouteRef, editWorkflowRouteRef } from '../../routes';
 
 export enum EditorViewKind {
   AUTHORING = 'AUTHORING',
@@ -82,16 +87,10 @@ export interface SWFEditorRef {
 }
 
 const LOCALE = 'en';
-const DEFAULT_FILENAME = 'fileName.sw.json';
+
 const NODE_COLORS = {
   error: '#f4d5d5',
   success: '#d5f4e6',
-};
-const DEFAULT_SWF_ITEM_FOR_AUTHORING: SwfItem = {
-  id: to_be_entered,
-  name: to_be_entered,
-  description: to_be_entered,
-  definition: JSON.stringify(empty_definition, null, 2),
 };
 
 export type SwfEditorView =
@@ -102,6 +101,7 @@ export type SwfEditorView =
 
 type SWFEditorProps = {
   swfId: string | undefined;
+  format?: WorkflowFormat;
 } & SwfEditorView;
 
 const RefForwardingSWFEditor: ForwardRefRenderFunction<
@@ -111,7 +111,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
   const swfApi = useApi(swfApiRef);
   const configApi = useApi(configApiRef);
   const contextPath = configApi.getString('swf.editor.path');
-  const { swfId, kind } = props;
+  const { swfId, kind, format } = props;
   const { editor, editorRef } = useEditorRef();
   const [embeddedFile, setEmbeddedFile] = useState<EmbeddedEditorFile>();
   const [swfItemPromise, setSwfItemPromise] = usePromiseState<SwfItem>();
@@ -120,6 +120,9 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
   >([]);
   const [canRender, setCanRender] = useState(false);
   const [isReady, setReady] = useState(false);
+  const navigate = useNavigate();
+  const editWorkflowLink = useRouteRef(editWorkflowRouteRef);
+  const viewWorkflowLink = useRouteRef(definitionsRouteRef);
 
   const currentProcessInstance = useMemo(() => {
     if (kind !== EditorViewKind.RUNTIME) {
@@ -133,7 +136,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
       new EditorEnvelopeLocator(window.location.origin, [
         new EnvelopeMapping({
           type: 'swf',
-          filePathGlob: '**/*.sw.json',
+          filePathGlob: '**/*.sw.+(json|yml|yaml)',
           resourcesPathPrefix: contextPath,
           envelopeContent: {
             type: EnvelopeContentType.PATH,
@@ -315,23 +318,50 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
       ({ canceled }) => {
         setCanRender(false);
 
+        if (!format && !swfId) {
+          setSwfItemPromise({ error: 'Either format or swfId is required' });
+          return;
+        }
+
         const promise = swfId
           ? swfApi.getSwf(swfId)
-          : Promise.resolve(DEFAULT_SWF_ITEM_FOR_AUTHORING);
+          : Promise.resolve({
+              uri: `workflow.sw.${format ?? 'yaml'}`,
+              definition: empty_definition,
+            } as SwfItem);
 
         promise
           .then(item => {
             if (canceled.get()) {
               return;
             }
+
             setSwfItemPromise({ data: item });
 
+            const workflowFormat = extractWorkflowFormatFromUri(item.uri);
+            const uriParts = item.uri.split('/');
+            const fileName = uriParts[uriParts.length - 1];
+            const fileNameParts = fileName.split('.');
+            const fileExtension = fileNameParts[fileNameParts.length - 1];
+
+            if (format && swfId && format !== workflowFormat) {
+              const link =
+                kind === EditorViewKind.AUTHORING
+                  ? editWorkflowLink({ swfId, format: fileExtension })
+                  : viewWorkflowLink({ swfId, format: fileExtension });
+
+              navigate(link, { replace: true });
+
+              return;
+            }
+
             setEmbeddedFile({
-              path: DEFAULT_FILENAME,
-              getFileContents: async () => item.definition,
+              path: item.uri,
+              getFileContents: async () =>
+                toWorkflowString(item.definition, workflowFormat),
               isReadOnly: kind !== EditorViewKind.AUTHORING,
-              fileExtension: 'sw.json',
-              fileName: DEFAULT_FILENAME,
+              fileExtension,
+              fileName,
             });
 
             setCanRender(true);
@@ -340,7 +370,16 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
             setSwfItemPromise({ error: e });
           });
       },
-      [kind, setSwfItemPromise, swfApi, swfId],
+      [
+        format,
+        swfId,
+        swfApi,
+        setSwfItemPromise,
+        kind,
+        editWorkflowLink,
+        viewWorkflowLink,
+        navigate,
+      ],
     ),
   );
 
@@ -376,7 +415,7 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
         canRender &&
         embeddedFile && (
           <EmbeddedEditor
-            key={currentProcessInstance?.id ?? swfItem.id}
+            key={currentProcessInstance?.id ?? swfItem.definition.id}
             ref={editorRef}
             file={embeddedFile}
             channelType={ChannelType.ONLINE}
