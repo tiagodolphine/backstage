@@ -946,7 +946,7 @@ export class DataInputSchemaService {
   private extractVariablesFromWorkflow(
     workflow: Specification.Workflow,
   ): Set<string> {
-    const blockList = ['.actionDataFilter'];
+    const blockList = ['.actionDataFilter', '.stateDataFilter'];
     const variableSet = new Set<string>();
 
     function traverseValue(value: any, currentPath: string) {
