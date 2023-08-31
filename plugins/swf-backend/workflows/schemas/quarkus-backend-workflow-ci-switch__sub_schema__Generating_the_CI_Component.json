@@ -27,17 +27,17 @@
         },
         "namespace": {
           "title": "namespace",
-          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/tekton-skeleton",
+          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/tekton",
           "type": "string"
         },
         "imageBuilder": {
           "title": "imageBuilder",
-          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/tekton-skeleton",
+          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/tekton",
           "type": "string"
         },
         "imageRepository": {
           "title": "imageRepository",
-          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/tekton-skeleton",
+          "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/tekton",
           "type": "string"
         }
       },

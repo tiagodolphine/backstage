@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { SwfDefinition, WorkflowSample } from './types';
+
 export const topic = 'kogito-swf-service-ready';
 
-export const to_be_entered = `<Enter>`;
-
-export const empty_definition = {
+export const empty_definition: SwfDefinition = {
   id: 'workflow_unique_identifier',
   version: '0.1',
   specVersion: '0.8',
@@ -58,3 +59,13 @@ export const schemas_folder = 'schemas';
 export const workflow_title = 'Workflow';
 export const workflow_title_plural = 'Workflows';
 export const workflow_type = 'workflow';
+
+export const workflow_json_sample: WorkflowSample = {
+  id: 'jsongreet',
+  url: 'https://raw.githubusercontent.com/kiegroup/kogito-examples/stable/serverless-workflow-examples/serverless-workflow-greeting-quarkus/src/main/resources/jsongreet.sw.json',
+};
+
+export const workflow_yaml_sample: WorkflowSample = {
+  id: 'yamlgreet',
+  url: 'https://raw.githubusercontent.com/kiegroup/kogito-examples/stable/serverless-workflow-examples/serverless-workflow-greeting-quarkus/src/main/resources/yamlgreet.sw.yml',
+};

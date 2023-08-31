@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-export type SwfItem = {
-  id: string;
-  name: string;
-  description: string;
-  definition: string;
-};
+import { OmitRecursively } from '@kie-tools/json-yaml-language-service/dist/channel';
+import { Specification } from '@severlessworkflow/sdk-typescript';
+
+export type SwfDefinition = OmitRecursively<
+  Specification.Workflow,
+  'normalize'
+>;
+
+export interface SwfItem {
+  uri: string;
+  definition: SwfDefinition;
+}
 
 export type SwfListResult = {
   items: SwfItem[];
@@ -27,3 +33,10 @@ export type SwfListResult = {
   offset: number;
   limit: number;
 };
+
+export type WorkflowFormat = 'yaml' | 'json';
+
+export interface WorkflowSample {
+  id: string;
+  url: string;
+}

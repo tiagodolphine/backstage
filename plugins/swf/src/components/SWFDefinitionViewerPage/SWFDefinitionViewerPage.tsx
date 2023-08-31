@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouteRefParams } from '@backstage/core-plugin-api';
 import { definitionsRouteRef } from '../../routes';
 import {
@@ -34,16 +34,21 @@ import { useController } from '@kie-tools-core/react-hooks/dist/useController';
 
 export const SWFDefinitionViewerPage = () => {
   const [name, setName] = useState<string>();
-  const { swfId } = useRouteRefParams(definitionsRouteRef);
+  const { swfId, format } = useRouteRefParams(definitionsRouteRef);
   const [swfEditor, swfEditorRef] = useController<SWFEditorRef>();
   const [loading, setLoading] = useState(true);
+
+  const workflowFormat = useMemo(
+    () => (format === 'json' ? 'json' : 'yaml'),
+    [format],
+  );
 
   useEffect(() => {
     if (!swfEditor?.swfItem) {
       return;
     }
     setLoading(false);
-    setName(swfEditor.swfItem.name);
+    setName(swfEditor.swfItem.definition.name);
   }, [swfEditor]);
 
   return (
@@ -68,6 +73,7 @@ export const SWFDefinitionViewerPage = () => {
                   ref={swfEditorRef}
                   kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
                   swfId={swfId}
+                  format={workflowFormat}
                 />
               </div>
             </InfoCard>

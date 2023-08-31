@@ -22,7 +22,7 @@ export { swfApiRef } from './api';
 export {
   swfInstanceRouteRef,
   swfInstancesRouteRef,
-  importWorkflowRouteRef,
+  newWorkflowRef,
   createWorkflowRouteRef,
   scaffolderTemplateSelectedRouteRef,
 } from './routes';

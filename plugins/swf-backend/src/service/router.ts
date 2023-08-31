@@ -22,6 +22,8 @@ import {
   SwfItem,
   SwfListResult,
   topic,
+  fromWorkflowSource,
+  SwfDefinition,
 } from '@backstage/plugin-swf-common';
 import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
@@ -52,6 +54,7 @@ export async function createRouter(
 
   const router = Router();
   router.use(express.json());
+  router.use('/workflows', express.text());
 
   router.get('/health', (_, response) => {
     logger.info('PONG!');
@@ -137,6 +140,18 @@ function setupInternalRoutes(
   openApiService: OpenApiService,
   jiraService: JiraService,
 ) {
+  const fetchWorkflowUri = async (swfId: string): Promise<string> => {
+    const uriResponse = await executeWithRetry(() =>
+      fetch(
+        `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}/sources`,
+      ),
+    );
+
+    const json = await uriResponse.json();
+    // Assuming only one source in the list
+    return json[0].uri;
+  };
+
   router.get('/items', async (_, res) => {
     const svcResponse = await executeWithRetry(() =>
       fetch(`${kogitoBaseUrl}:${kogitoPort}/management/processes`),
@@ -149,12 +164,14 @@ function setupInternalRoutes(
             `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}`,
           )
             .then((swfResponse: Response) => swfResponse.json())
-            .then((swf: SwfItem) => {
+            .then(async (definition: SwfDefinition) => {
+              const uri = await fetchWorkflowUri(definition.id);
               const swfItem: SwfItem = {
-                id: swf.id,
-                name: swf.name,
-                description: swf.description ?? swf.name,
-                definition: '',
+                uri,
+                definition: {
+                  ...definition,
+                  description: definition.description ?? definition.name,
+                },
               };
               return swfItem;
             }),
@@ -179,18 +196,15 @@ function setupInternalRoutes(
         `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}/source`,
       ),
     );
-    const json = await svcResponse.json();
-    const name = json.name;
-    const description = json.description;
-    const swfItem: SwfItem = {
-      id: swfId,
-      name: name,
-      description: description,
-      definition: JSON.stringify(json, undefined, 2),
-    };
+
+    const uri = await fetchWorkflowUri(swfId);
+    const definition = fromWorkflowSource(await svcResponse.text());
 
     // When complete return to Backstage
-    res.status(200).json(swfItem);
+    res.status(200).json({
+      uri,
+      definition,
+    });
   });
 
   router.post('/execute/:swfId', async (req, res) => {
@@ -244,25 +258,19 @@ function setupInternalRoutes(
 
   router.delete('/workflows/:swfId', async (req, res) => {
     const swfId = req.params.swfId;
-    await workflowService.deleteWorkflowDefinitionById(swfId);
+    const uri = await fetchWorkflowUri(swfId);
+    await workflowService.deleteWorkflowDefinitionById(uri);
     res.status(201).send();
   });
 
   router.post('/workflows', async (req, res) => {
-    const url: any = req.query.url;
-    let swfData = req.body;
-    if (url && url.includes(`http`)) {
-      swfData = await workflowService.saveWorkflowDefinitionFromUrl(url);
-    } else {
-      swfData = await workflowService.saveWorkflowDefinition(swfData);
-    }
-
-    const swfItem: SwfItem = {
-      id: swfData.id,
-      definition: JSON.stringify(swfData),
-      name: ``,
-      description: ``,
-    };
+    const uri = req.query.uri as string;
+    const swfItem = uri?.startsWith('http')
+      ? await workflowService.saveWorkflowDefinitionFromUrl(uri)
+      : await workflowService.saveWorkflowDefinition({
+          uri,
+          definition: fromWorkflowSource(req.body),
+        });
     res.status(201).json(swfItem).send();
   });
 

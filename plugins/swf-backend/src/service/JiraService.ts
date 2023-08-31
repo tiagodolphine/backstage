@@ -24,7 +24,7 @@ export interface BaseIssueEvent {
     id: string;
     key: string;
     fields: {
-      labels: Array<String>;
+      labels: string[];
     };
   };
 }
@@ -67,10 +67,15 @@ export class JiraService {
       const newStatus = event.changelog.items.find(
         item => item.field === 'status',
       )?.toString;
-      const label: String = event.issue.fields.labels.find(l =>
+      const label = event.issue.fields.labels.find(l =>
         l.includes('workflowId'),
       );
-      const workflowInstanceId: String = label?.slice(label.indexOf('=') + 1);
+      if (!label) {
+        this.logger.warn('Received event without JIRA label');
+        return;
+      }
+
+      const workflowInstanceId = label.slice(label.indexOf('=') + 1);
       if (newStatus === 'Done') {
         const response = await this.cloudEventService.send({
           event: new CloudEvent({

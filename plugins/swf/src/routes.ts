@@ -27,7 +27,7 @@ export const rootRouteRef = createRouteRef({
 export const definitionsRouteRef = createSubRouteRef({
   id: 'swf/items',
   parent: rootRouteRef,
-  path: '/items/:swfId',
+  path: '/items/:format/:swfId',
 });
 
 // This route integrates with Scaffolder and lists all SWF instances
@@ -44,22 +44,22 @@ export const swfInstanceRouteRef = createSubRouteRef({
   path: '/instances/:instanceId',
 });
 
-export const importWorkflowRouteRef = createSubRouteRef({
-  id: 'swf/workflows/import',
+export const newWorkflowRef = createSubRouteRef({
+  id: 'swf/workflows/new',
   parent: rootRouteRef,
-  path: '/workflows/import',
+  path: '/workflows/new',
 });
 
 export const createWorkflowRouteRef = createSubRouteRef({
   id: 'swf/workflows/create',
   parent: rootRouteRef,
-  path: '/workflows/create',
+  path: '/workflows/create/:format',
 });
 
 export const editWorkflowRouteRef = createSubRouteRef({
   id: 'swf/workflows/edit',
   parent: rootRouteRef,
-  path: '/workflows/edit/:swfId',
+  path: '/workflows/edit/:format/:swfId',
 });
 
 export const scaffolderTemplateSelectedRouteRef = createExternalRouteRef({

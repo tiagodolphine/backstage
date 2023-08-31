@@ -99,6 +99,8 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
           }}
           options={{
             padding: 'dense',
+            paging: true,
+            pageSize: 8,
             rowStyle: (rowData: Row) => {
               return rowData.pid === selectedInstance?.id
                 ? { backgroundColor: '#a266e5' }

@@ -18,7 +18,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import {
   definitionsRouteRef,
-  importWorkflowRouteRef,
+  newWorkflowRef,
   createWorkflowRouteRef,
   swfInstanceRouteRef,
   swfInstancesRouteRef,
@@ -27,7 +27,7 @@ import {
 import { SWFPage } from './SWFPage';
 import { SWFInstancesViewerPage } from './SWFInstancesViewerPage';
 import { SWFDefinitionViewerPage } from './SWFDefinitionViewerPage';
-import { ImportWorkflowViewerPage } from './ImportWorkflowViewerPage';
+import { NewWorkflowViewerPage } from './NewWorkflowViewerPage';
 import { CreateSWFPage } from './CreateSWFPage';
 
 export const Router = () => {
@@ -46,10 +46,7 @@ export const Router = () => {
         path={swfInstanceRouteRef.path}
         element={<SWFInstancesViewerPage />}
       />
-      <Route
-        path={importWorkflowRouteRef.path}
-        element={<ImportWorkflowViewerPage />}
-      />
+      <Route path={newWorkflowRef.path} element={<NewWorkflowViewerPage />} />
       <Route path={createWorkflowRouteRef.path} element={<CreateSWFPage />} />
       <Route path={editWorkflowRouteRef.path} element={<CreateSWFPage />} />
     </Routes>

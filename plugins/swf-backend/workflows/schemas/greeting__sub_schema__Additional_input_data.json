@@ -1,6 +1,6 @@
 {
-  "$id": "classpath:/schemas/jsongreet__sub_schema__Additional_input_data.json",
-  "title": "jsongreet: Additional input data",
+  "$id": "classpath:/schemas/greeting__sub_schema__Additional_input_data.json",
+  "title": "greeting: Additional input data",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {

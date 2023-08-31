@@ -6,22 +6,22 @@
   "properties": {
     "owner": {
       "title": "owner",
-      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
+      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/catalog-info",
       "type": "string"
     },
     "system": {
       "title": "system",
-      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
+      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/catalog-info",
       "type": "string"
     },
     "namespace": {
       "title": "namespace",
-      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
+      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/catalog-info",
       "type": "string"
     },
     "ci": {
       "title": "ci",
-      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton",
+      "description": "Extracted from https://github.com/janus-idp/software-templates/tree/main/skeletons/catalog-info",
       "type": "string"
     }
   },
