@@ -157,22 +157,21 @@
           "arguments": {
             "fields": {
               "assignee": {
-                "name": ".jiraAssignee"
+                "name": ".owner"
               },
-              "description": "${`Create Github Repository: ` .repoName .repoUrl}",
-              "id": "$WORKFLOW.instanceId",
-              "repoUrl": "${.repoUrl}",
+              "description": "\"Create Github Repository: \" + .githubOrg + \"/\".repoName",
               "issuetype": {
                 "id": "10001"
               },
               "labels": [
-                "backstage-workflow"
+                "backstage-workflow",
+                "\"workflowId=\" + $WORKFLOW.instanceId"
               ],
               "project": {
                 "id": "10000"
               },
               "reporter": {
-                "name": ".jiraReporter"
+                "name": ".owner"
               },
               "summary": "New Repository for Ansible project on Backstage",
               "customfield_10104": "testing custom field"
@@ -183,7 +182,13 @@
           "toStateData": "."
         }
       },
+      "stateDataFilter": {
+        "output": ".jiraCreateIssueResult"
+      },
       "eventRef": "callbackEvent",
+      "timeouts": {
+        "eventTimeout": "PT10S"
+      },
       "compensatedBy": "Close Jira issue",
       "transition": "Check Repository Created"
     },
@@ -192,18 +197,17 @@
       "type": "switch",
       "dataConditions": [
         {
-          "condition": ".jiraEvent != null",
+          "condition": ".jiraCreateIssueResult != null",
           "transition": "Publish to GitHub",
           "name": "created"
-        },
-        {
-          "condition": ".jiraEvent = null",
-          "name": "timeout",
-          "end": {
-            "compensate": true
-          }
         }
-      ]
+      ],
+      "defaultCondition" : {
+        "transition": {
+          "compensate": true,
+          "nextState": "End workflow with error"
+        }
+      }
     },
     {
       "name": "Register Catalog entry",
@@ -246,40 +250,35 @@
       "name": "Close Jira issue",
       "type": "operation",
       "actionMode": "sequential",
+
       "actions": [
         {
-          "name": "callbackAction",
+          "name": "close the jira issue",
           "functionRef": {
-            "refName": "jiraCreateIssue",
+            "refName": "print",
             "arguments": {
-              "fields": {
-                "assignee": {
-                  "name": ".jiraAssignee"
-                },
-                "description": "${`Create Github Repository: ` .repoName .repoUrl}",
-                "id": "$WORKFLOW.instanceId",
-                "repoUrl": "${.repoUrl}",
-                "issuetype": {
-                  "id": "10001"
-                },
-                "labels": [
-                  "backstage-workflow"
-                ],
-                "project": {
-                  "id": "10000"
-                },
-                "reporter": {
-                  "name": ".jiraReporter"
-                },
-                "summary": "New Repository for Ansible project on Backstage",
-                "customfield_10104": "testing custom field",
-                "customfield_workflowId": "$WORKFLOW.instanceId"
-              }
+              "message": "close the jira issue"
             }
           }
         }
       ],
       "usedForCompensation": true
+    },
+    {
+      "name": "End workflow with error",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "End log",
+          "functionRef": {
+            "refName": "print",
+            "arguments": {
+              "message": "Ending"
+            }
+          }
+        }
+      ],
+      "end": true
     }
   ]
 }

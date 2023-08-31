@@ -2,8 +2,8 @@
   "id": "jira",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "[WF] Ansible Job Long Running",
-  "description": "[WF] Launch an Ansible Job within Ansible Automation Platform",
+  "name": "[WF] Jira",
+  "description": "[WF] Jira issue",
   "functions": [
     {
       "name": "jiraCreateIssue",
