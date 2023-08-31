@@ -252,7 +252,7 @@ export class ServerlessWorkflowEntityProvider
           steps: [
             {
               id: 'execute',
-              name: 'swf:execute',
+              name: 'Run workflow',
               action: 'swf:execute',
               input: {
                 swfId: 'TBE',
