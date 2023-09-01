@@ -22,7 +22,7 @@ import {
   useRouteRef,
   useRouteRefParams,
 } from '@backstage/core-plugin-api';
-import { swfInstanceRouteRef } from '../../routes';
+import { swfInstanceRouteRef, swfInstancesRouteRef } from '../../routes';
 import { ProcessInstance } from '@backstage/plugin-swf-common';
 import { Button, Typography } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
@@ -50,6 +50,8 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     REFRESH_COUNTDOWN_INITIAL_VALUE_IN_SECONDS,
   );
   const instanceLink = useRouteRef(swfInstanceRouteRef);
+  const instancesLink = useRouteRef(swfInstancesRouteRef);
+
   const navigate = useNavigate();
 
   const column1 = {
@@ -86,6 +88,7 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
       console.error(e);
     } finally {
       setIsLoadingInstances(false);
+      setRefreshCountdownInSeconds(REFRESH_COUNTDOWN_INITIAL_VALUE_IN_SECONDS);
     }
   }, [swfApi]);
 
@@ -106,11 +109,23 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
   );
 
   useEffect(() => {
+    if (!instanceId) {
+      setSelectedInstance(undefined);
+    }
     const selectedRowData = data.find(d => d.pid === instanceId);
     if (selectedRowData) {
       loadInstance(selectedRowData.pid);
+    } else {
+      navigate(instancesLink());
     }
-  }, [loadInstance, data, instanceId]);
+  }, [
+    loadInstance,
+    data,
+    instanceId,
+    setSelectedInstance,
+    navigate,
+    instancesLink,
+  ]);
 
   useEffect(() => {
     if (!selectedInstance || !data.length) {
@@ -159,11 +174,12 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
       title="Instances"
       action={
         <Button
+          variant="outlined"
           style={{ marginTop: 8, marginRight: 8 }}
           disabled={isLoadingInstances}
           onClick={() => loadInstances()}
         >
-          {isLoadingInstances ? 'Refreshing ...' : 'Refresh'}
+          Refresh
         </Button>
       }
     >
@@ -188,12 +204,14 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
             },
           }}
         />
-        <Typography
-          variant="caption"
-          style={{ marginTop: '6px', float: 'right' }}
-        >
-          <i>Auto refreshing in {refreshCountdownInSeconds} seconds</i>
-        </Typography>
+        {!isLoadingInstances && (
+          <Typography
+            variant="caption"
+            style={{ marginTop: '6px', float: 'right' }}
+          >
+            <i>Auto refreshing in {refreshCountdownInSeconds} seconds</i>
+          </Typography>
+        )}
       </div>
     </InfoCard>
   );

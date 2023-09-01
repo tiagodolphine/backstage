@@ -39,9 +39,9 @@ export const ProcessGraphViewer = (props: ProcessGraphViewerProps) => {
           swfId &&
           selectedInstance && (
             <Button
-              color="secondary"
+              color="default"
               type="submit"
-              variant="contained"
+              variant="outlined"
               style={{ marginTop: 8, marginRight: 8 }}
               onClick={() => setOpen(true)}
             >

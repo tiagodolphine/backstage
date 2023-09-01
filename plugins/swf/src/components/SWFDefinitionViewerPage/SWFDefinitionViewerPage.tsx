@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useMemo, useState } from 'react';
-import { useRouteRefParams } from '@backstage/core-plugin-api';
-import { definitionsRouteRef } from '../../routes';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouteRef, useRouteRefParams } from '@backstage/core-plugin-api';
+import {
+  definitionsRouteRef,
+  scaffolderTemplateSelectedRouteRef,
+} from '../../routes';
 import {
   Content,
   ContentHeader,
@@ -26,17 +29,20 @@ import {
   Progress,
   SupportButton,
 } from '@backstage/core-components';
-import { Grid } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import { workflow_title } from '@backstage/plugin-swf-common';
 import { SWFEditor } from '../SWFEditor';
 import { EditorViewKind, SWFEditorRef } from '../SWFEditor/SWFEditor';
 import { useController } from '@kie-tools-core/react-hooks/dist/useController';
+import { useNavigate } from 'react-router-dom';
 
 export const SWFDefinitionViewerPage = () => {
   const [name, setName] = useState<string>();
   const { swfId, format } = useRouteRefParams(definitionsRouteRef);
   const [swfEditor, swfEditorRef] = useController<SWFEditorRef>();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const scaffolderLink = useRouteRef(scaffolderTemplateSelectedRouteRef);
 
   const workflowFormat = useMemo(
     () => (format === 'json' ? 'json' : 'yaml'),
@@ -50,6 +56,15 @@ export const SWFDefinitionViewerPage = () => {
     setLoading(false);
     setName(swfEditor.swfItem.definition.name);
   }, [swfEditor]);
+
+  const onExecute = useCallback(() => {
+    if (!scaffolderLink) {
+      return;
+    }
+    navigate(
+      scaffolderLink({ namespace: 'default', templateName: `${swfId}` }),
+    );
+  }, [navigate, scaffolderLink, swfId]);
 
   return (
     <Page themeId="tool">
@@ -67,7 +82,19 @@ export const SWFDefinitionViewerPage = () => {
         <Grid container spacing={3} direction="column">
           <Grid item>
             {loading && <Progress />}
-            <InfoCard title={name || ''}>
+            <InfoCard
+              title={name}
+              action={
+                <Button
+                  color="primary"
+                  variant="contained"
+                  style={{ marginTop: 8, marginRight: 8 }}
+                  onClick={() => onExecute()}
+                >
+                  Execute
+                </Button>
+              }
+            >
               <div style={{ height: '600px' }}>
                 <SWFEditor
                   ref={swfEditorRef}

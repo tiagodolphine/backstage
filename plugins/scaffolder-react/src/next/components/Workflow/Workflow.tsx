@@ -102,7 +102,7 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
             manifest.name && (
               <>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   color="secondary"
                   style={{ marginTop: 8, marginRight: 8 }}
                   onClick={_ => setOpen(true)}
