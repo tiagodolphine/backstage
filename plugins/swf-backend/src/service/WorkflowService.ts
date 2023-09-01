@@ -23,6 +23,8 @@ import {
   toWorkflowString,
   fromWorkflowSource,
   extractWorkflowFormatFromUri,
+  SwfSpecFile,
+  spec_files,
 } from '@backstage/plugin-swf-common';
 import { DataInputSchemaService } from './DataInputSchemaService';
 import { join, extname } from 'path';
@@ -154,5 +156,20 @@ export class WorkflowService {
       `${this.resourcesPath}/${uri}`,
     );
     await fs.rm(definitionsPath, { force: true });
+  }
+
+  async listStoredSpecs(): Promise<SwfSpecFile[]> {
+    const specs: SwfSpecFile[] = [];
+    // We can list all spec files from FS but let's keep it simple for now
+    for (const relativePath of spec_files) {
+      const path = resolvePackagePath(
+        `@backstage/plugin-swf-backend`,
+        `${this.resourcesPath}/${relativePath}`,
+      );
+      const buffer = await fs.readFile(path);
+      const content = JSON.parse(buffer.toString('utf8'));
+      specs.push({ path, content });
+    }
+    return specs;
   }
 }

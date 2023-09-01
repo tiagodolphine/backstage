@@ -300,6 +300,11 @@ function setupInternalRoutes(
     await jiraService.handleEvent(event);
     res.status(200).send();
   });
+
+  router.get('/specs', async (_, res) => {
+    const specs = await workflowService.listStoredSpecs();
+    res.json(specs).status(200).send();
+  });
 }
 
 // ==================================================

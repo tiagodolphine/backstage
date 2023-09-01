@@ -38,8 +38,6 @@ import {
   ProcessInstance,
   SwfItem,
   WorkflowFormat,
-  actions_open_api_file,
-  actions_open_api_file_path,
   empty_definition,
   extractWorkflowFormatFromUri,
   toWorkflowString,
@@ -389,19 +387,26 @@ const RefForwardingSWFEditor: ForwardRefRenderFunction<
         if (kind !== EditorViewKind.AUTHORING) {
           return;
         }
-        swfApi.getActionsSchema().then(schema => {
+
+        swfApi.getSpecs().then(specFiles => {
           if (canceled.get()) {
             return;
           }
-          const service = parseApiContent({
-            serviceFileContent: JSON.stringify(schema),
-            serviceFileName: actions_open_api_file,
-            source: {
-              type: SwfCatalogSourceType.LOCAL_FS,
-              absoluteFilePath: actions_open_api_file_path,
-            },
+
+          const services = specFiles.map(specFile => {
+            const parts = specFile.path.split('/');
+            const filename = parts[parts.length - 1];
+            return parseApiContent({
+              serviceFileContent: JSON.stringify(specFile.content),
+              serviceFileName: filename,
+              source: {
+                type: SwfCatalogSourceType.LOCAL_FS,
+                absoluteFilePath: specFile.path,
+              },
+            });
           });
-          setCatalogServices([service]);
+
+          setCatalogServices(services);
         });
       },
       [kind, swfApi],

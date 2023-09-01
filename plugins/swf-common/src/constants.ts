@@ -51,10 +51,16 @@ export const empty_definition: SwfDefinition = {
   ],
 };
 
-export const actions_open_api_file = 'actions-openapi.json';
-export const actions_open_api_file_path = `specs/${actions_open_api_file}`;
-
 export const schemas_folder = 'schemas';
+export const specs_folder = 'specs';
+
+export const jira_open_api_file = 'jira-openapi.json';
+export const jira_open_api_file_path = `${specs_folder}/${jira_open_api_file}`;
+
+export const actions_open_api_file = 'actions-openapi.json';
+export const actions_open_api_file_path = `${specs_folder}/${actions_open_api_file}`;
+
+export const spec_files = [actions_open_api_file_path, jira_open_api_file_path];
 
 export const workflow_title = 'Workflow';
 export const workflow_title_plural = 'Workflows';
