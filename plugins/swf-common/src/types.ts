@@ -16,6 +16,7 @@
 
 import { OmitRecursively } from '@kie-tools/json-yaml-language-service/dist/channel';
 import { Specification } from '@severlessworkflow/sdk-typescript';
+import { OpenAPIV3 } from 'openapi-types';
 
 export type SwfDefinition = OmitRecursively<
   Specification.Workflow,
@@ -39,4 +40,9 @@ export type WorkflowFormat = 'yaml' | 'json';
 export interface WorkflowSample {
   id: string;
   url: string;
+}
+
+export interface SwfSpecFile {
+  path: string;
+  content: OpenAPIV3.Document;
 }

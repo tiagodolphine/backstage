@@ -20,8 +20,8 @@ import {
   ProcessInstance,
   SwfItem,
   SwfListResult,
+  SwfSpecFile,
 } from '@backstage/plugin-swf-common';
-import { OpenAPIV3 } from 'openapi-types';
 
 export interface SwfClientOptions {
   discoveryApi: DiscoveryApi;
@@ -98,9 +98,9 @@ export class SwfClient implements SwfApi {
     }
   }
 
-  async getActionsSchema(): Promise<OpenAPIV3.Document> {
+  async getSpecs(): Promise<SwfSpecFile[]> {
     const baseUrl = await this.discoveryApi.getBaseUrl('swf');
-    const res = await fetch(`${baseUrl}/actions/schema`);
+    const res = await fetch(`${baseUrl}/specs`);
     if (!res.ok) {
       throw await ResponseError.fromResponse(res);
     }

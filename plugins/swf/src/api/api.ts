@@ -18,8 +18,8 @@ import {
   ProcessInstance,
   SwfItem,
   SwfListResult,
+  SwfSpecFile,
 } from '@backstage/plugin-swf-common';
-import { OpenAPIV3 } from 'openapi-types';
 
 export interface SwfApi {
   getSwf(swfId: string): Promise<SwfItem>;
@@ -34,7 +34,7 @@ export interface SwfApi {
 
   deleteWorkflowDefinition(swfId: string): Promise<any>;
 
-  getActionsSchema(): Promise<OpenAPIV3.Document>;
+  getSpecs(): Promise<SwfSpecFile[]>;
 }
 
 export const swfApiRef = createApiRef<SwfApi>({

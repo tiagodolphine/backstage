@@ -947,31 +947,39 @@ export class DataInputSchemaService {
     workflow: Specification.Workflow,
   ): Set<string> {
     const blockList = ['.actionDataFilter', '.stateDataFilter'];
-    const variableSet = new Set<string>();
+    const inputVariableSet = new Set<string>();
+    const workflowVariableSet = new Set<string>();
 
     function traverseValue(value: any, currentPath: string) {
-      if (blockList.some(b => currentPath.includes(b))) {
-        return;
-      }
       if (typeof value === 'string') {
         const match = value.match(
           /(^|\s|\{)\s*\.([a-zA-Z_][a-zA-Z0-9_]*)\s*([=!<>]+)/,
         );
-        if (match?.[2]) {
-          variableSet.add(match[2]);
-        }
+        addVariable({ variable: match?.[2], currentPath });
         const dotMatch = value.match(
           /(^|\s|\{)\s*\.(?![a-zA-Z_][a-zA-Z0-9_]*\.[a-zA-Z_][a-zA-Z0-9_]*)([a-zA-Z_][a-zA-Z0-9_]*)/,
         );
-        if (dotMatch?.[2]) {
-          variableSet.add(dotMatch[2]);
-        }
+        addVariable({ variable: dotMatch?.[2], currentPath });
       } else if (Array.isArray(value)) {
         value.forEach((item, index) => {
           traverseValue(item, `${currentPath}[${index}]`);
         });
       } else if (typeof value === 'object') {
         traverseObject(value, currentPath);
+      }
+    }
+
+    function addVariable(args: {
+      variable: string | undefined;
+      currentPath: string;
+    }): void {
+      if (!args.variable) {
+        return;
+      }
+      if (blockList.some(b => args.currentPath.includes(b))) {
+        workflowVariableSet.add(args.variable);
+      } else {
+        inputVariableSet.add(args.variable);
       }
     }
 
@@ -990,10 +998,12 @@ export class DataInputSchemaService {
 
     workflow.states.forEach(state => {
       if (state.type === 'inject' && state.data) {
-        Object.keys(state.data).forEach(k => variableSet.delete(k));
+        Object.keys(state.data).forEach(k => inputVariableSet.delete(k));
       }
     });
 
-    return variableSet;
+    workflowVariableSet.forEach(v => inputVariableSet.delete(v));
+
+    return inputVariableSet;
   }
 }

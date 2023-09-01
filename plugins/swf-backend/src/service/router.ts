@@ -35,6 +35,7 @@ import { OpenApiService } from './OpenApiService';
 import { DataInputSchemaService } from './DataInputSchemaService';
 import { CloudEventService } from './CloudEventService';
 import { JiraEvent, JiraService } from './JiraService';
+import { readGithubIntegrationConfigs } from '@backstage/integration';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
@@ -81,8 +82,18 @@ export async function createRouter(
   const jiraBearerToken =
     config.getOptionalString('swf.workflowService.jira.bearerToken') ?? '';
 
-  const githubToken = process.env.BACKSTAGE_GITHUB_TOKEN;
-  // @ts-ignore
+  const githubConfigs = readGithubIntegrationConfigs(
+    config.getOptionalConfigArray('integrations.github') ?? [],
+  );
+
+  const githubToken = githubConfigs[0]?.token;
+
+  if (!githubToken) {
+    logger.warn(
+      'No GitHub token found. Some features may not work as expected.',
+    );
+  }
+
   const cloudEventService = new CloudEventService(
     logger,
     `${kogitoBaseUrl}:${kogitoPort}`,
@@ -288,6 +299,11 @@ function setupInternalRoutes(
     const event = req.body as JiraEvent;
     await jiraService.handleEvent(event);
     res.status(200).send();
+  });
+
+  router.get('/specs', async (_, res) => {
+    const specs = await workflowService.listStoredSpecs();
+    res.json(specs).status(200).send();
   });
 }
 
