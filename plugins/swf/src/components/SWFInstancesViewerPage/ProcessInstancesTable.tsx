@@ -112,12 +112,13 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     if (!instanceId) {
       setSelectedInstance(undefined);
     }
+
     const selectedRowData = data.find(d => d.pid === instanceId);
-    if (selectedRowData) {
-      loadInstance(selectedRowData.pid);
-    } else {
-      navigate(instancesLink());
+    if (!selectedRowData) {
+      return;
     }
+
+    loadInstance(selectedRowData.pid);
   }, [
     loadInstance,
     data,
@@ -126,6 +127,13 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     navigate,
     instancesLink,
   ]);
+
+  useEffect(() => {
+    if (instanceId) {
+      return;
+    }
+    navigate(instancesLink());
+  }, [instanceId, instancesLink, navigate]);
 
   useEffect(() => {
     if (!selectedInstance || !data.length) {
