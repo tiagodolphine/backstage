@@ -24,6 +24,7 @@ import {
   topic,
   fromWorkflowSource,
   SwfDefinition,
+  Job,
 } from '@backstage/plugin-swf-common';
 import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
@@ -265,6 +266,23 @@ function setupInternalRoutes(
       .ProcessInstances as ProcessInstance[];
     const processInstance: ProcessInstance = processInstances[0];
     res.status(200).json(processInstance);
+  });
+
+  router.get('/instances/:instanceId/jobs', async (req, res) => {
+    const {
+      params: { instanceId },
+    } = req;
+    const graphQlQuery = `{ Jobs (where: { processInstanceId: { equal: "${instanceId}" } }) { id, processId, processInstanceId, rootProcessId, status, expirationTime, priority, callbackEndpoint, repeatInterval, repeatLimit, scheduledId, retries, lastUpdate, endpoint, nodeInstanceId, executionCounter } }`;
+    const svcResponse = await executeWithRetry(() =>
+      fetch(`${kogitoBaseUrl}:${kogitoPort}/graphql`, {
+        method: 'POST',
+        body: JSON.stringify({ query: graphQlQuery }),
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+    const json = await svcResponse.json();
+    const jobs: Job[] = json.data.Jobs as Job[];
+    res.status(200).json(jobs);
   });
 
   router.delete('/workflows/:swfId', async (req, res) => {
