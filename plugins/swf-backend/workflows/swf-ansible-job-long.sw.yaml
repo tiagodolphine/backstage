@@ -15,6 +15,8 @@ functions:
     operation: specs/jira-openapi.json#createIssue
   - name: jiraCloseIssue
     operation: specs/jira-openapi.json#transitionIssue
+  - name: jiraGetIssueTransitions
+    operation: specs/jira-openapi.json#getIssueTransitions
   - name: print
     type: custom
     operation: sysout
@@ -126,7 +128,7 @@ states:
     eventDataFilter:
       toStateData: .jiraResolveIssueResult
     timeouts:
-      eventTimeout: PT50S
+      eventTimeout: PT5S
     compensatedBy: Close Jira issue
     transition: Check Repository Created
   - name: Check Repository Created
@@ -166,6 +168,13 @@ states:
     type: operation
     actionMode: sequential
     actions:
+      - name: get transition id
+        actionDataFilter:
+          toStateData: .jiraGetTransitionResult
+        functionRef:
+          refName: jiraGetIssueTransitions
+          arguments:
+            issueIdOrKey: .jiraCreateIssueResult.id
       - name: close the jira issue
         actionDataFilter:
           toStateData: .jiraCloseIssueResult
@@ -174,7 +183,7 @@ states:
           arguments:
             issueIdOrKey: .jiraCreateIssueResult.id
             transition:
-              id: 2
+              id: .jiraGetTransitionResult.transitions[] | select(.name | contains("Close")) | .id
             update:
               comment:
                 - add:

@@ -36,18 +36,8 @@ export interface IssueCommented extends BaseIssueEvent {
   };
 }
 
-export interface IssueResolved extends BaseIssueEvent {
-  issue_event_type_name: 'issue_resolved';
-  changelog: {
-    items: {
-      field: string;
-      fromString: string;
-      toString: string;
-    }[];
-  };
-}
 export interface IssueUpdated extends BaseIssueEvent {
-  issue_event_type_name: 'issue_generic';
+  issue_event_type_name: 'issue_generic' | 'issue_resolved';
   changelog: {
     items: {
       field: string;
@@ -57,7 +47,7 @@ export interface IssueUpdated extends BaseIssueEvent {
   };
 }
 
-export type IssueEvent = IssueCommented | IssueUpdated | IssueResolved;
+export type IssueEvent = IssueCommented | IssueUpdated;
 
 export type JiraEvent = IssueEvent;
 
