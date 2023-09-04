@@ -16,7 +16,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Content, ErrorPanel, Header, Page } from '@backstage/core-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, makeStyles, Paper } from '@material-ui/core';
+import { Box, Button, Grid, makeStyles, Paper } from '@material-ui/core';
 import {
   ScaffolderTaskOutput,
   scaffolderApiRef,
@@ -32,7 +32,12 @@ import {
   TaskSteps,
 } from '@backstage/plugin-scaffolder-react/alpha';
 import { useAsync } from '@react-hookz/web';
-import { swfInstanceRouteRef } from '@backstage/plugin-swf';
+import {
+  EditorViewKind,
+  SWFDialog,
+  swfInstanceRouteRef,
+} from '@backstage/plugin-swf';
+import { workflow_type } from '@backstage/plugin-swf-common';
 
 const useStyles = makeStyles(theme => ({
   contentWrapper: {
@@ -76,6 +81,12 @@ export const OngoingTask = (props: {
     [steps],
   );
   const swfInstanceRoute = useRouteRef(swfInstanceRouteRef);
+
+  const swfId = useMemo(
+    () => steps.find(step => step.input?.swfId)?.input?.swfId as string,
+    [steps],
+  );
+  const [openWorkflow, setOpenWorkflow] = useState<boolean>(false);
 
   const [logsVisible, setLogVisibleState] = useState(false);
   const [buttonBarVisible, setButtonBarVisibleState] = useState(true);
@@ -181,19 +192,7 @@ export const OngoingTask = (props: {
           />
         </Box>
 
-        <Outputs output={taskStream.output} />
-
-        {processInstanceId && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              navigate(swfInstanceRoute({ instanceId: processInstanceId }))
-            }
-          >
-            View details
-          </Button>
-        )}
+        {!swfId && <Outputs output={taskStream.output} />}
 
         {buttonBarVisible ? (
           <Box paddingBottom={2}>
@@ -231,6 +230,49 @@ export const OngoingTask = (props: {
             </Paper>
           </Box>
         ) : null}
+
+        {swfId && (
+          <>
+            <Paper>
+              <Box padding={2}>
+                <Grid container direction="row" justifyContent="flex-end">
+                  <Grid item>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => setOpenWorkflow(true)}
+                    >
+                      {`View ${workflow_type}`}
+                    </Button>
+                  </Grid>
+
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={!processInstanceId}
+                      onClick={() =>
+                        navigate(
+                          swfInstanceRoute({ instanceId: processInstanceId }),
+                        )
+                      }
+                    >
+                      View details
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Paper>
+
+            <SWFDialog
+              swfId={swfId}
+              kind={EditorViewKind.DIAGRAM_VIEWER}
+              title={templateName ?? 'Workflow'}
+              open={openWorkflow}
+              close={() => setOpenWorkflow(false)}
+            />
+          </>
+        )}
       </Content>
     </Page>
   );
