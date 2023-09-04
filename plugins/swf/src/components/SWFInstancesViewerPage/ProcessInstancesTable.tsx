@@ -179,7 +179,7 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
 
   return (
     <InfoCard
-      title="Instances"
+      title=" "
       action={
         <Button
           variant="outlined"

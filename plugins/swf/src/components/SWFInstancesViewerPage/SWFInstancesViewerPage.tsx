@@ -36,7 +36,7 @@ export const SWFInstancesViewerPage = () => {
   return (
     <Page themeId="tool">
       <Header
-        title={workflow_title}
+        title={`${workflow_title} Management`}
         subtitle={`Where all your ${workflow_title} needs come to life!`}
       >
         <HeaderLabel label="Owner" value="Team X" />
