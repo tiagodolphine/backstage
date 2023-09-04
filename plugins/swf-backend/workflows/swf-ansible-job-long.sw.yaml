@@ -21,7 +21,7 @@ functions:
 events:
   - name: callbackEvent
     type: jira_webhook_callback
-    source: jira
+    source: jira.test
 errors:
   - name: Error
     code: java.lang.RuntimeException
@@ -35,10 +35,9 @@ states:
         functionRef:
           refName: runActionTemplateFetch
           arguments:
-            id: $WORKFLOW.instanceId
-            url: >-
-              https://github.com/manstis/janus-software-templates/tree/main/scaffolder-templates/ansible-job/skeleton
-            targetPath: argo/ansibleJobs/
+            id: "$WORKFLOW.instanceId"
+            url: '"https://github.com/manstis/janus-software-templates/tree/main/scaffolder-templates/ansible-job/skeleton"'
+            targetPath: '"argo/ansibleJobs/"'
             values:
               component_id: .component_id
               jobTemplate: .jobTemplate
@@ -58,8 +57,7 @@ states:
           refName: runActionTemplateFetch
           arguments:
             id: $WORKFLOW.instanceId
-            url: >-
-              https://github.com/manstis/janus-software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton/
+            url: '"https://github.com/manstis/janus-software-templates/tree/main/scaffolder-skeletons/catalog-info-skeleton/"'
             values:
               githubOrg: .githubOrg
               repoName: .repoName
@@ -109,7 +107,7 @@ states:
           fields:
             assignee:
               name: .jiraAssignee
-            description: "\"Create Github Repository: \" + .githubOrg + \"/\" + .repoName"
+            description: '"Create Github Repository: https://github.com/" + .githubOrg + "/" + .repoName'
             issuetype:
               name: Task
             labels:
@@ -128,13 +126,13 @@ states:
     eventDataFilter:
       toStateData: .jiraResolveIssueResult
     timeouts:
-      eventTimeout: PT10S
+      eventTimeout: PT50S
     compensatedBy: Close Jira issue
     transition: Check Repository Created
   - name: Check Repository Created
     type: switch
     dataConditions:
-      - condition: .jiraCreateIssueResult.webhookEvent != null
+      - condition: .jiraResolveIssueResult != null
         transition: Publish to GitHub
         name: created
     defaultCondition:
@@ -151,7 +149,7 @@ states:
           arguments:
             id: $WORKFLOW.instanceId
             repoContentsUrl: .publishGithubResult.repoContentsUrl
-            catalogInfoPath: "\"/catalog-info.yaml\""
+            catalogInfoPath: '"/catalog-info.yaml"'
         actionDataFilter:
           toStateData: .catalogRegisterResult
     end: true
