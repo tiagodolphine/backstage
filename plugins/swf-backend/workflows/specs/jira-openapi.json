@@ -109,6 +109,43 @@
             "bearerAuth": []
           }
         ]
+      },
+      "get": {
+        "tags": [
+          "Issues"
+        ],
+        "summary": "Get issue transitions",
+        "description": "Get issue transitions",
+        "operationId": "getIssueTransitions",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "in": "path",
+            "description": "The ID or key of the issue.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Transition Issue Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false,
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },

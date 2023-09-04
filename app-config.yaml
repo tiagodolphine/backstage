@@ -193,7 +193,7 @@ swf:
   port: 8899
   workflowService:
     path: ../../plugins/swf-backend/workflows
-    container: quay.io/kiegroup/kogito-swf-devmode-nightly
+    container: quay.io/kiegroup/kogito-swf-devmode-nightly:main-2023-08-30
     persistence:
       path: ${POSTGRE_PERSISTENCE_PATH}
     jira:
