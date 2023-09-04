@@ -29,6 +29,7 @@ import { ProcessInstancesTable } from './ProcessInstancesTable';
 import { ProcessInstance, workflow_title } from '@backstage/plugin-swf-common';
 import { ProcessDetailsViewer } from './ProcessDetailsViewer';
 import { ProcessTimeline } from './ProcessTimeline';
+import { ProcessJobs } from './ProcessJobs';
 
 export const SWFInstancesViewerPage = () => {
   const [selectedInstance, setSelectedInstance] = useState<ProcessInstance>();
@@ -72,7 +73,14 @@ export const SWFInstancesViewerPage = () => {
             </Grid>
           </Grid>
           <Grid item xs={12} lg={4}>
-            <ProcessDetailsViewer selectedInstance={selectedInstance} />
+            <Grid container direction="row">
+              <Grid item xs={12}>
+                <ProcessDetailsViewer selectedInstance={selectedInstance} />
+              </Grid>
+              <Grid item xs={12}>
+                <ProcessJobs selectedInstance={selectedInstance} />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Content>

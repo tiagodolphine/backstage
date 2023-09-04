@@ -17,6 +17,7 @@ import { ResponseError } from '@backstage/errors';
 import { SwfApi } from './api';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import {
+  Job,
   ProcessInstance,
   SwfItem,
   SwfListResult,
@@ -69,6 +70,17 @@ export class SwfClient implements SwfApi {
     const data: ProcessInstance = await res.json();
     return data;
   }
+
+  async getInstanceJobs(instanceId: string): Promise<Job[]> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('swf');
+    const res = await fetch(`${baseUrl}/instances/${instanceId}/jobs`);
+    if (!res.ok) {
+      throw await ResponseError.fromResponse(res);
+    }
+    const data: Job[] = await res.json();
+    return data;
+  }
+
   async createWorkflowDefinition(
     uri: string,
     content: string,

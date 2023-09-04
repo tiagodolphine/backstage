@@ -15,6 +15,7 @@
  */
 import { createApiRef } from '@backstage/core-plugin-api';
 import {
+  Job,
   ProcessInstance,
   SwfItem,
   SwfListResult,
@@ -29,6 +30,8 @@ export interface SwfApi {
   getInstances(): Promise<ProcessInstance[]>;
 
   getInstance(instanceId: string): Promise<ProcessInstance>;
+
+  getInstanceJobs(instanceId: string): Promise<Job[]>;
 
   createWorkflowDefinition(uri: string, content?: string): Promise<SwfItem>;
 
