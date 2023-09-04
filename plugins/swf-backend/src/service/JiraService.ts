@@ -36,6 +36,16 @@ export interface IssueCommented extends BaseIssueEvent {
   };
 }
 
+export interface IssueResolved extends BaseIssueEvent {
+  issue_event_type_name: 'issue_resolved';
+  changelog: {
+    items: {
+      field: string;
+      fromString: string;
+      toString: string;
+    }[];
+  };
+}
 export interface IssueUpdated extends BaseIssueEvent {
   issue_event_type_name: 'issue_generic';
   changelog: {
@@ -47,7 +57,7 @@ export interface IssueUpdated extends BaseIssueEvent {
   };
 }
 
-export type IssueEvent = IssueCommented | IssueUpdated;
+export type IssueEvent = IssueCommented | IssueUpdated | IssueResolved;
 
 export type JiraEvent = IssueEvent;
 
@@ -57,17 +67,17 @@ export class JiraService {
     private readonly cloudEventService: CloudEventService,
   ) {}
 
-  public async handleEvent(event: JiraEvent | undefined): Promise<void> {
-    if (!event) {
+  public async handleEvent(jiraEvent: JiraEvent | undefined): Promise<void> {
+    if (!jiraEvent) {
       this.logger.warn('Received empty event');
       return;
     }
 
-    if (event.issue_event_type_name === 'issue_generic') {
-      const newStatus = event.changelog.items.find(
+    if (jiraEvent.issue_event_type_name === 'issue_resolved') {
+      const newStatus = jiraEvent.changelog.items.find(
         item => item.field === 'status',
       )?.toString;
-      const label = event.issue.fields.labels.find(l =>
+      const label = jiraEvent.issue.fields.labels.find(l =>
         l.includes('workflowId'),
       );
       if (!label) {
@@ -76,15 +86,13 @@ export class JiraService {
       }
 
       const workflowInstanceId = label.slice(label.indexOf('=') + 1);
-      if (newStatus === 'Done') {
+      if (newStatus === 'Done' || newStatus === 'Resolved') {
         const response = await this.cloudEventService.send({
           event: new CloudEvent({
             type: 'jira_webhook_callback', // same defined in the workflow
             source: 'jira',
             kogitoprocrefid: workflowInstanceId, // correlation
-            data: {
-              jiraEvent: event,
-            },
+            data: jiraEvent,
           }),
         });
 
