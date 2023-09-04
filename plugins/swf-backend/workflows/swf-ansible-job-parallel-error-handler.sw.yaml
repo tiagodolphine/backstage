@@ -1,8 +1,8 @@
 id: swf-ansible-job-parallel-error-handler
 version: '1.0'
 specVersion: '0.8'
-name: '[WF] Ansible Job - Parallel - Error Handler'
-description: '[WF] Launch an Ansible Job within Ansible Automation Platform'
+name: '[WF] Ansible Job - Parallel/Error'
+description: '[WF] Launch an Ansible Job within Ansible Automation Platform - Error Handling'
 dataInputSchema: schemas/swf-ansible-job-parallel-error-handler__main_schema.json
 errors:
   - name: workitemError

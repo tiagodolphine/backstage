@@ -1,8 +1,8 @@
-id: swf-ansible-job-long
+id: swf-ansible-job-long-timeout
 version: '1.0'
 specVersion: '0.8'
-name: '[WF] Ansible Job with Jira'
-description: '[WF] Launch an Ansible Job within Ansible Automation Platform with Jira integration'
+name: '[WF] Ansible Job with Jira and Timeout'
+description: '[WF] Launch an Ansible Job within Ansible Automation Platform with Jira integration and Timeout'
 dataInputSchema: schemas/swf-ansible-job-long__main_schema.json
 functions:
   - name: runActionTemplateFetch
@@ -127,6 +127,8 @@ states:
     eventRef: callbackEvent
     eventDataFilter:
       toStateData: .jiraResolveIssueResult
+    timeouts:
+      eventTimeout: PT20S
     compensatedBy: Close Jira issue
     transition: Check Repository Created
   - name: Check Repository Created
