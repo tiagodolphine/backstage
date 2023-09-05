@@ -109,7 +109,7 @@ states:
           fields:
             assignee:
               name: .jiraAssignee
-            description: '"Create Github Repository: https://github.com/" + .githubOrg + "/" + .repoName + "\n To crete the new repository: https://github.com/new"'
+            description: '"Create Github Repository: https://github.com/" + .githubOrg + "/" + .repoName + "\n To create the new repository: https://github.com/new"'
             issuetype:
               name: Task
             labels:
