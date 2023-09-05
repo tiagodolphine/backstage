@@ -31,6 +31,7 @@ import {
   ProcessInstanceState,
 } from '@backstage/plugin-swf-common';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { Paragraph } from '../Paragraph/Paragraph';
 
 interface ProcessDetailsViewerProps {
   selectedInstance: ProcessInstance | undefined;
@@ -39,7 +40,7 @@ interface ProcessDetailsViewerProps {
 const processInstanceIconCreator = (state: string) => {
   const render = (icon: JSX.Element, text: string) => {
     return (
-      <p>
+      <Paragraph>
         <div
           style={{
             display: 'flex',
@@ -48,9 +49,15 @@ const processInstanceIconCreator = (state: string) => {
           }}
         >
           {icon}
-          <span style={{ paddingLeft: '8px' }}>{text}</span>
+          <Typography
+            component="span"
+            variant="body2"
+            style={{ paddingLeft: '8px' }}
+          >
+            {text}
+          </Typography>
         </div>
-      </p>
+      </Paragraph>
     );
   };
 
@@ -95,36 +102,38 @@ export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
             <Typography variant="caption" style={{ fontWeight: 'bold' }}>
               Node with error
             </Typography>
-            <p>{nodeName}</p>
+            <Paragraph>{nodeName}</Paragraph>
           </>
         )}
         <Typography variant="caption" style={{ fontWeight: 'bold' }}>
           Error message
         </Typography>
-        <p>{selectedInstance.error.message}</p>
+        <Paragraph>{selectedInstance.error.message}</Paragraph>
       </>
     );
   }, [selectedInstance]);
 
   return (
     <InfoCard title="Details">
-      {selectedInstance === undefined && <p>No instance selected</p>}
+      {selectedInstance === undefined && (
+        <Paragraph>No instance selected</Paragraph>
+      )}
       {selectedInstance && (
         <div>
           <Typography variant="caption" style={{ fontWeight: 'bold' }}>
             Id
           </Typography>
-          <p>{selectedInstance?.id}</p>
+          <Paragraph>{selectedInstance?.id}</Paragraph>
           <Typography variant="caption" style={{ fontWeight: 'bold' }}>
             Name
           </Typography>
-          <p>{selectedInstance?.processName}</p>
+          <Paragraph>{selectedInstance?.processName}</Paragraph>
           {selectedInstance.businessKey && (
             <>
               <Typography variant="caption" style={{ fontWeight: 'bold' }}>
                 Business key
               </Typography>
-              <p>{selectedInstance?.businessKey}</p>
+              <Paragraph>{selectedInstance?.businessKey}</Paragraph>
             </>
           )}
           <Typography variant="caption" style={{ fontWeight: 'bold' }}>
@@ -148,9 +157,9 @@ export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
               <Typography variant="caption" style={{ fontWeight: 'bold' }}>
                 Start
               </Typography>
-              <p>
+              <Paragraph>
                 <Moment fromNow>{new Date(`${selectedInstance.start}`)}</Moment>
-              </p>
+              </Paragraph>
             </div>
           )}
           {selectedInstance.lastUpdate && (
@@ -158,11 +167,11 @@ export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
               <Typography variant="caption" style={{ fontWeight: 'bold' }}>
                 Last Updated
               </Typography>
-              <p>
+              <Paragraph>
                 <Moment fromNow>
                   {new Date(`${selectedInstance.lastUpdate}`)}
                 </Moment>
-              </p>
+              </Paragraph>
             </div>
           )}
           {selectedInstance.end && (
@@ -170,9 +179,9 @@ export const ProcessDetailsViewer = (props: ProcessDetailsViewerProps) => {
               <Typography variant="caption" style={{ fontWeight: 'bold' }}>
                 End
               </Typography>
-              <p>
+              <Paragraph>
                 <Moment fromNow>{new Date(`${selectedInstance.end}`)}</Moment>
-              </p>
+              </Paragraph>
             </div>
           )}
           {selectedInstance.parentProcessInstance && (

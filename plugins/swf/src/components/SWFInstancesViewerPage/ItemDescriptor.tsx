@@ -35,14 +35,14 @@ const ItemDescriptor = (props: IOwnProps) => {
   };
   return (
     <Tooltip title={itemDescription.id}>
-      <span>
+      <Typography variant="body2" component="span">
         {itemDescription.name}{' '}
         {itemDescription.description ? (
           <Badge>{itemDescription.description}</Badge>
         ) : (
           idStringModifier(itemDescription.id)
         )}
-      </span>
+      </Typography>
     </Tooltip>
   );
 };

@@ -18,6 +18,7 @@ import ReactJson from 'react-json-view';
 
 import { InfoCard } from '@backstage/core-components';
 import { useTheme } from '@material-ui/core';
+import { Paragraph } from '../Paragraph/Paragraph';
 
 interface ProcessVariablesViewerProps {
   variables: Record<string, unknown> | undefined;
@@ -29,7 +30,7 @@ export const ProcessVariablesViewer = (props: ProcessVariablesViewerProps) => {
 
   return (
     <InfoCard title="Variables">
-      {variables === undefined && <p>No instance selected</p>}
+      {variables === undefined && <Paragraph>No instance selected</Paragraph>}
       <div>
         {variables && (
           <ReactJson

@@ -27,6 +27,7 @@ import ReplayOutlinedIcon from '@material-ui/icons/ReplayOutlined';
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
 import Moment from 'react-moment';
 import { swfApiRef } from '../../api';
+import { Paragraph } from '../Paragraph/Paragraph';
 
 interface ProcessJobsProps {
   selectedInstance: ProcessInstance | undefined;
@@ -133,7 +134,9 @@ export const ProcessJobs = (props: ProcessJobsProps) => {
 
   return (
     <InfoCard title="Timers">
-      {viewState === 'unselected' && <p>No instance selected</p>}
+      {viewState === 'unselected' && (
+        <Paragraph>No instance selected</Paragraph>
+      )}
       {viewState === 'selected' && (
         <Table<TableRow>
           data={data ?? []}
