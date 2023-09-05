@@ -340,8 +340,21 @@ export class DataInputSchemaService {
     } as WorkflowFunctionArgs;
 
     if (operationId === FETCH_TEMPLATE_ACTION_OPERATION_ID) {
-      const skeletonValues = await this.extractTemplateValuesFromSkeleton(
-        workflowArgsToFilter,
+      if (
+        !workflowArgsToFilter.url ||
+        !workflowArgsToFilter.values ||
+        !Object.keys(workflowArgsToFilter.values).length
+      ) {
+        return undefined;
+      }
+
+      const githubPath = this.convertToGitHubApiUrl(workflowArgsToFilter.url);
+      if (!githubPath) {
+        return undefined;
+      }
+
+      const skeletonValues = await this.extractTemplateValuesFromSkeletonUrl(
+        githubPath,
       );
 
       if (!skeletonValues && !args.isConditional) {
@@ -349,20 +362,22 @@ export class DataInputSchemaService {
       }
 
       if (skeletonValues?.length) {
+        const skeletonUrl = `https://github.com/${githubPath.owner}/${githubPath.repo}/tree/${githubPath.ref}/${githubPath.path}`;
+
         skeletonValues.forEach(v => {
           schemaPropsToFilter[v] = {
             title: v,
-            description: `Extracted from ${workflowArgsToFilter.url}`,
+            description: `Extracted from ${skeletonUrl}`,
             type: 'string',
           };
           schemaPropsToFilter[this.snakeCaseToCamelCase(v)] = {
             title: this.snakeCaseToCamelCase(v),
-            description: `Extracted from ${workflowArgsToFilter.url}`,
+            description: `Extracted from ${skeletonUrl}`,
             type: 'string',
           };
           schemaPropsToFilter[this.camelCaseToSnakeCase(v)] = {
             title: this.camelCaseToSnakeCase(v),
-            description: `Extracted from ${workflowArgsToFilter.url}`,
+            description: `Extracted from ${skeletonUrl}`,
             type: 'string',
           };
         });
@@ -450,24 +465,6 @@ export class DataInputSchemaService {
     };
 
     return { actionSchema, argsMap };
-  }
-
-  private async extractTemplateValuesFromSkeleton(
-    workflowArgs: WorkflowFunctionArgs,
-  ): Promise<string[] | undefined> {
-    if (
-      !workflowArgs.url ||
-      !workflowArgs.values ||
-      !Object.keys(workflowArgs.values).length
-    ) {
-      return undefined;
-    }
-    const githubPath = this.convertToGitHubApiUrl(workflowArgs.url.trim());
-    if (!githubPath) {
-      return undefined;
-    }
-    // This call can be expensive
-    return await this.extractTemplateValuesFromSkeletonUrl(githubPath);
   }
 
   private extractRequiredArgsToShow(
@@ -847,8 +844,20 @@ export class DataInputSchemaService {
     return path;
   }
 
+  private removeSurroundingQuotes(inputString: string): string {
+    const trimmed = inputString.trim();
+    if (
+      (trimmed.startsWith("'") && trimmed.endsWith("'")) ||
+      (trimmed.startsWith('"') && trimmed.endsWith('"'))
+    ) {
+      return trimmed.slice(1, -1);
+    }
+    return trimmed;
+  }
+
   private convertToGitHubApiUrl(githubUrl: string): GitHubPath | undefined {
-    const githubApiMatch = githubUrl.match(Regex.GITHUB_API_URL);
+    const sanitizedUrl = this.removeSurroundingQuotes(githubUrl);
+    const githubApiMatch = RegExp(Regex.GITHUB_API_URL).exec(sanitizedUrl);
     if (githubApiMatch) {
       const [, owner, repo, ref, path] = githubApiMatch;
       return {
@@ -859,7 +868,7 @@ export class DataInputSchemaService {
       };
     }
 
-    const githubUrlMatch = githubUrl.match(Regex.GITHUB_URL);
+    const githubUrlMatch = RegExp(Regex.GITHUB_URL).exec(sanitizedUrl);
     if (!githubUrlMatch) {
       return undefined;
     }
@@ -946,7 +955,11 @@ export class DataInputSchemaService {
   private extractVariablesFromWorkflow(
     workflow: Specification.Workflow,
   ): Set<string> {
-    const blockList = ['.actionDataFilter', '.stateDataFilter'];
+    const blockList = [
+      '.actionDataFilter',
+      '.stateDataFilter',
+      '.eventDataFilter',
+    ];
     const inputVariableSet = new Set<string>();
     const workflowVariableSet = new Set<string>();
 
