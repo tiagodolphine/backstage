@@ -21,6 +21,7 @@ import { SWFEditor } from '../SWFEditor';
 import { EditorViewKind } from '../SWFEditor/SWFEditor';
 import { Button } from '@material-ui/core';
 import { SWFDialog } from '../SWFDialog';
+import { Paragraph } from '../Paragraph/Paragraph';
 
 interface ProcessGraphViewerProps {
   swfId: string | undefined;
@@ -52,7 +53,7 @@ export const ProcessGraphViewer = (props: ProcessGraphViewerProps) => {
       >
         <div style={{ height: '500px', padding: '10px' }}>
           {!swfId || !selectedInstance ? (
-            <p>No instance selected</p>
+            <Paragraph>No instance selected</Paragraph>
           ) : (
             <SWFEditor
               kind={EditorViewKind.RUNTIME}

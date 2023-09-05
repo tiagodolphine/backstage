@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useCallback, useMemo } from 'react';
 
+import React, { useCallback, useMemo } from 'react';
 import { InfoCard } from '@backstage/core-components';
 import { Tooltip } from '@material-ui/core';
 import Moment from 'react-moment';
@@ -26,6 +26,7 @@ import {
   ProcessInstance,
   ProcessInstanceError,
 } from '@backstage/plugin-swf-common';
+import { Paragraph } from '../Paragraph/Paragraph';
 
 interface ProcessTimelineProps {
   selectedInstance: ProcessInstance | undefined;
@@ -45,7 +46,7 @@ export const ProcessTimeline = (props: ProcessTimelineProps) => {
 
   const render = (icon: JSX.Element, node: NodeInstance) => {
     return (
-      <p>
+      <Paragraph>
         <div
           style={{
             display: 'flex',
@@ -69,7 +70,7 @@ export const ProcessTimeline = (props: ProcessTimelineProps) => {
             )}
           </small>
         </div>
-      </p>
+      </Paragraph>
     );
   };
   const renderNode = (node: NodeInstance): JSX.Element => {
@@ -120,14 +121,14 @@ export const ProcessTimeline = (props: ProcessTimelineProps) => {
   if (selectedInstance === undefined) {
     return (
       <InfoCard title="Timeline">
-        <p>No instance selected</p>
+        <Paragraph>No instance selected</Paragraph>
       </InfoCard>
     );
   }
   if (nodes.length === 0) {
     return (
       <InfoCard title="Timeline">
-        <p>No nodes in workflow</p>
+        <Paragraph>No nodes in workflow</Paragraph>
       </InfoCard>
     );
   }
