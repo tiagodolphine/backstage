@@ -20,7 +20,6 @@ import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import { DemoEventBasedEntityProvider } from './DemoEventBasedEntityProvider';
 import { UnprocessedEntitiesModule } from '@backstage/plugin-catalog-backend-module-unprocessed';
-import { ServerlessWorkflowEntityProvider } from '@backstage/plugin-swf-backend';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -34,33 +33,6 @@ export default async function createPlugin(
     eventBroker: env.eventBroker,
   });
   builder.addEntityProvider(demoProvider);
-
-  // SWF Entity Provider
-  const config = env.config;
-  const logger = env.logger;
-  const kogitoBaseUrl =
-    config.getOptionalString('swf.baseUrl') ?? 'http://localhost';
-  const kogitoPort = config.getOptionalNumber('swf.port') ?? 8899;
-  logger.info(
-    `Using kogito Serverless Workflow Url of: ${kogitoBaseUrl}:${kogitoPort}`,
-  );
-  const owner =
-    config.getOptionalString('swf.workflowService.owner') ?? 'infrastructure';
-  const environment =
-    config.getOptionalString('swf.workflowService.environment') ??
-    'development';
-
-  const swfProvider = new ServerlessWorkflowEntityProvider({
-    reader: env.reader,
-    kogitoServiceUrl: `${kogitoBaseUrl}:${kogitoPort}`,
-    swfPluginUrl: await env.discovery.getBaseUrl('swf'),
-    eventBroker: env.eventBroker,
-    scheduler: env.scheduler,
-    logger: env.logger,
-    owner: owner,
-    env: environment,
-  });
-  builder.addEntityProvider(swfProvider);
 
   const { processingEngine, router } = await builder.build();
 

@@ -154,11 +154,7 @@ export const Root = ({ children }: PropsWithChildren<{}>) => (
         <SidebarItem icon={PlaylistPlayIcon} to="playlist" text="Playlists" />
         <SidebarItem icon={LayersIcon} to="explore" text="Explore" />
         <SidebarItem icon={CreateComponentIcon} to="create" text="Create..." />
-        <SidebarItem
-          icon={WorkflowIcon}
-          to="swf/instances/"
-          text="Workflow..."
-        />
+        <SidebarItem icon={WorkflowIcon} to="swf" text="Workflow" />
         {/* End global nav */}
         <SidebarDivider />
         <SidebarScrollWrapper>

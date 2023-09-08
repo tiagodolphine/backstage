@@ -52,8 +52,6 @@ import {
   viewTechDocRouteRef,
 } from '../../routes';
 import { parseEntityRef, stringifyEntityRef } from '@backstage/catalog-model';
-import { newWorkflowRef } from '@backstage/plugin-swf';
-import { Grid } from '@material-ui/core';
 
 /**
  * @alpha
@@ -91,7 +89,6 @@ const createGroupsWithOther = (
  */
 export const TemplateListPage = (props: TemplateListPageProps) => {
   const registerComponentLink = useRouteRef(registerComponentRouteRef);
-  const newWorkflow = useRouteRef(newWorkflowRef);
   const {
     TemplateCardComponent,
     groups: givenGroups = [],
@@ -164,27 +161,15 @@ export const TemplateListPage = (props: TemplateListPageProps) => {
         </Header>
         <Content>
           <ContentHeader title="Available Templates">
-            <Grid container direction="row" spacing={1}>
-              <Grid item>
-                <RegisterExistingButton
-                  title="Register Existing Component"
-                  to={registerComponentLink && registerComponentLink()}
-                />
-              </Grid>
-              <Grid item>
-                <RegisterExistingButton
-                  title="New Workflow"
-                  to={newWorkflow?.()}
-                />
-              </Grid>
-              <Grid item>
-                <SupportButton>
-                  Create new software components using standard templates.
-                  Different templates create different kinds of components
-                  (services, websites, documentation, ...).
-                </SupportButton>
-              </Grid>
-            </Grid>
+            <RegisterExistingButton
+              title="Register Existing Component"
+              to={registerComponentLink && registerComponentLink()}
+            />
+            <SupportButton>
+              Create new software components using standard templates. Different
+              templates create different kinds of components (services,
+              websites, documentation, ...).
+            </SupportButton>
           </ContentHeader>
 
           <CatalogFilterLayout>

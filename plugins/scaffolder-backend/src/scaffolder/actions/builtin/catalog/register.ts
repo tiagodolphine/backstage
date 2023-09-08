@@ -107,8 +107,7 @@ export function createCatalogRegisterAction(options: {
       let catalogInfoUrl;
       if ('catalogInfoUrl' in input) {
         catalogInfoUrl = input.catalogInfoUrl;
-      }
-      if ('repoContentsUrl' in input) {
+      } else {
         const { repoContentsUrl, catalogInfoPath = '/catalog-info.yaml' } =
           input;
         const integration = integrations.byUrl(repoContentsUrl);
@@ -122,9 +121,6 @@ export function createCatalogRegisterAction(options: {
           base: repoContentsUrl,
           url: catalogInfoPath,
         });
-      }
-      if (catalogInfoUrl === undefined) {
-        throw new InputError(`catalog:register missing mandatory parameters.`);
       }
 
       ctx.logger.info(`Registering ${catalogInfoUrl} in the catalog`);

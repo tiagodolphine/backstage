@@ -8276,7 +8276,6 @@ __metadata:
     "@backstage/plugin-permission-node": "workspace:^"
     "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-scaffolder-node": "workspace:^"
-    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/types": "workspace:^"
     "@gitbeaker/core": ^35.6.0
     "@gitbeaker/node": ^35.1.0
@@ -8377,8 +8376,6 @@ __metadata:
     "@backstage/plugin-catalog-common": "workspace:^"
     "@backstage/plugin-catalog-react": "workspace:^"
     "@backstage/plugin-scaffolder-common": "workspace:^"
-    "@backstage/plugin-swf": "workspace:^"
-    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
     "@backstage/types": "workspace:^"
@@ -8443,8 +8440,6 @@ __metadata:
     "@backstage/plugin-permission-react": "workspace:^"
     "@backstage/plugin-scaffolder-common": "workspace:^"
     "@backstage/plugin-scaffolder-react": "workspace:^"
-    "@backstage/plugin-swf": "workspace:^"
-    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
     "@backstage/types": "workspace:^"
@@ -8993,7 +8988,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@backstage/plugin-swf-backend@^0.0.0, @backstage/plugin-swf-backend@workspace:^, @backstage/plugin-swf-backend@workspace:plugins/swf-backend":
+"@backstage/plugin-swf-backend@workspace:^, @backstage/plugin-swf-backend@workspace:plugins/swf-backend":
   version: 0.0.0-use.local
   resolution: "@backstage/plugin-swf-backend@workspace:plugins/swf-backend"
   dependencies:
@@ -9033,7 +9028,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@backstage/plugin-swf-common@^0.0.0, @backstage/plugin-swf-common@workspace:^, @backstage/plugin-swf-common@workspace:plugins/swf-common":
+"@backstage/plugin-swf-common@workspace:^, @backstage/plugin-swf-common@workspace:plugins/swf-common":
   version: 0.0.0-use.local
   resolution: "@backstage/plugin-swf-common@workspace:plugins/swf-common"
   dependencies:
@@ -25890,8 +25885,7 @@ __metadata:
     "@backstage/plugin-search-backend-module-pg": "workspace:^"
     "@backstage/plugin-search-backend-node": "workspace:^"
     "@backstage/plugin-search-common": "workspace:^"
-    "@backstage/plugin-swf-backend": ^0.0.0
-    "@backstage/plugin-swf-common": ^0.0.0
+    "@backstage/plugin-swf-backend": "workspace:^"
     "@backstage/plugin-tech-insights-backend": "workspace:^"
     "@backstage/plugin-tech-insights-backend-module-jsonfc": "workspace:^"
     "@backstage/plugin-tech-insights-node": "workspace:^"

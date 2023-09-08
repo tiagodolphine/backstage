@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Content,
   InfoCard,
@@ -21,14 +21,12 @@ import {
   Progress,
 } from '@backstage/core-components';
 import { stringifyEntityRef } from '@backstage/catalog-model';
-import { Button, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { BackstageTheme } from '@backstage/theme';
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useTemplateParameterSchema } from '../../hooks/useTemplateParameterSchema';
 import { Stepper, type StepperProps } from '../Stepper/Stepper';
 import { SecretsContextProvider } from '../../../secrets/SecretsContext';
-import { EditorViewKind, SWFDialog } from '@backstage/plugin-swf';
-import { workflow_title, workflow_type } from '@backstage/plugin-swf-common';
 
 const useStyles = makeStyles<BackstageTheme>(() => ({
   markdown: {
@@ -85,8 +83,6 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
     }
   }, [error, errorApi]);
 
-  const [open, setOpen] = useState<boolean>(false);
-
   if (error) {
     return props.onError(error);
   }
@@ -97,28 +93,6 @@ export const Workflow = (workflowProps: WorkflowProps): JSX.Element | null => {
       {manifest && (
         <InfoCard
           title={title ?? manifest.title}
-          action={
-            manifest.type === workflow_type &&
-            manifest.name && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  style={{ marginTop: 8, marginRight: 8 }}
-                  onClick={_ => setOpen(true)}
-                >
-                  View {workflow_title}
-                </Button>
-                <SWFDialog
-                  kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
-                  swfId={manifest.name}
-                  title={manifest.title}
-                  open={open}
-                  close={() => setOpen(false)}
-                />
-              </>
-            )
-          }
           subheader={
             <MarkdownContent
               className={styles.markdown}
