@@ -9003,8 +9003,6 @@ __metadata:
     "@backstage/plugin-catalog-node": "workspace:^"
     "@backstage/plugin-events-backend": "workspace:^"
     "@backstage/plugin-events-node": "workspace:^"
-    "@backstage/plugin-scaffolder-common": "workspace:^"
-    "@backstage/plugin-scaffolder-node": "workspace:^"
     "@backstage/plugin-swf-common": "workspace:^"
     "@octokit/rest": ^19.0.3
     "@severlessworkflow/sdk-typescript": ^3.0.3
@@ -9059,6 +9057,7 @@ __metadata:
     "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
     "@backstage/theme": "workspace:^"
+    "@backstage/types": "workspace:^"
     "@kie-tools-core/editor": ^0.31.0
     "@kie-tools-core/envelope-bus": ^0.31.0
     "@kie-tools-core/notifications": ^0.31.0
@@ -9073,6 +9072,12 @@ __metadata:
     "@material-ui/core": ^4.9.13
     "@material-ui/icons": ^4.9.1
     "@material-ui/lab": ^4.0.0-alpha.60
+    "@rjsf/core": ^3.2.1
+    "@rjsf/core-v5": "npm:@rjsf/core@5.7.3"
+    "@rjsf/material-ui": ^3.2.1
+    "@rjsf/material-ui-v5": "npm:@rjsf/material-ui@5.7.3"
+    "@rjsf/utils": 5.7.3
+    "@rjsf/validator-ajv8": 5.7.3
     "@severlessworkflow/sdk-typescript": ^3.0.3
     "@testing-library/jest-dom": ^5.10.1
     "@testing-library/react": ^12.1.3

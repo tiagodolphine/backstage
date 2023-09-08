@@ -20,9 +20,17 @@ import {
   SwfItem,
   SwfListResult,
   SwfSpecFile,
+  WorkflowDataInputSchemaResponse,
+  WorkflowExecutionResponse,
 } from '@backstage/plugin-swf-common';
+import { JsonValue } from '@backstage/types';
 
 export interface SwfApi {
+  executeWorkflow(args: {
+    swfId: string;
+    parameters: Record<string, JsonValue>;
+  }): Promise<WorkflowExecutionResponse>;
+
   getSwf(swfId: string): Promise<SwfItem>;
 
   listSwfs(): Promise<SwfListResult>;
@@ -32,6 +40,10 @@ export interface SwfApi {
   getInstance(instanceId: string): Promise<ProcessInstance>;
 
   getInstanceJobs(instanceId: string): Promise<Job[]>;
+
+  getWorkflowDataInputSchema(
+    swfId: string,
+  ): Promise<WorkflowDataInputSchemaResponse>;
 
   createWorkflowDefinition(uri: string, content?: string): Promise<SwfItem>;
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   createApiFactory,
   createPlugin,
@@ -20,11 +21,7 @@ import {
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
 
-import {
-  definitionsRouteRef,
-  rootRouteRef,
-  scaffolderTemplateSelectedRouteRef,
-} from './routes';
+import { definitionsRouteRef, rootRouteRef } from './routes';
 import { swfApiRef, SwfClient } from './api';
 
 export const swfPlugin = createPlugin({
@@ -41,9 +38,6 @@ export const swfPlugin = createPlugin({
   routes: {
     root: rootRouteRef,
     definitions: definitionsRouteRef,
-  },
-  externalRoutes: {
-    scaffolderTemplateSelectedLink: scaffolderTemplateSelectedRouteRef,
   },
 });
 

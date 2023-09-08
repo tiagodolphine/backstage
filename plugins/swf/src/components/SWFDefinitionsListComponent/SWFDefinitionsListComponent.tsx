@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   Table,
   TableColumn,
@@ -30,13 +30,11 @@ import {
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Pageview from '@material-ui/icons/Pageview';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import Subscriptions from '@material-ui/icons/Subscriptions';
 import Edit from '@material-ui/icons/Edit';
 import {
   definitionsRouteRef,
   editWorkflowRouteRef,
-  scaffolderTemplateSelectedRouteRef,
-  swfInstancesRouteRef,
+  executeWorkflowRouteRef,
 } from '../../routes';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,8 +47,7 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
 
   const navigate = useNavigate();
   const definitionLink = useRouteRef(definitionsRouteRef);
-  const scaffolderLink = useRouteRef(scaffolderTemplateSelectedRouteRef);
-  const instancesLink = useRouteRef(swfInstancesRouteRef);
+  const executeWorkflowLink = useRouteRef(executeWorkflowRouteRef);
   const editLink = useRouteRef(editWorkflowRouteRef);
 
   interface Row {
@@ -68,41 +65,45 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
     };
   });
 
-  const doView = (rowData: Row) => {
-    navigate(definitionLink({ swfId: rowData.id, format: rowData.format }));
-  };
+  const doView = useCallback(
+    (rowData: Row) => {
+      navigate(definitionLink({ swfId: rowData.id, format: rowData.format }));
+    },
+    [definitionLink, navigate],
+  );
 
-  const doExecute = (rowData: Row) => {
-    if (scaffolderLink) {
-      navigate(
-        scaffolderLink({ namespace: 'default', templateName: `${rowData.id}` }),
-      );
-    }
-  };
+  const doExecute = useCallback(
+    (rowData: Row) => {
+      navigate(executeWorkflowLink({ swfId: rowData.id }));
+    },
+    [executeWorkflowLink, navigate],
+  );
 
-  const doInstances = (_: Row) => {
-    navigate(instancesLink());
-  };
+  const doEdit = useCallback(
+    (rowData: Row) => {
+      navigate(editLink({ swfId: `${rowData.id}`, format: rowData.format }));
+    },
+    [editLink, navigate],
+  );
 
-  const doEdit = (rowData: Row) => {
-    navigate(editLink({ swfId: `${rowData.id}`, format: rowData.format }));
-  };
-
-  const doDelete = (rowData: Row) => {
-    // Lazy use of window.confirm vs writing a popup.
-    if (
-      // eslint-disable-next-line no-alert
-      window.confirm(
-        `Please confirm you want to delete '${rowData.id}' permanently.`,
-      )
-    ) {
-      swfApi.deleteWorkflowDefinition(rowData.id);
-    }
-  };
+  const doDelete = useCallback(
+    (rowData: Row) => {
+      // Lazy use of window.confirm vs writing a popup.
+      if (
+        // eslint-disable-next-line no-alert
+        window.confirm(
+          `Please confirm you want to delete '${rowData.id}' permanently.`,
+        )
+      ) {
+        swfApi.deleteWorkflowDefinition(rowData.id);
+      }
+    },
+    [swfApi],
+  );
 
   return (
     <Table
-      title="Definitions"
+      title=""
       options={{ search: true, paging: false, actionsColumnIndex: 1 }}
       columns={columns}
       data={data}
@@ -111,11 +112,6 @@ export const SwfItemsTable = ({ items }: SwfItemsTableProps) => {
           icon: () => <PlayArrow />,
           tooltip: 'Execute',
           onClick: (_, rowData) => doExecute(rowData as Row),
-        },
-        {
-          icon: () => <Subscriptions />,
-          tooltip: 'Instances',
-          onClick: (_, rowData) => doInstances(rowData as Row),
         },
         {
           icon: () => <Pageview />,

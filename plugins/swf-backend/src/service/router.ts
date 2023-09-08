@@ -25,6 +25,7 @@ import {
   fromWorkflowSource,
   SwfDefinition,
   Job,
+  WorkflowDataInputSchemaResponse,
 } from '@backstage/plugin-swf-common';
 import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
@@ -37,6 +38,7 @@ import { DataInputSchemaService } from './DataInputSchemaService';
 import { CloudEventService } from './CloudEventService';
 import { JiraEvent, JiraService } from './JiraService';
 import { readGithubIntegrationConfigs } from '@backstage/integration';
+import { OpenAPIV3 } from 'openapi-types';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
@@ -117,6 +119,7 @@ export async function createRouter(
     kogitoPort,
     workflowService,
     openApiService,
+    dataInputSchemaService,
     jiraService,
   );
   setupExternalRoutes(router, discovery);
@@ -150,6 +153,7 @@ function setupInternalRoutes(
   kogitoPort: number,
   workflowService: WorkflowService,
   openApiService: OpenApiService,
+  dataInputSchemaService: DataInputSchemaService,
   jiraService: JiraService,
 ) {
   const fetchWorkflowUri = async (swfId: string): Promise<string> => {
@@ -162,6 +166,26 @@ function setupInternalRoutes(
     const json = await uriResponse.json();
     // Assuming only one source in the list
     return json[0].uri;
+  };
+
+  const fetchWorkflowDefinition = async (
+    swfId: string,
+  ): Promise<SwfDefinition> => {
+    const sourceResponse = await executeWithRetry(() =>
+      fetch(
+        `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}/source`,
+      ),
+    );
+
+    const source = await sourceResponse.text();
+    return fromWorkflowSource(source);
+  };
+
+  const fetchOpenApi = async (): Promise<OpenAPIV3.Document> => {
+    const svcOpenApiResponse = await executeWithRetry(() =>
+      fetch(`${kogitoBaseUrl}:${kogitoPort}/q/openapi.json`),
+    );
+    return await svcOpenApiResponse.json();
   };
 
   router.get('/items', async (_, res) => {
@@ -203,16 +227,9 @@ function setupInternalRoutes(
       params: { swfId },
     } = req;
 
-    const svcResponse = await executeWithRetry(() =>
-      fetch(
-        `${kogitoBaseUrl}:${kogitoPort}/management/processes/${swfId}/source`,
-      ),
-    );
-
+    const definition = await fetchWorkflowDefinition(swfId);
     const uri = await fetchWorkflowUri(swfId);
-    const definition = fromWorkflowSource(await svcResponse.text());
 
-    // When complete return to Backstage
     res.status(200).json({
       uri,
       definition,
@@ -283,6 +300,36 @@ function setupInternalRoutes(
     const json = await svcResponse.json();
     const jobs: Job[] = json.data.Jobs as Job[];
     res.status(200).json(jobs);
+  });
+
+  router.get('/items/:swfId/schema', async (req, res) => {
+    const {
+      params: { swfId },
+    } = req;
+
+    const definition = await fetchWorkflowDefinition(swfId);
+    const uri = await fetchWorkflowUri(swfId);
+
+    const swfItem: SwfItem = { uri, definition };
+
+    const openApi = await fetchOpenApi();
+    const workflowDataInputSchema =
+      await dataInputSchemaService.resolveDataInputSchema({
+        openApi,
+        swfId,
+      });
+
+    if (!workflowDataInputSchema) {
+      res.status(404).send();
+      return;
+    }
+
+    const response: WorkflowDataInputSchemaResponse = {
+      swfItem,
+      schema: workflowDataInputSchema,
+    };
+
+    res.status(200).json(response);
   });
 
   router.delete('/workflows/:swfId', async (req, res) => {
@@ -406,7 +453,7 @@ async function executeWithRetry(
   let response: Response;
   let errorCount = 0;
   // execute with retry
-  const backoff = 5000;
+  const backoff = 3000;
   const maxErrors = 15;
   while (errorCount < maxErrors) {
     try {

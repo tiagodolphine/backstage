@@ -13,39 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
-import { Grid } from '@material-ui/core';
-import {
-  Header,
-  Page,
-  Content,
-  ContentHeader,
-  HeaderLabel,
-  SupportButton,
-} from '@backstage/core-components';
+import { Button, Grid } from '@material-ui/core';
+import { ContentHeader } from '@backstage/core-components';
 import { SWFDefinitionsListComponent } from '../SWFDefinitionsListComponent';
 import { workflow_title } from '@backstage/plugin-swf-common';
+import { useNavigate } from 'react-router-dom';
+import { useRouteRef } from '@backstage/core-plugin-api';
+import { newWorkflowRef, swfInstancesRouteRef } from '../../routes';
+import { BaseWorkflowPage } from '../BaseWorkflowPage/BaseWorkflowPage';
+import { WorkflowSupportButton } from '../WorkflowSupportButton/WorkflowSupportButton';
 
 export const SWFPage = () => {
+  const navigate = useNavigate();
+  const newWorkflowLink = useRouteRef(newWorkflowRef);
+  const instancesLink = useRouteRef(swfInstancesRouteRef);
+
   return (
-    <Page themeId="tool">
-      <Header
-        title={workflow_title}
-        subtitle={`Where all your ${workflow_title} needs come to life!`}
-      >
-        <HeaderLabel label="Owner" value="Team X" />
-        <HeaderLabel label="Lifecycle" value="Alpha" />
-      </Header>
-      <Content>
-        <ContentHeader title={workflow_title}>
-          <SupportButton>Orchestrate things with stuff.</SupportButton>
-        </ContentHeader>
-        <Grid container spacing={3} direction="column">
+    <BaseWorkflowPage>
+      <ContentHeader title="Definitions">
+        <Grid container spacing={1}>
           <Grid item>
-            <SWFDefinitionsListComponent />
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => navigate(newWorkflowLink())}
+            >
+              {`New ${workflow_title}`}
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => navigate(instancesLink())}
+            >
+              View Instances
+            </Button>
+          </Grid>
+          <Grid item>
+            <WorkflowSupportButton />
           </Grid>
         </Grid>
-      </Content>
-    </Page>
+      </ContentHeader>
+      <Grid container spacing={3} direction="column">
+        <Grid item>
+          <SWFDefinitionsListComponent />
+        </Grid>
+      </Grid>
+    </BaseWorkflowPage>
   );
 };

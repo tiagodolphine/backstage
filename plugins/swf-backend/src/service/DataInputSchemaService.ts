@@ -29,7 +29,10 @@ import { Foreachstate } from '@severlessworkflow/sdk-typescript/lib/definitions/
 import { Callbackstate } from '@severlessworkflow/sdk-typescript/lib/definitions/callbackstate';
 import { Databasedswitchstate } from '@severlessworkflow/sdk-typescript/lib/definitions/databasedswitchstate';
 import { Transitiondatacondition } from '@severlessworkflow/sdk-typescript/lib/definitions/transitiondatacondition';
-import { SwfDefinition } from '@backstage/plugin-swf-common';
+import {
+  SwfDefinition,
+  WorkflowDataInputSchema,
+} from '@backstage/plugin-swf-common';
 
 type OpenApiSchemaProperties = {
   [k: string]: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject;
@@ -1018,5 +1021,117 @@ export class DataInputSchemaService {
     workflowVariableSet.forEach(v => inputVariableSet.delete(v));
 
     return inputVariableSet;
+  }
+
+  public async resolveDataInputSchema(args: {
+    openApi: OpenAPIV3.Document;
+    swfId: string;
+  }): Promise<WorkflowDataInputSchema | undefined> {
+    const requestBody = args.openApi.paths[`/${args.swfId}`]?.post?.requestBody;
+    if (!requestBody) {
+      return undefined;
+    }
+
+    const content = (requestBody as OpenAPIV3.RequestBodyObject).content;
+    if (!content) {
+      return undefined;
+    }
+
+    const mainSchema = content[`application/json`]?.schema;
+    if (!mainSchema) {
+      return undefined;
+    }
+
+    const referencedSchemas = this.findReferencedSchemas({
+      swfId: args.swfId,
+      openApi: args.openApi,
+      schema: mainSchema as OpenAPIV3.SchemaObject,
+    });
+
+    const compositionSchema = {
+      ...mainSchema,
+      title: '',
+      properties: {
+        ...referencedSchemas.reduce((obj, s) => {
+          obj![s.title!] = {
+            $ref: `#/components/schemas/${s.title!}`,
+          };
+          return obj;
+        }, {} as WorkflowDataInputSchema['properties']),
+      },
+    };
+
+    const dataInputSchema: WorkflowDataInputSchema = {
+      ...compositionSchema,
+      properties: referencedSchemas.reduce((obj, s) => {
+        obj![s.title!] = {
+          $ref: `#/components/schemas/${s.title!}`,
+        };
+        return obj;
+      }, {} as WorkflowDataInputSchema['properties']),
+      components: {
+        schemas: referencedSchemas.reduce((obj, s) => {
+          obj[s.title!] = s as OpenAPIV3.NonArraySchemaObject;
+          return obj;
+        }, {} as WorkflowDataInputSchema['components']['schemas']),
+      },
+    };
+
+    return dataInputSchema;
+  }
+
+  private findReferencedSchemas(args: {
+    swfId: string;
+    openApi: OpenAPIV3.Document;
+    schema: JSONSchema4;
+  }): JSONSchema4[] {
+    if (!args.schema.properties) {
+      return [];
+    }
+
+    const schemas: JSONSchema4[] = [];
+
+    for (const key of Object.keys(args.schema.properties)) {
+      const property = args.schema.properties[key];
+      if (!property.$ref) {
+        continue;
+      }
+      const referencedSchema = this.findReferencedSchema({
+        rootSchema: args.openApi,
+        ref: property.$ref,
+      });
+      if (referencedSchema) {
+        schemas.push({
+          ...referencedSchema,
+          title: referencedSchema.title!.replace(`${args.swfId}:`, '').trim(),
+        });
+      }
+    }
+
+    if (!schemas.length) {
+      return [args.schema];
+    }
+
+    return schemas;
+  }
+
+  private findReferencedSchema(args: {
+    rootSchema: JSONSchema4;
+    ref: string;
+  }): JSONSchema4 | undefined {
+    const pathParts = args.ref
+      .split('/')
+      .filter(part => !['#', ''].includes(part));
+
+    let current: JSONSchema4 | undefined = args.rootSchema;
+
+    for (const part of pathParts) {
+      current = current?.[part];
+      if (current === undefined) {
+        return undefined;
+      }
+    }
+
+    return current;
   }
 }

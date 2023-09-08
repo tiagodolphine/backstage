@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  createExternalRouteRef,
-  createRouteRef,
-  createSubRouteRef,
-} from '@backstage/core-plugin-api';
+
+import { createRouteRef, createSubRouteRef } from '@backstage/core-plugin-api';
 
 export const rootRouteRef = createRouteRef({
   id: 'swf',
 });
 
-// This route demos a standalone plugin and is not integrated into Scaffolder
 export const definitionsRouteRef = createSubRouteRef({
   id: 'swf/items',
   parent: rootRouteRef,
   path: '/items/:format/:swfId',
 });
 
-// This route integrates with Scaffolder and lists all SWF instances
 export const swfInstancesRouteRef = createSubRouteRef({
   id: 'swf/instance',
   parent: rootRouteRef,
   path: '/instances',
 });
 
-// This route integrates with Scaffolder and lists all SWF instances, selecting a specific one.
 export const swfInstanceRouteRef = createSubRouteRef({
   id: 'swf/instance',
   parent: rootRouteRef,
@@ -62,8 +56,8 @@ export const editWorkflowRouteRef = createSubRouteRef({
   path: '/workflows/edit/:format/:swfId',
 });
 
-export const scaffolderTemplateSelectedRouteRef = createExternalRouteRef({
-  id: 'scaffolder-template-selected',
-  optional: true,
-  params: ['namespace', 'templateName'],
+export const executeWorkflowRouteRef = createSubRouteRef({
+  id: 'swf/workflows/execute',
+  parent: rootRouteRef,
+  path: '/workflows/execute/:swfId',
 });

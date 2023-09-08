@@ -23,12 +23,14 @@ import {
   swfInstanceRouteRef,
   swfInstancesRouteRef,
   editWorkflowRouteRef,
+  executeWorkflowRouteRef,
 } from '../routes';
 import { SWFPage } from './SWFPage';
 import { SWFInstancesViewerPage } from './SWFInstancesViewerPage';
 import { SWFDefinitionViewerPage } from './SWFDefinitionViewerPage';
 import { NewWorkflowViewerPage } from './NewWorkflowViewerPage';
 import { CreateSWFPage } from './CreateSWFPage';
+import { ExecuteWorkflowPage } from './ExecuteWorkflowPage/ExecuteWorkflowPage';
 
 export const Router = () => {
   return (
@@ -49,6 +51,10 @@ export const Router = () => {
       <Route path={newWorkflowRef.path} element={<NewWorkflowViewerPage />} />
       <Route path={createWorkflowRouteRef.path} element={<CreateSWFPage />} />
       <Route path={editWorkflowRouteRef.path} element={<CreateSWFPage />} />
+      <Route
+        path={executeWorkflowRouteRef.path}
+        element={<ExecuteWorkflowPage />}
+      />
     </Routes>
   );
 };

@@ -15,22 +15,11 @@
  */
 import React, { useCallback, useMemo, useState } from 'react';
 import { Grid } from '@material-ui/core';
-import {
-  Content,
-  ContentHeader,
-  Header,
-  HeaderLabel,
-  InfoCard,
-  Page,
-  Progress,
-  SupportButton,
-} from '@backstage/core-components';
+import { ContentHeader, InfoCard, Progress } from '@backstage/core-components';
 import { SWFEditor } from '../SWFEditor';
 import { useController } from '@kie-tools-core/react-hooks/dist/useController';
 import { EditorViewKind, SWFEditorRef } from '../SWFEditor/SWFEditor';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { swfApiRef } from '../../api';
 import {
   alertApiRef,
   errorApiRef,
@@ -41,6 +30,9 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { definitionsRouteRef, editWorkflowRouteRef } from '../../routes';
 import { workflow_title } from '@backstage/plugin-swf-common';
+import { BaseWorkflowPage } from '../BaseWorkflowPage/BaseWorkflowPage';
+import { WorkflowSupportButton } from '../WorkflowSupportButton/WorkflowSupportButton';
+import { swfApiRef } from '../../api';
 
 export const CreateSWFPage = () => {
   const { format } = useParams();
@@ -114,60 +106,49 @@ export const CreateSWFPage = () => {
   );
 
   return (
-    <Page themeId="tool">
-      <Header
-        title={workflow_title}
-        subtitle={`Where all your ${workflow_title} needs come to life!`}
+    <BaseWorkflowPage>
+      <ContentHeader
+        title={`Authoring - ${workflowFormat.toLocaleUpperCase('en-US')}`}
       >
-        <HeaderLabel label="Owner" value="Team X" />
-        <HeaderLabel label="Lifecycle" value="Alpha" />
-      </Header>
-      <Content>
-        <ContentHeader title={workflow_title}>
-          <SupportButton>Orchestrate things with stuff.</SupportButton>
-        </ContentHeader>
-        <Grid container spacing={3} direction="column">
-          <Grid item>
-            {loading && <Progress />}
-            <InfoCard
-              action={
-                swfEditor?.isReady && (
-                  <Button
-                    color="primary"
-                    type="submit"
-                    variant="contained"
-                    disabled={loading}
-                    style={{ marginTop: 8, marginRight: 8 }}
-                    onClick={() => {
-                      swfEditor?.getContent().then(content => {
-                        if (content) {
-                          handleResult(content);
-                        }
-                      });
-                    }}
-                  >
-                    Save
-                  </Button>
-                )
-              }
-              title={
-                <Typography variant="h5">
-                  Author - Example of how we could support authoring
-                </Typography>
-              }
-            >
-              <div style={{ height: '600px', padding: '10px' }}>
-                <SWFEditor
-                  ref={swfEditorRef}
-                  kind={EditorViewKind.AUTHORING}
-                  swfId={swfId}
-                  format={workflowFormat}
-                />
-              </div>
-            </InfoCard>
-          </Grid>
+        <WorkflowSupportButton />
+      </ContentHeader>
+      <Grid container spacing={3} direction="column">
+        <Grid item>
+          {loading && <Progress />}
+          <InfoCard
+            action={
+              swfEditor?.isReady && (
+                <Button
+                  color="primary"
+                  type="submit"
+                  variant="contained"
+                  disabled={loading}
+                  style={{ marginTop: 8, marginRight: 8 }}
+                  onClick={() => {
+                    swfEditor?.getContent().then(content => {
+                      if (content) {
+                        handleResult(content);
+                      }
+                    });
+                  }}
+                >
+                  Save
+                </Button>
+              )
+            }
+            title={swfId ?? `New ${workflow_title}`}
+          >
+            <div style={{ height: '600px', padding: '10px' }}>
+              <SWFEditor
+                ref={swfEditorRef}
+                kind={EditorViewKind.AUTHORING}
+                swfId={swfId}
+                format={workflowFormat}
+              />
+            </div>
+          </InfoCard>
         </Grid>
-      </Content>
-    </Page>
+      </Grid>
+    </BaseWorkflowPage>
   );
 };
