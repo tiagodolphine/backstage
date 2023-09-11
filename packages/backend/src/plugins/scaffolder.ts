@@ -23,7 +23,6 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
 import { createConfluenceToMarkdownAction } from '@backstage/plugin-scaffolder-backend-module-confluence-to-markdown';
-import { executeServerlessWorkflowAction } from '@backstage/plugin-swf-backend';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -48,7 +47,6 @@ export default async function createPlugin(
       config: env.config,
       reader: env.reader,
     }),
-    executeServerlessWorkflowAction({ discovery: env.discovery }),
   ];
 
   return await createRouter({

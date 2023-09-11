@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   createApiFactory,
   createPlugin,
@@ -20,11 +21,7 @@ import {
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
 
-import {
-  definitionsRouteRef,
-  rootRouteRef,
-  scaffolderTemplateSelectedRouteRef,
-} from './routes';
+import { rootRouteRef } from './routes';
 import { swfApiRef, SwfClient } from './api';
 
 export const swfPlugin = createPlugin({
@@ -40,23 +37,8 @@ export const swfPlugin = createPlugin({
   ],
   routes: {
     root: rootRouteRef,
-    definitions: definitionsRouteRef,
-  },
-  externalRoutes: {
-    scaffolderTemplateSelectedLink: scaffolderTemplateSelectedRouteRef,
   },
 });
-
-export const SWFInstancesViewerPage = swfPlugin.provide(
-  createRoutableExtension({
-    name: 'SWFInstancesViewerPage',
-    component: () =>
-      import('./components/SWFInstancesViewerPage').then(
-        m => m.SWFInstancesViewerPage,
-      ),
-    mountPoint: rootRouteRef,
-  }),
-);
 
 export const SWFPage = swfPlugin.provide(
   createRoutableExtension({

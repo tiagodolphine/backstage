@@ -132,7 +132,7 @@ export const ProcessInstancesTable = (props: ProcessInstancesTableProps) => {
     if (instanceId) {
       return;
     }
-    navigate(instancesLink());
+    navigate(instancesLink(), { replace: true });
   }, [instanceId, instancesLink, navigate]);
 
   useEffect(() => {

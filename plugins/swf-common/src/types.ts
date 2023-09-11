@@ -16,6 +16,7 @@
 
 import { OmitRecursively } from '@kie-tools/json-yaml-language-service/dist/channel';
 import { Specification } from '@severlessworkflow/sdk-typescript';
+import { JSONSchema4 } from 'json-schema';
 import { OpenAPIV3 } from 'openapi-types';
 
 export type SwfDefinition = OmitRecursively<
@@ -45,4 +46,21 @@ export interface WorkflowSample {
 export interface SwfSpecFile {
   path: string;
   content: OpenAPIV3.Document;
+}
+
+export type WorkflowDataInputSchema = JSONSchema4 & {
+  components: {
+    schemas: {
+      [key: string]: OpenAPIV3.NonArraySchemaObject;
+    };
+  };
+};
+
+export interface WorkflowDataInputSchemaResponse {
+  swfItem: SwfItem;
+  schema: WorkflowDataInputSchema;
+}
+
+export interface WorkflowExecutionResponse {
+  id: string;
 }

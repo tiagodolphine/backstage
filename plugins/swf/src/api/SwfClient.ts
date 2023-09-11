@@ -22,7 +22,10 @@ import {
   SwfItem,
   SwfListResult,
   SwfSpecFile,
+  WorkflowDataInputSchemaResponse,
+  WorkflowExecutionResponse,
 } from '@backstage/plugin-swf-common';
+import { JsonValue } from '@backstage/types';
 
 export interface SwfClientOptions {
   discoveryApi: DiscoveryApi;
@@ -33,6 +36,22 @@ export class SwfClient implements SwfApi {
     this.discoveryApi = options.discoveryApi;
   }
 
+  async executeWorkflow(args: {
+    swfId: string;
+    parameters: Record<string, JsonValue>;
+  }): Promise<WorkflowExecutionResponse> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('swf');
+    const res = await fetch(`${baseUrl}/execute/${args.swfId}`, {
+      method: 'POST',
+      body: JSON.stringify(args.parameters),
+      headers: { 'content-type': 'application/json' },
+    });
+    if (!res.ok) {
+      throw await ResponseError.fromResponse(res);
+    }
+    return await res.json();
+  }
+
   async getSwf(swfId: string): Promise<SwfItem> {
     const baseUrl = await this.discoveryApi.getBaseUrl('swf');
     const res = await fetch(`${baseUrl}/items/${swfId}`);
@@ -41,6 +60,7 @@ export class SwfClient implements SwfApi {
     }
     return await res.json();
   }
+
   async listSwfs(): Promise<SwfListResult> {
     const baseUrl = await this.discoveryApi.getBaseUrl('swf');
     const res = await fetch(`${baseUrl}/items`);
@@ -78,6 +98,18 @@ export class SwfClient implements SwfApi {
       throw await ResponseError.fromResponse(res);
     }
     const data: Job[] = await res.json();
+    return data;
+  }
+
+  async getWorkflowDataInputSchema(
+    swfId: string,
+  ): Promise<WorkflowDataInputSchemaResponse> {
+    const baseUrl = await this.discoveryApi.getBaseUrl('swf');
+    const res = await fetch(`${baseUrl}/items/${swfId}/schema`);
+    if (!res.ok) {
+      throw await ResponseError.fromResponse(res);
+    }
+    const data: WorkflowDataInputSchemaResponse = await res.json();
     return data;
   }
 

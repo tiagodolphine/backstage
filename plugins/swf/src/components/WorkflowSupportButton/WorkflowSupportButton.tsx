@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { swfPlugin, SWFPage } from './plugin';
-export { SwfClient } from './api/SwfClient';
-export { SWFDialog } from './components/SWFDialog';
-export { EditorViewKind } from './components/SWFEditor';
-export type { SwfClientOptions } from './api/SwfClient';
-export { swfApiRef } from './api';
-export {
-  swfInstanceRouteRef,
-  swfInstancesRouteRef,
-  newWorkflowRef,
-  createWorkflowRouteRef,
-} from './routes';
+
+import { SupportButton } from '@backstage/core-components';
+import React from 'react';
+
+export const WorkflowSupportButton = () => {
+  return <SupportButton>Orchestrate things with stuff</SupportButton>;
+};

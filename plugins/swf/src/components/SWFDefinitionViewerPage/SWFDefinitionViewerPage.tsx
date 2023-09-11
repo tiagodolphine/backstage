@@ -13,28 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouteRef, useRouteRefParams } from '@backstage/core-plugin-api';
-import {
-  definitionsRouteRef,
-  scaffolderTemplateSelectedRouteRef,
-} from '../../routes';
-import {
-  Content,
-  ContentHeader,
-  Header,
-  HeaderLabel,
-  InfoCard,
-  Page,
-  Progress,
-  SupportButton,
-} from '@backstage/core-components';
+import { definitionsRouteRef, executeWorkflowRouteRef } from '../../routes';
+import { ContentHeader, InfoCard, Progress } from '@backstage/core-components';
 import { Button, Grid } from '@material-ui/core';
-import { workflow_title } from '@backstage/plugin-swf-common';
 import { SWFEditor } from '../SWFEditor';
 import { EditorViewKind, SWFEditorRef } from '../SWFEditor/SWFEditor';
 import { useController } from '@kie-tools-core/react-hooks/dist/useController';
 import { useNavigate } from 'react-router-dom';
+import { BaseWorkflowPage } from '../BaseWorkflowPage/BaseWorkflowPage';
+import { WorkflowSupportButton } from '../WorkflowSupportButton/WorkflowSupportButton';
 
 export const SWFDefinitionViewerPage = () => {
   const [name, setName] = useState<string>();
@@ -42,7 +32,7 @@ export const SWFDefinitionViewerPage = () => {
   const [swfEditor, swfEditorRef] = useController<SWFEditorRef>();
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const scaffolderLink = useRouteRef(scaffolderTemplateSelectedRouteRef);
+  const executeWorkflowLink = useRouteRef(executeWorkflowRouteRef);
 
   const workflowFormat = useMemo(
     () => (format === 'json' ? 'json' : 'yaml'),
@@ -58,55 +48,41 @@ export const SWFDefinitionViewerPage = () => {
   }, [swfEditor]);
 
   const onExecute = useCallback(() => {
-    if (!scaffolderLink) {
-      return;
-    }
-    navigate(
-      scaffolderLink({ namespace: 'default', templateName: `${swfId}` }),
-    );
-  }, [navigate, scaffolderLink, swfId]);
+    navigate(executeWorkflowLink({ swfId: swfId }));
+  }, [executeWorkflowLink, navigate, swfId]);
 
   return (
-    <Page themeId="tool">
-      <Header
-        title={workflow_title}
-        subtitle={`Where all your ${workflow_title} needs come to life!`}
-      >
-        <HeaderLabel label="Owner" value="Team X" />
-        <HeaderLabel label="Lifecycle" value="Alpha" />
-      </Header>
-      <Content>
-        <ContentHeader title={`${workflow_title} Definition`}>
-          <SupportButton>Orchestrate things with stuff.</SupportButton>
-        </ContentHeader>
-        <Grid container spacing={3} direction="column">
-          <Grid item>
-            {loading && <Progress />}
-            <InfoCard
-              title={name}
-              action={
-                <Button
-                  color="primary"
-                  variant="contained"
-                  style={{ marginTop: 8, marginRight: 8 }}
-                  onClick={() => onExecute()}
-                >
-                  Execute
-                </Button>
-              }
-            >
-              <div style={{ height: '600px' }}>
-                <SWFEditor
-                  ref={swfEditorRef}
-                  kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
-                  swfId={swfId}
-                  format={workflowFormat}
-                />
-              </div>
-            </InfoCard>
-          </Grid>
+    <BaseWorkflowPage>
+      <ContentHeader title="Definition">
+        <WorkflowSupportButton />
+      </ContentHeader>
+      <Grid container spacing={3} direction="column">
+        <Grid item>
+          {loading && <Progress />}
+          <InfoCard
+            title={name}
+            action={
+              <Button
+                color="primary"
+                variant="contained"
+                style={{ marginTop: 8, marginRight: 8 }}
+                onClick={() => onExecute()}
+              >
+                Execute
+              </Button>
+            }
+          >
+            <div style={{ height: '600px' }}>
+              <SWFEditor
+                ref={swfEditorRef}
+                kind={EditorViewKind.EXTENDED_DIAGRAM_VIEWER}
+                swfId={swfId}
+                format={workflowFormat}
+              />
+            </div>
+          </InfoCard>
         </Grid>
-      </Content>
-    </Page>
+      </Grid>
+    </BaseWorkflowPage>
   );
 };

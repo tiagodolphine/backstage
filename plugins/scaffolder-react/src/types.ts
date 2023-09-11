@@ -23,10 +23,8 @@ import { JsonObject } from '@backstage/types';
  * @public
  */
 export type TemplateParameterSchema = {
-  name?: string;
   title: string;
   description?: string;
-  type?: string;
   steps: Array<{
     title: string;
     description?: string;

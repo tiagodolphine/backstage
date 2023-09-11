@@ -63,10 +63,7 @@ import {
   IdentityApi,
   IdentityApiGetIdentityRequest,
 } from '@backstage/plugin-auth-node';
-import {
-  ActionContext,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import {
   PermissionEvaluator,
   PermissionRuleParams,
@@ -77,10 +74,6 @@ import {
   PermissionRule,
 } from '@backstage/plugin-permission-node';
 import { scaffolderActionRules, scaffolderTemplateRules } from './rules';
-import fs from 'fs-extra';
-import { workflow_type } from '@backstage/plugin-swf-common';
-import { PassThrough } from 'stream';
-import path from 'path';
 
 /**
  *
@@ -150,17 +143,6 @@ export interface RouterOptions {
   >;
   identity?: IdentityApi;
 }
-
-type ExecutorOptions = {
-  kind: string;
-  namespace: string;
-  name: string;
-  template: TemplateEntityV1beta3;
-  userEntity: Entity | undefined;
-  userEntityRef: string | undefined;
-  baseUrl: string | undefined;
-  values: any;
-};
 
 function isSupportedTemplate(entity: TemplateEntityV1beta3) {
   return entity.apiVersion === 'scaffolder.backstage.io/v1beta3';
@@ -367,66 +349,6 @@ export async function createRouter(
     ],
   });
 
-  const defaultExecutor = (opts: ExecutorOptions): TaskSpec => {
-    return {
-      apiVersion: opts.template.apiVersion,
-      steps: opts.template.spec.steps.map((step, index) => ({
-        ...step,
-        id: step.id ?? `step-${index + 1}`,
-        name: step.name ?? step.action,
-      })),
-      output: opts.template.spec.output ?? {},
-      parameters: opts.values,
-      user: {
-        entity: opts.userEntity as UserEntity,
-        ref: opts.userEntityRef,
-      },
-      templateInfo: {
-        entityRef: stringifyEntityRef({
-          kind: opts.kind,
-          name: opts.name,
-          namespace: opts.namespace,
-        }),
-        baseUrl: opts.baseUrl,
-        entity: {
-          metadata: opts.template.metadata,
-        },
-      },
-    };
-  };
-
-  const swfExecutor = (opts: ExecutorOptions): TaskSpec => {
-    return {
-      apiVersion: opts.template.apiVersion,
-      steps: opts.template.spec.steps.map(step => ({
-        ...step,
-        id: step.id as string,
-        name: step.name as string,
-        input: {
-          ...step.input,
-          swfId: opts.name,
-        },
-      })),
-      output: opts.template.spec.output ?? {},
-      parameters: opts.values,
-      user: {
-        entity: opts.userEntity as UserEntity,
-        ref: opts.userEntityRef,
-      },
-      templateInfo: {
-        entityRef: stringifyEntityRef({
-          kind: opts.kind,
-          name: opts.name,
-          namespace: opts.namespace,
-        }),
-        baseUrl: opts.baseUrl,
-        entity: {
-          metadata: opts.template.metadata,
-        },
-      },
-    };
-  };
-
   router.use(permissionIntegrationRouter);
 
   router
@@ -442,11 +364,9 @@ export async function createRouter(
 
         const parameters = [template.spec.parameters ?? []].flat();
         res.json({
-          name: template.metadata.name,
           title: template.metadata.title ?? template.metadata.name,
           description: template.metadata.description,
           'ui:options': template.metadata['ui:options'],
-          type: template.spec.type,
           steps: parameters.map(schema => ({
             title: schema.title ?? 'Please enter the following information',
             description: schema.description,
@@ -465,41 +385,6 @@ export async function createRouter(
         };
       });
       res.json(actionsList);
-    })
-    // to be used by swf to trigger actions
-    .post('/v2/actions/:actionId', async (req, res) => {
-      const { actionId } = req.params;
-      console.log('Body request == ');
-      const body = req.body;
-      console.log(body);
-      const streamLogger = new PassThrough();
-      const action: TemplateAction = await actionRegistry.get(actionId);
-      const tmpDirs = new Array<string>();
-      const stepOutput: { [outputName: string]: JsonValue } = {};
-      const processInstanceId = req.header('kogitoprocinstanceid') ?? 'unknown';
-      const workspacePath = path.join(workingDirectory, processInstanceId);
-      const mockContext: ActionContext<JsonObject> = {
-        input: body,
-        workspacePath: workspacePath,
-        logger: logger,
-        logStream: streamLogger,
-        createTemporaryDirectory: async () => {
-          const tmpDir = await fs.mkdtemp(`${workspacePath}_step-${0}-`);
-          tmpDirs.push(tmpDir);
-          return tmpDir;
-        },
-        output(name: string, value: JsonValue) {
-          stepOutput[name] = value;
-        },
-      };
-      await action.handler(mockContext);
-
-      // TODO {manstis} Not sure if we need these "long lived" for the duration of the whole Workflow
-      // Remove all temporary directories that were created when executing the action
-      // for (const tmpDir of tmpDirs) {
-      //   await fs.remove(tmpDir);
-      // }
-      res.json(stepOutput);
     })
     .post('/v2/tasks', async (req, res) => {
       const templateRef: string = req.body.templateRef;
@@ -541,32 +426,27 @@ export async function createRouter(
 
       const baseUrl = getEntityBaseUrl(template);
 
-      let taskSpec: TaskSpec;
-      if (template.spec.type === workflow_type) {
-        // Delegate execution of SWF's to the SWF backend
-        taskSpec = swfExecutor({
-          kind,
-          namespace,
-          name,
-          template,
-          userEntity,
-          userEntityRef,
+      const taskSpec: TaskSpec = {
+        apiVersion: template.apiVersion,
+        steps: template.spec.steps.map((step, index) => ({
+          ...step,
+          id: step.id ?? `step-${index + 1}`,
+          name: step.name ?? step.action,
+        })),
+        output: template.spec.output ?? {},
+        parameters: values,
+        user: {
+          entity: userEntity as UserEntity,
+          ref: userEntityRef,
+        },
+        templateInfo: {
+          entityRef: stringifyEntityRef({ kind, name, namespace }),
           baseUrl,
-          values,
-        });
-      } else {
-        // Otherwise delegate to Backstage's default workflow
-        taskSpec = defaultExecutor({
-          kind,
-          namespace,
-          name,
-          template,
-          userEntity,
-          userEntityRef,
-          baseUrl,
-          values,
-        });
-      }
+          entity: {
+            metadata: template.metadata,
+          },
+        },
+      };
 
       const result = await taskBroker.dispatch({
         spec: taskSpec,

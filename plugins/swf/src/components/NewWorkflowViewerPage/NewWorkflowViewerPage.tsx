@@ -38,6 +38,7 @@ import {
   workflow_title,
   workflow_yaml_sample,
 } from '@backstage/plugin-swf-common';
+import { BaseWorkflowPage } from '../BaseWorkflowPage/BaseWorkflowPage';
 
 type FormData = {
   url: string;
@@ -196,13 +197,10 @@ export const NewWorkflowViewerPage = () => {
   ];
 
   return (
-    <Page themeId="home">
-      <Header title={`Register a new ${workflow_title}`} />
-      <Content>
-        <Grid container spacing={2}>
-          {isMobile ? contentItems : contentItems.reverse()}
-        </Grid>
-      </Content>
-    </Page>
+    <BaseWorkflowPage>
+      <Grid container spacing={2}>
+        {isMobile ? contentItems : contentItems.reverse()}
+      </Grid>
+    </BaseWorkflowPage>
   );
 };
