@@ -247,7 +247,11 @@ function setupInternalRoutes(
       headers: { 'content-type': 'application/json' },
     });
     const json = await svcResponse.json();
-    res.status(svcResponse.status).json(json);
+    if (!json.id) {
+      res.status(svcResponse.status).send();
+      return;
+    }
+    res.status(200).json(json);
   });
 
   router.get('/instances', async (_, res) => {
