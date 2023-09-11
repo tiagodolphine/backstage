@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { swfPlugin, SWFPage, SWFInstancesViewerPage } from './plugin';
+export { swfPlugin, SWFPage } from './plugin';
 export { SwfClient } from './api/SwfClient';
 export { SWFDialog } from './components/SWFDialog';
 export { EditorViewKind } from './components/SWFEditor';

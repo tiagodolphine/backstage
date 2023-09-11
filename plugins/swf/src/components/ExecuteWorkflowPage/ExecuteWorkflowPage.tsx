@@ -37,6 +37,7 @@ import { EditorViewKind } from '../SWFEditor';
 import { JsonValue } from '@backstage/types';
 import { useNavigate } from 'react-router-dom';
 import { WorkflowSupportButton } from '../WorkflowSupportButton/WorkflowSupportButton';
+import { TitleFieldTemplate } from './TitleFieldTemplate';
 
 const WrappedForm = withTheme(require('@rjsf/material-ui-v5').Theme);
 
@@ -135,6 +136,7 @@ export const ExecuteWorkflowPage = (props: ExecuteWorkflowPageProps) => {
               onChange={onFormChanged}
               formData={formState}
               formContext={{ formData: formState }}
+              templates={{ TitleFieldTemplate }}
             >
               <Button variant="contained" color="primary" type="submit">
                 Execute

@@ -21,7 +21,7 @@ import {
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
 
-import { definitionsRouteRef, rootRouteRef } from './routes';
+import { rootRouteRef } from './routes';
 import { swfApiRef, SwfClient } from './api';
 
 export const swfPlugin = createPlugin({
@@ -37,20 +37,8 @@ export const swfPlugin = createPlugin({
   ],
   routes: {
     root: rootRouteRef,
-    definitions: definitionsRouteRef,
   },
 });
-
-export const SWFInstancesViewerPage = swfPlugin.provide(
-  createRoutableExtension({
-    name: 'SWFInstancesViewerPage',
-    component: () =>
-      import('./components/SWFInstancesViewerPage').then(
-        m => m.SWFInstancesViewerPage,
-      ),
-    mountPoint: rootRouteRef,
-  }),
-);
 
 export const SWFPage = swfPlugin.provide(
   createRoutableExtension({
