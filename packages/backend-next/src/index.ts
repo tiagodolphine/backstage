@@ -39,6 +39,7 @@ import { devtoolsPlugin } from '@backstage/plugin-devtools-backend';
 import { adrPlugin } from '@backstage/plugin-adr-backend';
 import { lighthousePlugin } from '@backstage/plugin-lighthouse-backend';
 import { proxyPlugin } from '@backstage/plugin-proxy-backend';
+import { orchestratorPlugin } from '@backstage/plugin-swf-backend';
 
 const backend = createBackend();
 
@@ -93,5 +94,7 @@ backend.add(permissionPlugin());
 backend.add(permissionModuleAllowAllPolicy());
 
 backend.add(catalogModuleUnprocessedEntities());
+
+backend.add(orchestratorPlugin());
 
 backend.start();
