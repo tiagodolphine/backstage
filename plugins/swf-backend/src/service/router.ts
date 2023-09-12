@@ -18,20 +18,20 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import {
-  fromWorkflowSource,
-  Job,
   ProcessInstance,
-  SwfDefinition,
   SwfItem,
   SwfListResult,
   topic,
+  fromWorkflowSource,
+  SwfDefinition,
+  Job,
   WorkflowDataInputSchemaResponse,
 } from '@backstage/plugin-swf-common';
 import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
 import { Config } from '@backstage/config';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import path, { resolve } from 'path';
+import path, { path, resolve } from 'path';
 import { WorkflowService } from './WorkflowService';
 import { OpenApiService } from './OpenApiService';
 import { DataInputSchemaService } from './DataInputSchemaService';
@@ -42,26 +42,12 @@ import {
   ScmIntegrations,
 } from '@backstage/integration';
 import { OpenAPIV3 } from 'openapi-types';
-import { PassThrough } from 'stream';
-import {
-  ActionContext,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
-import {
-  createBuiltinActions,
-  TemplateActionRegistry,
-} from '@backstage/plugin-scaffolder-backend';
-import { JsonObject, JsonValue } from '@backstage/types';
-import { fs } from 'fs-extra';
-import { CatalogApi } from '@backstage/catalog-client';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
   config: Config;
   logger: Logger;
   discovery: DiscoveryApi;
-  catalogApi: CatalogApi;
-  urlReader: UrlReader;
 }
 
 function delay(time: number) {
