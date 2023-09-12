@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
     "start": "yarn workspace example-app start",
-    "start-backend": "yarn workspace example-backend start",
-    "build:backend": "yarn workspace example-backend build",
+    "start-backend": "yarn workspace example-backend-next start",
+    "build:backend": "yarn workspace example-backend-next build",
     "build:all": "backstage-cli repo build --all",
     "build:api-reports": "yarn build:api-reports:only --tsc",
     "build:api-reports:only": "backstage-repo-tools api-reports --allow-warnings 'packages/core-components,plugins/+(catalog|catalog-import|git-release-manager|jenkins|kubernetes)' -o ae-wrong-input-file-type --validate-release-tags",
@@ -48,7 +48,7 @@
     "@types/react": "^17",
     "@types/react-dom": "^17"
   },
-  "version": "1.18.0-next.2",
+  "version": "1.18.0-next.3",
   "dependencies": {
     "@backstage/errors": "workspace:^",
     "@manypkg/get-packages": "^1.1.3"
