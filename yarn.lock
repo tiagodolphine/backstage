@@ -9411,6 +9411,7 @@ __metadata:
     "@backstage/backend-common": "workspace:^"
     "@backstage/backend-plugin-api": "workspace:^"
     "@backstage/backend-tasks": "workspace:^"
+    "@backstage/catalog-client": "workspace:^"
     "@backstage/catalog-model": "workspace:^"
     "@backstage/cli": "workspace:^"
     "@backstage/config": "workspace:^"
@@ -9419,7 +9420,11 @@ __metadata:
     "@backstage/plugin-catalog-node": "workspace:^"
     "@backstage/plugin-events-backend": "workspace:^"
     "@backstage/plugin-events-node": "workspace:^"
+    "@backstage/plugin-scaffolder-backend": "workspace:^"
+    "@backstage/plugin-scaffolder-common": "workspace:^"
+    "@backstage/plugin-scaffolder-node": "workspace:^"
     "@backstage/plugin-swf-common": "workspace:^"
+    "@backstage/types": "workspace:^"
     "@octokit/rest": ^19.0.3
     "@severlessworkflow/sdk-typescript": ^3.0.3
     "@types/express": "*"
@@ -26522,6 +26527,7 @@ __metadata:
     "@backstage/plugin-search-backend-module-explore": "workspace:^"
     "@backstage/plugin-search-backend-module-techdocs": "workspace:^"
     "@backstage/plugin-search-backend-node": "workspace:^"
+    "@backstage/plugin-swf-backend": "workspace:^"
     "@backstage/plugin-techdocs-backend": "workspace:^"
     "@backstage/plugin-todo-backend": "workspace:^"
   languageName: unknown
