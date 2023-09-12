@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {coreServices, createBackendPlugin,} from '@backstage/backend-plugin-api';
-import {createRouter} from './service/router';
-import {loggerToWinstonLogger} from '@backstage/backend-common';
-import {DefaultEventBroker} from '@backstage/plugin-events-backend';
-import {catalogServiceRef} from '@backstage/plugin-catalog-node/alpha';
+import {
+  coreServices,
+  createBackendPlugin,
+} from '@backstage/backend-plugin-api';
+import { createRouter } from './service/router';
+import { loggerToWinstonLogger } from '@backstage/backend-common';
+import { DefaultEventBroker } from '@backstage/plugin-events-backend';
+import { catalogServiceRef } from '@backstage/plugin-catalog-node/alpha';
 
 export const orchestratorPlugin = createBackendPlugin({
-  pluginId: 'orchestrator',
+  pluginId: 'swf',
   register(env) {
     env.registerInit({
       deps: {

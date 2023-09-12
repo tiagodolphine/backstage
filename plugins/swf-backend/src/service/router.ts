@@ -31,29 +31,18 @@ import { exec, ExecException } from 'child_process';
 import { EventBroker } from '@backstage/plugin-events-node';
 import { Config } from '@backstage/config';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import path, { resolve } from 'path';
+import { resolve } from 'path';
 import { WorkflowService } from './WorkflowService';
 import { OpenApiService } from './OpenApiService';
 import { DataInputSchemaService } from './DataInputSchemaService';
 import { CloudEventService } from './CloudEventService';
 import { JiraEvent, JiraService } from './JiraService';
-import {
-  readGithubIntegrationConfigs,
-  ScmIntegrations,
-} from '@backstage/integration';
+import { readGithubIntegrationConfigs } from '@backstage/integration';
 import { OpenAPIV3 } from 'openapi-types';
-import { PassThrough } from 'stream';
-import {
-  ActionContext,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
-import {
-  createBuiltinActions,
-  TemplateActionRegistry,
-} from '@backstage/plugin-scaffolder-backend';
 import { JsonObject, JsonValue } from '@backstage/types';
 import { fs } from 'fs-extra';
 import { CatalogApi } from '@backstage/catalog-client';
+import { ScaffolderService } from './ScaffolderService';
 
 export interface RouterOptions {
   eventBroker: EventBroker;
@@ -131,6 +120,13 @@ export async function createRouter(
     dataInputSchemaService,
   );
 
+  const scaffolderService: ScaffolderService = new ScaffolderService(
+    logger,
+    config,
+    catalogApi,
+    urlReader,
+  );
+
   setupInternalRoutes(
     router,
     kogitoBaseUrl,
@@ -140,7 +136,7 @@ export async function createRouter(
     dataInputSchemaService,
     jiraService,
   );
-  setupExternalRoutes(router, discovery, logger, config, catalogApi, urlReader);
+  setupExternalRoutes(router, discovery, scaffolderService);
 
   await setupKogitoService(
     kogitoBaseUrl,
@@ -400,10 +396,7 @@ function setupInternalRoutes(
 function setupExternalRoutes(
   router: express.Router,
   discovery: DiscoveryApi,
-  logger: Logger,
-  config: Config,
-  catalogClient: CatalogApi,
-  reader: UrlReader,
+  scaffolderService: ScaffolderService,
 ) {
   router.get('/actions', async (_, res) => {
     const scaffolderUrl = await discovery.getBaseUrl('scaffolder');
@@ -412,83 +405,16 @@ function setupExternalRoutes(
     res.status(response.status).json(json);
   });
 
-  // router.post('/actions/:actionId', async (req, res) => {
-  //   const { actionId } = req.params;
-  //   const scaffolderUrl = await discovery.getBaseUrl('scaffolder');
-  //   const requestBody = req.body;
-  //   const processInstanceId = req.header('kogitoprocinstanceid');
-  //   const headers = new Headers();
-  //   headers.set('content-type', 'application/json');
-  //   if (processInstanceId) {
-  //     headers.set('kogitoprocinstanceid', processInstanceId);
-  //   }
-  //   const wsRequest = await fetch(`${scaffolderUrl}/v2/actions/${actionId}`, {
-  //     method: 'POST',
-  //     body: JSON.stringify(requestBody),
-  //     headers: headers,
-  //   });
-  //   const response = await wsRequest.json();
-  //   res.status(wsRequest.status).json(response);
-  // });
-
   router.post('/actions/:actionId', async (req, res) => {
     const { actionId } = req.params;
-    const processInstanceId: string =
-      (await req.header('kogitoprocinstanceid')) ?? 'random';
-
-    // todo: extract to a new class
-    const actionRegistry: TemplateActionRegistry = new TemplateActionRegistry();
-
-    const actions = [
-      ...createBuiltinActions({
-        integrations: ScmIntegrations.fromConfig(config),
-        catalogClient,
-        reader,
-        config,
-      }),
-    ];
-    actions.forEach(a => actionRegistry.register(a));
-    if (!actions) {
-      res.json(actions);
-      return;
-    }
-
-    const body = req.body;
-    const streamLogger = new PassThrough();
-    const action: TemplateAction = await actionRegistry.get(actionId);
-    const tmpDirs = new Array<string>();
-    const stepOutput: { [outputName: string] } = {};
-    const workingDirectory = '/tmp/orchestrator'; // config.getString('backend.workingDirectory');
-    try {
-      // Check if working directory exists and is writable
-      await fs.access(workingDirectory, fs.constants.F_OK | fs.constants.W_OK);
-      // logger.info(`using working directory: ${workingDirectory}`);
-    } catch (err) {
-      logger.error(err);
-    }
-    const workspacePath = path.join(workingDirectory, processInstanceId);
-    const mockContext: ActionContext<JsonObject> = {
+    const instanceId: string | undefined = req.header('kogitoprocinstanceid');
+    const body: JsonObject = (await req.body) as JsonObject;
+    const result: JsonValue = await scaffolderService.executeAction({
+      actionId,
+      instanceId,
       input: body,
-      workspacePath: workspacePath,
-      logger: logger,
-      logStream: streamLogger,
-      createTemporaryDirectory: async () => {
-        const tmpDir = await fs.mkdtemp(`${workspacePath}_step-${0}-`);
-        tmpDirs.push(tmpDir);
-        return tmpDir;
-      },
-      output(name: string, value: JsonValue) {
-        stepOutput[name] = value;
-      },
-    };
-    await action.handler(mockContext);
-
-    // TODO Not sure if we need these "long lived" for the duration of the whole Workflow
-    // Remove all temporary directories that were created when executing the action
-    // for (const tmpDir of tmpDirs) {
-    //   await fs.remove(tmpDir);
-    // }
-    res.status(200).json(stepOutput);
+    });
+    res.status(200).json(result);
   });
 }
 
