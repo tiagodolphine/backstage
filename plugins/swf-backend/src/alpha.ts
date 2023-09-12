@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 export * from './service';
-export { orchestratorPlugin } from './OrchestratorPlugin';
+export { orchestratorPlugin as default } from './OrchestratorPlugin';
+

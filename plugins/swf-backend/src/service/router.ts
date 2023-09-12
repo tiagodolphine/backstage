@@ -435,7 +435,10 @@ function setupExternalRoutes(
     const { actionId } = req.params;
     const processInstanceId: string =
       (await req.header('kogitoprocinstanceid')) ?? 'random';
+
+    // todo: extract to a new class
     const actionRegistry: TemplateActionRegistry = new TemplateActionRegistry();
+
     const actions = [
       ...createBuiltinActions({
         integrations: ScmIntegrations.fromConfig(config),
@@ -450,9 +453,7 @@ function setupExternalRoutes(
       return;
     }
 
-    console.log('Body request == ');
     const body = req.body;
-    console.log(body);
     const streamLogger = new PassThrough();
     const action: TemplateAction = await actionRegistry.get(actionId);
     const tmpDirs = new Array<string>();
