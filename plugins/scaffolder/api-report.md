@@ -23,6 +23,7 @@ import { FieldExtensionOptions as FieldExtensionOptions_2 } from '@backstage/plu
 import { FieldValidation } from '@rjsf/core';
 import { IdentityApi } from '@backstage/core-plugin-api';
 import { JsonObject } from '@backstage/types';
+import { JSX as JSX_2 } from 'react';
 import { LayoutOptions as LayoutOptions_2 } from '@backstage/plugin-scaffolder-react';
 import { LayoutTemplate as LayoutTemplate_2 } from '@backstage/plugin-scaffolder-react';
 import { ListActionsResponse as ListActionsResponse_2 } from '@backstage/plugin-scaffolder-react';
@@ -240,6 +241,24 @@ export const OwnedEntityPickerFieldExtension: FieldExtensionComponent_2<
     defaultKind?: string | undefined;
     allowArbitraryValues?: boolean | undefined;
     defaultNamespace?: string | false | undefined;
+    catalogFilter?:
+      | Record<
+          string,
+          | string
+          | string[]
+          | {
+              exists?: boolean | undefined;
+            }
+        >
+      | Record<
+          string,
+          | string
+          | string[]
+          | {
+              exists?: boolean | undefined;
+            }
+        >[]
+      | undefined;
   }
 >;
 
@@ -251,6 +270,24 @@ export const OwnedEntityPickerFieldSchema: FieldSchema<
     defaultKind?: string | undefined;
     allowArbitraryValues?: boolean | undefined;
     defaultNamespace?: string | false | undefined;
+    catalogFilter?:
+      | Record<
+          string,
+          | string
+          | string[]
+          | {
+              exists?: boolean | undefined;
+            }
+        >
+      | Record<
+          string,
+          | string
+          | string[]
+          | {
+              exists?: boolean | undefined;
+            }
+        >[]
+      | undefined;
   }
 >;
 
@@ -500,7 +537,7 @@ export const ScaffolderLayouts: ComponentType<{
 export type ScaffolderOutputlink = ScaffolderOutputLink;
 
 // @public
-export const ScaffolderPage: (props: RouterProps) => JSX.Element;
+export const ScaffolderPage: (props: RouterProps) => JSX_2.Element;
 
 // @public
 export const scaffolderPlugin: BackstagePlugin<
@@ -550,7 +587,7 @@ export type ScaffolderTaskStatus = ScaffolderTaskStatus_2;
 export type ScaffolderUseTemplateSecrets = ScaffolderUseTemplateSecrets_2;
 
 // @public
-export const TaskPage: (props: TaskPageProps) => JSX.Element;
+export const TaskPage: (props: TaskPageProps) => React_2.JSX.Element;
 
 // @public
 export type TaskPageProps = {
@@ -561,7 +598,7 @@ export type TaskPageProps = {
 export type TemplateParameterSchema = TemplateParameterSchema_2;
 
 // @public
-export const TemplateTypePicker: () => JSX.Element | null;
+export const TemplateTypePicker: () => React_2.JSX.Element | null;
 
 // @public @deprecated (undocumented)
 export const useTemplateSecrets: () => ScaffolderUseTemplateSecrets_2;

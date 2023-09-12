@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AppConfig, Config } from '@backstage/config';
+import { Config } from '@backstage/config';
 import React, {
   ComponentType,
   PropsWithChildren,
@@ -42,6 +42,10 @@ import {
   BackstagePlugin,
   FeatureFlag,
 } from '@backstage/core-plugin-api';
+import {
+  AppTranslationApi,
+  appTranslationApiRef,
+} from '@backstage/core-plugin-api/alpha';
 import { ApiFactoryRegistry, ApiResolver } from '../apis/system';
 import {
   childDiscoverer,
@@ -75,23 +79,15 @@ import { resolveRouteBindings } from './resolveRouteBindings';
 import { isReactRouterBeta } from './isReactRouterBeta';
 import { InternalAppContext } from './InternalAppContext';
 import { AppRouter, getBasePath } from './AppRouter';
+import { AppTranslationProvider } from './AppTranslationProvider';
+import { AppTranslationApiImpl } from '../apis/implementations/AppTranslationApi';
+import { overrideBaseUrlConfigs } from './overrideBaseUrlConfigs';
 
 type CompatiblePlugin =
   | BackstagePlugin
   | (Omit<BackstagePlugin, 'getFeatureFlags'> & {
       output(): Array<{ type: 'feature-flag'; name: string }>;
     });
-
-/**
- * Creates a base URL that uses to the current document origin.
- */
-function createLocalBaseUrl(fullUrl: string): string {
-  const url = new URL(fullUrl);
-  url.protocol = document.location.protocol;
-  url.hostname = document.location.hostname;
-  url.port = document.location.port;
-  return url.toString().replace(/\/$/, '');
-}
 
 function useConfigLoader(
   configLoader: AppConfigLoader | undefined,
@@ -125,52 +121,9 @@ function useConfigLoader(
     };
   }
 
-  let configReader;
-  /**
-   * config.value can be undefined or empty. If it's either, don't bother overriding anything.
-   */
-  if (config.value?.length) {
-    const urlConfigReader = ConfigReader.fromConfigs(config.value);
-
-    /**
-     * Test configs may not define `app.baseUrl` or `backend.baseUrl` and we
-     *  don't want to enforce here.
-     */
-    const appBaseUrl = urlConfigReader.getOptionalString('app.baseUrl');
-    const backendBaseUrl = urlConfigReader.getOptionalString('backend.baseUrl');
-
-    let configs = config.value;
-    const relativeResolverConfig: AppConfig = {
-      data: {},
-      context: 'relative-resolver',
-    };
-    if (appBaseUrl && backendBaseUrl) {
-      const appOrigin = new URL(appBaseUrl).origin;
-      const backendOrigin = new URL(backendBaseUrl).origin;
-
-      if (appOrigin === backendOrigin) {
-        const newBackendBaseUrl = createLocalBaseUrl(backendBaseUrl);
-        if (backendBaseUrl !== newBackendBaseUrl) {
-          relativeResolverConfig.data.backend = { baseUrl: newBackendBaseUrl };
-        }
-      }
-    }
-    if (appBaseUrl) {
-      const newAppBaseUrl = createLocalBaseUrl(appBaseUrl);
-      if (appBaseUrl !== newAppBaseUrl) {
-        relativeResolverConfig.data.app = { baseUrl: newAppBaseUrl };
-      }
-    }
-    /**
-     * Only add the relative config if there is actually data to add.
-     */
-    if (Object.keys(relativeResolverConfig.data).length) {
-      configs = configs.concat([relativeResolverConfig]);
-    }
-    configReader = ConfigReader.fromConfigs(configs);
-  } else {
-    configReader = ConfigReader.fromConfigs([]);
-  }
+  const configReader = ConfigReader.fromConfigs(
+    config.value?.length ? overrideBaseUrlConfigs(config.value) : [],
+  );
 
   return { api: configReader };
 }
@@ -209,6 +162,7 @@ export class AppManager implements BackstageApp {
   private readonly configLoader?: AppConfigLoader;
   private readonly defaultApis: Iterable<AnyApiFactory>;
   private readonly bindRoutes: AppOptions['bindRoutes'];
+  private readonly appTranslationApi: AppTranslationApi;
 
   private readonly appIdentityProxy = new AppIdentityProxy();
   private readonly apiFactoryRegistry: ApiFactoryRegistry;
@@ -224,6 +178,9 @@ export class AppManager implements BackstageApp {
     this.defaultApis = options.defaultApis ?? [];
     this.bindRoutes = options.bindRoutes;
     this.apiFactoryRegistry = new ApiFactoryRegistry();
+    this.appTranslationApi = AppTranslationApiImpl.create(
+      options.__experimentalI18n,
+    );
   }
 
   getPlugins(): BackstagePlugin[] {
@@ -379,24 +336,26 @@ export class AppManager implements BackstageApp {
       return (
         <ApiProvider apis={this.getApiHolder()}>
           <AppContextProvider appContext={appContext}>
-            <ThemeProvider>
-              <RoutingProvider
-                routePaths={routing.paths}
-                routeParents={routing.parents}
-                routeObjects={routing.objects}
-                routeBindings={routeBindings}
-                basePath={getBasePath(loadedConfig.api)}
-              >
-                <InternalAppContext.Provider
-                  value={{
-                    routeObjects: routing.objects,
-                    appIdentityProxy: this.appIdentityProxy,
-                  }}
+            <AppTranslationProvider>
+              <ThemeProvider>
+                <RoutingProvider
+                  routePaths={routing.paths}
+                  routeParents={routing.parents}
+                  routeObjects={routing.objects}
+                  routeBindings={routeBindings}
+                  basePath={getBasePath(loadedConfig.api)}
                 >
-                  {children}
-                </InternalAppContext.Provider>
-              </RoutingProvider>
-            </ThemeProvider>
+                  <InternalAppContext.Provider
+                    value={{
+                      routeObjects: routing.objects,
+                      appIdentityProxy: this.appIdentityProxy,
+                    }}
+                  >
+                    {children}
+                  </InternalAppContext.Provider>
+                </RoutingProvider>
+              </ThemeProvider>
+            </AppTranslationProvider>
           </AppContextProvider>
         </ApiProvider>
       );
@@ -446,6 +405,11 @@ export class AppManager implements BackstageApp {
       api: identityApiRef,
       deps: {},
       factory: () => this.appIdentityProxy,
+    });
+    this.apiFactoryRegistry.register('static', {
+      api: appTranslationApiRef,
+      deps: {},
+      factory: () => this.appTranslationApi,
     });
 
     // It's possible to replace the feature flag API, but since we must have at least

@@ -26,6 +26,8 @@ import { JsonValue } from '@backstage/types';
 import { MatcherFunction } from '@testing-library/react';
 import { Observable } from '@backstage/types';
 import { PermissionApi } from '@backstage/plugin-permission-react';
+import { PropsWithChildren } from 'react';
+import { default as React_2 } from 'react';
 import { ReactElement } from 'react';
 import { ReactNode } from 'react';
 import { RenderOptions } from '@testing-library/react';
@@ -191,7 +193,7 @@ export type MockStorageBucket = {
 
 // @public
 export function renderInTestApp(
-  Component: ComponentType | ReactNode,
+  Component: ComponentType<PropsWithChildren<{}>> | ReactNode,
   options?: TestAppOptions,
 ): Promise<RenderResult>;
 
@@ -214,7 +216,7 @@ export type SyncLogCollector = () => void;
 // @public
 export const TestApiProvider: <T extends any[]>(
   props: TestApiProviderProps<T>,
-) => JSX.Element;
+) => React_2.JSX.Element;
 
 // @public
 export type TestApiProviderProps<TApiPairs extends any[]> = {

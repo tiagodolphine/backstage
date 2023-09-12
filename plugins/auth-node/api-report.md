@@ -100,6 +100,7 @@ export type AuthResolverContext = {
 
 // @public
 export interface BackstageIdentityResponse extends BackstageSignInResult {
+  expiresInSeconds?: number;
   identity: BackstageUserIdentity;
 }
 
@@ -377,11 +378,13 @@ export interface OAuthSession {
   // (undocumented)
   accessToken: string;
   // (undocumented)
-  expiresInSeconds: number;
+  expiresInSeconds?: number;
   // (undocumented)
   idToken?: string;
   // (undocumented)
   refreshToken?: string;
+  // (undocumented)
+  refreshTokenExpiresInSeconds?: number;
   // (undocumented)
   scope: string;
   // (undocumented)
