@@ -74,6 +74,7 @@
     "@backstage/plugin-stack-overflow": "workspace:^",
     "@backstage/plugin-stackstorm": "workspace:^",
     "@backstage/plugin-swf": "workspace:^",
+    "@backstage/plugin-swf-common": "workspace:^",
     "@backstage/plugin-tech-insights": "workspace:^",
     "@backstage/plugin-tech-radar": "workspace:^",
     "@backstage/plugin-techdocs": "workspace:^",

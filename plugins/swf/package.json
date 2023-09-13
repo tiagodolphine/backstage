@@ -28,6 +28,8 @@
     "@backstage/core-plugin-api": "workspace:^",
     "@backstage/errors": "workspace:^",
     "@backstage/plugin-catalog-import": "workspace:^",
+    "@backstage/plugin-scaffolder-common": "workspace:^",
+    "@backstage/plugin-scaffolder-react": "workspace:^",
     "@backstage/plugin-swf-backend": "workspace:^",
     "@backstage/plugin-swf-common": "workspace:^",
     "@backstage/theme": "workspace:^",

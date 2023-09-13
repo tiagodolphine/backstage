@@ -112,7 +112,11 @@ import { PuppetDbPage } from '@backstage/plugin-puppetdb';
 import { DevToolsPage } from '@backstage/plugin-devtools';
 import { customDevToolsPage } from './components/devtools/CustomDevToolsPage';
 import { CatalogUnprocessedEntitiesPage } from '@backstage/plugin-catalog-unprocessed-entities';
-import { SWFPage } from '@backstage/plugin-swf';
+import { SWFPage, NextScaffolderTemplateCard } from '@backstage/plugin-swf';
+import {
+  workflow_title_plural,
+  workflow_type,
+} from '@backstage/plugin-swf-common';
 
 const app = createApp({
   apis,
@@ -225,11 +229,17 @@ const routes = (
         path="/create"
         element={
           <NextScaffolderPage
+            components={{ TemplateCardComponent: NextScaffolderTemplateCard }}
             groups={[
               {
                 title: 'Recommended',
                 filter: entity =>
                   entity?.metadata?.tags?.includes('recommended') ?? false,
+              },
+              {
+                title: workflow_title_plural,
+                filter: entity =>
+                  entity?.metadata?.tags?.includes(workflow_type) ?? false,
               },
             ]}
           />
@@ -249,6 +259,9 @@ const routes = (
         element={
           <ScaffolderPage
             defaultPreviewTemplate={defaultPreviewTemplate}
+            templateFilter={entity =>
+              !entity?.metadata?.tags?.includes(workflow_type)
+            }
             groups={[
               {
                 title: 'Recommended',

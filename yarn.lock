@@ -5712,6 +5712,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@backstage/plugin-catalog-backend-module-swf-entity-provider@^0.0.0, @backstage/plugin-catalog-backend-module-swf-entity-provider@workspace:^, @backstage/plugin-catalog-backend-module-swf-entity-provider@workspace:plugins/catalog-backend-module-swf-entity-provider":
+  version: 0.0.0-use.local
+  resolution: "@backstage/plugin-catalog-backend-module-swf-entity-provider@workspace:plugins/catalog-backend-module-swf-entity-provider"
+  dependencies:
+    "@backstage/backend-common": "workspace:^"
+    "@backstage/backend-plugin-api": "workspace:^"
+    "@backstage/backend-tasks": "workspace:^"
+    "@backstage/backend-test-utils": "workspace:^"
+    "@backstage/catalog-model": "workspace:^"
+    "@backstage/cli": "workspace:^"
+    "@backstage/config": "workspace:^"
+    "@backstage/core-plugin-api": "workspace:^"
+    "@backstage/plugin-catalog-node": "workspace:^"
+    "@backstage/plugin-events-backend": "workspace:^"
+    "@backstage/plugin-events-node": "workspace:^"
+    "@backstage/plugin-scaffolder-common": "workspace:^"
+    "@backstage/plugin-swf-common": "workspace:^"
+    "@backstage/types": "workspace:^"
+    json-schema: ^0.4.0
+    openapi-types: ^12.1.3
+    winston: ^3.10.0
+  languageName: unknown
+  linkType: soft
+
 "@backstage/plugin-catalog-backend-module-unprocessed@workspace:^, @backstage/plugin-catalog-backend-module-unprocessed@workspace:plugins/catalog-backend-module-unprocessed":
   version: 0.0.0-use.local
   resolution: "@backstage/plugin-catalog-backend-module-unprocessed@workspace:plugins/catalog-backend-module-unprocessed"
@@ -9474,6 +9498,8 @@ __metadata:
     "@backstage/dev-utils": "workspace:^"
     "@backstage/errors": "workspace:^"
     "@backstage/plugin-catalog-import": "workspace:^"
+    "@backstage/plugin-scaffolder-common": "workspace:^"
+    "@backstage/plugin-scaffolder-react": "workspace:^"
     "@backstage/plugin-swf-backend": "workspace:^"
     "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/test-utils": "workspace:^"
@@ -15696,21 +15722,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sinonjs/commons@npm:^1.6.0, @sinonjs/commons@npm:^1.8.3":
+"@sinonjs/commons@npm:^1.6.0, @sinonjs/commons@npm:^1.7.0, @sinonjs/commons@npm:^1.8.3":
   version: 1.8.6
   resolution: "@sinonjs/commons@npm:1.8.6"
   dependencies:
     type-detect: 4.0.8
   checksum: 7d3f8c1e85f30cd4e83594fc19b7a657f14d49eb8d95a30095631ce15e906c869e0eff96c5b93dffea7490c00418b07f54582ba49c6560feb2a8c34c0b16832d
-  languageName: node
-  linkType: hard
-
-"@sinonjs/commons@npm:^1.7.0":
-  version: 1.8.3
-  resolution: "@sinonjs/commons@npm:1.8.3"
-  dependencies:
-    type-detect: 4.0.8
-  checksum: 6159726db5ce6bf9f2297f8427f7ca5b3dff45b31e5cee23496f1fa6ef0bb4eab878b23fb2c5e6446381f6a66aba4968ef2fc255c1180d753d4b8c271636a2e5
   languageName: node
   linkType: hard
 
@@ -15732,7 +15749,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sinonjs/fake-timers@npm:^7.0.4, @sinonjs/fake-timers@npm:^7.1.2":
+"@sinonjs/fake-timers@npm:^7.1.2":
   version: 7.1.2
   resolution: "@sinonjs/fake-timers@npm:7.1.2"
   dependencies:
@@ -23802,17 +23819,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.11":
+"csstype@npm:^3.0.11, csstype@npm:^3.0.2, csstype@npm:^3.0.6, csstype@npm:^3.1.2":
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
-  languageName: node
-  linkType: hard
-
-"csstype@npm:^3.0.2, csstype@npm:^3.0.6, csstype@npm:^3.1.2":
-  version: 3.0.9
-  resolution: "csstype@npm:3.0.9"
-  checksum: 199f9af7e673f9f188525c3102a329d637ff46c52f6385a4427ff5cb17adcb736189150170a7af7c5701d18d7704bdad130273f4aa7e44c6c4f9967e6115dc93
   languageName: node
   linkType: hard
 
@@ -26452,6 +26462,7 @@ __metadata:
     "@backstage/plugin-stack-overflow": "workspace:^"
     "@backstage/plugin-stackstorm": "workspace:^"
     "@backstage/plugin-swf": "workspace:^"
+    "@backstage/plugin-swf-common": "workspace:^"
     "@backstage/plugin-tech-insights": "workspace:^"
     "@backstage/plugin-tech-radar": "workspace:^"
     "@backstage/plugin-techdocs": "workspace:^"
@@ -26510,6 +26521,7 @@ __metadata:
     "@backstage/plugin-badges-backend": "workspace:^"
     "@backstage/plugin-catalog-backend": "workspace:^"
     "@backstage/plugin-catalog-backend-module-scaffolder-entity-model": "workspace:^"
+    "@backstage/plugin-catalog-backend-module-swf-entity-provider": "workspace:^"
     "@backstage/plugin-catalog-backend-module-unprocessed": "workspace:^"
     "@backstage/plugin-devtools-backend": "workspace:^"
     "@backstage/plugin-entity-feedback-backend": "workspace:^"
@@ -26553,6 +26565,7 @@ __metadata:
     "@backstage/plugin-badges-backend": "workspace:^"
     "@backstage/plugin-catalog-backend": "workspace:^"
     "@backstage/plugin-catalog-backend-module-scaffolder-entity-model": "workspace:^"
+    "@backstage/plugin-catalog-backend-module-swf-entity-provider": ^0.0.0
     "@backstage/plugin-catalog-backend-module-unprocessed": "workspace:^"
     "@backstage/plugin-catalog-node": "workspace:^"
     "@backstage/plugin-code-coverage-backend": "workspace:^"
@@ -34590,7 +34603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nise@npm:^5.1.0":
+"nise@npm:^5.1.0, nise@npm:^5.1.2":
   version: 5.1.4
   resolution: "nise@npm:5.1.4"
   dependencies:
@@ -34600,19 +34613,6 @@ __metadata:
     just-extend: ^4.0.2
     path-to-regexp: ^1.7.0
   checksum: bc57c10eaec28a6a7ddfb2e1e9b21d5e1fe22710e514f8858ae477cf9c7e9c891475674d5241519193403db43d16c3675f4207bc094a7a27b7e4f56584a78c1b
-  languageName: node
-  linkType: hard
-
-"nise@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "nise@npm:5.1.2"
-  dependencies:
-    "@sinonjs/commons": ^2.0.0
-    "@sinonjs/fake-timers": ^7.0.4
-    "@sinonjs/text-encoding": ^0.7.1
-    just-extend: ^4.0.2
-    path-to-regexp: ^1.7.0
-  checksum: 688c557333dcbc5b41f4f1f1b0ea32fb0f8b424541a8958140bc61074980362c954b2aeb027c282de26b9ddcb4b230656f68ac4206777499e405dd7e716ec1f8
   languageName: node
   linkType: hard
 
@@ -38083,16 +38083,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.12.2, react-hook-form@npm:^7.13.0":
-  version: 7.32.2
-  resolution: "react-hook-form@npm:7.32.2"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18
-  checksum: abe8ba146c313d206f99a01260457bc72af03b2c73d7bd4be5af11598140ec45ef1ef37bac64b80c4dbc298d6aa21af4caa259a133f305a04ddf583faa18e7d0
-  languageName: node
-  linkType: hard
-
-"react-hook-form@npm:^7.45.1":
+"react-hook-form@npm:^7.12.2, react-hook-form@npm:^7.13.0, react-hook-form@npm:^7.45.1":
   version: 7.46.1
   resolution: "react-hook-form@npm:7.46.1"
   peerDependencies:
@@ -43553,17 +43544,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vscode-languageserver-types@npm:^3.0.0, vscode-languageserver-types@npm:^3.16.0":
+"vscode-languageserver-types@npm:^3.0.0, vscode-languageserver-types@npm:^3.15.1, vscode-languageserver-types@npm:^3.16.0":
   version: 3.17.3
   resolution: "vscode-languageserver-types@npm:3.17.3"
   checksum: fbc8221297261f659a6482875ff2a419dc9d55965dc53745797da569ff9f819cd832e6f2699017baadd946548bbfe212e3f6971f3d960f12dc0ee9c629dacc07
-  languageName: node
-  linkType: hard
-
-"vscode-languageserver-types@npm:^3.15.1":
-  version: 3.15.1
-  resolution: "vscode-languageserver-types@npm:3.15.1"
-  checksum: 28c1cb0d5b7ad7c719015a6eb5f774c000fe68c41bbd4a3fd0cbe6d862f27eec075d6bfb14c9d86c22d0e8711c2df8194295bf1e7d6ac0c359cab348c5e14887
   languageName: node
   linkType: hard
 
@@ -44120,7 +44104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"winston@npm:^3.2.1":
+"winston@npm:^3.10.0, winston@npm:^3.2.1":
   version: 3.10.0
   resolution: "winston@npm:3.10.0"
   dependencies:
