@@ -24,7 +24,7 @@ import {
   SwfDefinition,
   SwfItem,
   SwfListResult,
-  topic,
+  swf_service_ready_topic,
   WorkflowDataInputSchemaResponse,
 } from '@backstage/plugin-swf-common';
 import { exec, ExecException } from 'child_process';
@@ -40,7 +40,6 @@ import { JiraEvent, JiraService } from './JiraService';
 import { readGithubIntegrationConfigs } from '@backstage/integration';
 import { OpenAPIV3 } from 'openapi-types';
 import { JsonObject, JsonValue } from '@backstage/types';
-import { fs } from 'fs-extra';
 import { CatalogApi } from '@backstage/catalog-client';
 import { ScaffolderService } from './ScaffolderService';
 
@@ -150,7 +149,7 @@ export async function createRouter(
   );
 
   await eventBroker.publish({
-    topic: topic,
+    topic: swf_service_ready_topic,
     eventPayload: {},
   });
 

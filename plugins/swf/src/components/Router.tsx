@@ -30,7 +30,7 @@ import { SWFInstancesViewerPage } from './SWFInstancesViewerPage';
 import { SWFDefinitionViewerPage } from './SWFDefinitionViewerPage';
 import { NewWorkflowViewerPage } from './NewWorkflowViewerPage';
 import { CreateSWFPage } from './CreateSWFPage';
-import { ExecuteWorkflowPage } from './ExecuteWorkflowPage/ExecuteWorkflowPage';
+import { ExecuteWorkflowPage } from './ExecuteWorkflowPage';
 
 export const Router = () => {
   return (

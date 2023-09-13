@@ -16,7 +16,7 @@
 
 import { SwfDefinition, WorkflowSample } from './types';
 
-export const topic = 'kogito-swf-service-ready';
+export const swf_service_ready_topic = 'kogito-swf-service-ready';
 
 export const empty_definition: SwfDefinition = {
   id: 'workflow_unique_identifier',
